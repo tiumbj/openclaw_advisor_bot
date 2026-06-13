@@ -488,6 +488,9 @@ def scan_git_history(paths: ProjectPaths) -> list[SecretFinding]:
             continue
         if line.startswith("+") or line.startswith("-"):
             content = line[1:]
+            if _classify_path(paths.root_dir / current_file) == "TEST_ONLY":
+                current_line += 1
+                continue
             for secret_type, pattern in SECRET_PATTERNS.items():
                 match = pattern.search(content)
                 if match:

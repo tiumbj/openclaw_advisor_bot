@@ -4,8 +4,8 @@
   "summary": {
     "pass": true,
     "active_source_violations": 0,
-    "documentation_hits": 16,
-    "test_hits": 8
+    "documentation_hits": 48,
+    "test_hits": 12
   },
   "source_text": [
     {
@@ -139,6 +139,262 @@
     {
       "detector": "source_text",
       "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 77,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 81,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 85,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 89,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 93,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 97,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 101,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 105,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 109,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 113,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 117,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 121,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 125,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 129,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 133,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 137,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 141,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 145,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 149,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 153,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 157,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 161,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 165,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 169,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 173,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 177,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 181,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 185,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 189,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 193,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 197,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\docs\\P1_1_SECURITY_SCAN.json",
+      "line": 201,
+      "classification": "DOCUMENTATION",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
       "file": "C:\\Data\\OpenClawSuperAdvisor\\engine\\tests\\security\\test_scanning.py",
       "line": 17,
       "classification": "TEST_ONLY",
@@ -180,7 +436,7 @@
       "detector": "source_text",
       "rule": "order_send",
       "file": "C:\\Data\\OpenClawSuperAdvisor\\engine\\tests\\security\\test_scanning_branches.py",
-      "line": 19,
+      "line": 25,
       "classification": "TEST_ONLY",
       "detail": "order_send"
     },
@@ -188,7 +444,39 @@
       "detector": "source_text",
       "rule": "order_send",
       "file": "C:\\Data\\OpenClawSuperAdvisor\\engine\\tests\\security\\test_scanning_branches.py",
-      "line": 28,
+      "line": 34,
+      "classification": "TEST_ONLY",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\engine\\tests\\security\\test_scanning_branches.py",
+      "line": 37,
+      "classification": "TEST_ONLY",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\engine\\tests\\security\\test_scanning_branches.py",
+      "line": 49,
+      "classification": "TEST_ONLY",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\engine\\tests\\security\\test_scanning_branches.py",
+      "line": 50,
+      "classification": "TEST_ONLY",
+      "detail": "order_send"
+    },
+    {
+      "detector": "source_text",
+      "rule": "order_send",
+      "file": "C:\\Data\\OpenClawSuperAdvisor\\engine\\tests\\security\\test_scanning_branches.py",
+      "line": 52,
       "classification": "TEST_ONLY",
       "detail": "order_send"
     },
@@ -206,7 +494,7 @@
       "detector": "ast",
       "rule": "builtin_import",
       "file": "C:\\Data\\OpenClawSuperAdvisor\\engine\\tests\\security\\test_scanning_branches.py",
-      "line": 26,
+      "line": 32,
       "classification": "TEST_ONLY",
       "detail": "ast"
     }
@@ -216,7 +504,7 @@
       "detector": "resolved_constants",
       "rule": "builtin_import_constant",
       "file": "C:\\Data\\OpenClawSuperAdvisor\\engine\\tests\\security\\test_scanning_branches.py",
-      "line": 26,
+      "line": 32,
       "classification": "TEST_ONLY",
       "detail": "ast"
     }
