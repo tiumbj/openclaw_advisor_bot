@@ -270,3 +270,27 @@
   - `Code and workspace metadata still report 1.2.0 / P2.`
   - `Live MT5 verification remains blocked by environment readiness.`
 - Next action: `Commit and push the validated WP-03/WP-04/WP-05 package, then verify GitHub Actions on the new commit.`
+
+## Entry 0011
+
+- Timestamp UTC: `2026-06-13T14:33:39Z`
+- Phase: `P2.1`
+- Work Package: `WP-03/WP-04/WP-05`
+- Operation: `Committed and pushed the reliability hardening package, then verified that both GitHub Actions workflows completed successfully on the new commit.`
+- Files changed:
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `gh run watch 27469573908 --exit-status`
+  - `gh run watch 27469573895 --exit-status`
+  - `gh run list --commit d1315a1e69559c4495b1c5b7ef3441b2916cc4ca --limit 10`
+- Result: `PASS`
+- Commit: `d1315a1e69559c4495b1c5b7ef3441b2916cc4ca`
+- Remote push: `PASS`
+- CI result: `PASS`
+- Security result: `PASS`
+- Known defects:
+  - `Code and workspace metadata still report 1.2.0 / P2.`
+  - `Live MT5 verification remains blocked by environment readiness.`
+- Next action: `Advance to WP-06 deterministic soak coverage.`

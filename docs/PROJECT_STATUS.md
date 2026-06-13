@@ -3,18 +3,18 @@
 - Project: `openclaw_advisor_bot`
 - Current package version: `1.2.0` baseline code, target `1.2.1`
 - Current phase: `P2.1`
-- Current work package: `WP-03/WP-04/WP-05`
+- Current work package: `WP-06`
 - Overall phase status: `IN_PROGRESS`
-- Last update UTC: `2026-06-13T14:30:37Z`
-- Last local commit: `7032f5b3876c79f5838ea8758c8925c0f4da1297`
-- Last remote commit: `7032f5b3876c79f5838ea8758c8925c0f4da1297`
+- Last update UTC: `2026-06-13T14:33:39Z`
+- Last local commit: `d1315a1e69559c4495b1c5b7ef3441b2916cc4ca`
+- Last remote commit: `d1315a1e69559c4495b1c5b7ef3441b2916cc4ca`
 - Local/remote alignment: `PASS`
 - Working tree status: `DIRTY`
 - CI status: `PASS`
 - Security workflow status: `PASS`
 - Live MT5 status: `BLOCKED`
 - Latest blocker: `Live MT5 verification remains blocked because MT5 is disabled and the MetaTrader5 package/terminal/session settings are unavailable locally.`
-- Next action: `Commit and push the validated WP-03/WP-04/WP-05 reliability hardening package, then verify GitHub Actions on the new commit.`
+- Next action: `Start WP-06 deterministic simulated soak coverage while keeping the unresolved metadata-version drift tracked for later closure.`
 
 ## Progress Matrix
 
@@ -23,9 +23,9 @@
 | WP-00 Repository and Report Bootstrap | PASS | `eca0c72` | Baseline git/remote/actions audit observed; GitHub Actions passed | `docs/P2_1_BASELINE_AUDIT.md` | Start WP-01 workflow hardening |
 | WP-01 GitHub Actions Future Compatibility | PASS | `0940182` | Local validation PASS; GitHub `ci` PASS; GitHub `security` PASS; Node20 warning removed | `.github/workflows/ci.yml`, `.github/workflows/security.yml`, `docs/IMPLEMENTATION_LEDGER.md` | Start WP-02 readiness check |
 | WP-02 Live MT5 Read-only Verification | BLOCKED | `7032f5b` | Redacted readiness check shows MT5 disabled and unavailable; GitHub `ci` PASS; GitHub `security` PASS | `docs/P2_1_LIVE_MT5_REPORT.md`, `docs/P2_1_LIVE_MT5_REPORT.json` | Keep blocked state recorded and continue reliability hardening |
-| WP-03 Disconnect and Reconnect Reliability | IN_PROGRESS | `""` | Full local validation PASS after retry root-cause fix for `None + last_error` backend responses | `engine/src/openclaw_super_advisor/market_data/collector.py`, `engine/src/openclaw_super_advisor/market_data/fake_backend.py`, `engine/tests/unit/test_market_data_reliability.py` | Commit and push reconnect hardening |
-| WP-04 Tick and Bar Integrity Failure Injection | IN_PROGRESS | `""` | Full local validation PASS with same-timestamp tick collision coverage and integrity failure injection tests | `engine/src/openclaw_super_advisor/market_data/quality.py`, `engine/tests/unit/test_market_data_reliability.py` | Commit and push integrity hardening |
-| WP-05 Storage Crash and Recovery | IN_PROGRESS | `""` | Full local validation PASS with SQLite rollback, atomic cleanup, and Parquet validation failure coverage | `engine/tests/unit/test_market_data_reliability.py`, `engine/src/openclaw_super_advisor/market_data/collector.py` | Commit and push storage recovery hardening |
+| WP-03 Disconnect and Reconnect Reliability | PASS | `d1315a1` | Full local validation PASS; GitHub `ci` PASS; GitHub `security` PASS after retry root-cause fix for `None + last_error` backend responses | `engine/src/openclaw_super_advisor/market_data/collector.py`, `engine/src/openclaw_super_advisor/market_data/fake_backend.py`, `engine/tests/unit/test_market_data_reliability.py` | Start WP-06 simulated soak coverage |
+| WP-04 Tick and Bar Integrity Failure Injection | PASS | `d1315a1` | Full local validation PASS; GitHub `ci` PASS; GitHub `security` PASS with same-timestamp tick collision coverage and integrity failure injection tests | `engine/src/openclaw_super_advisor/market_data/quality.py`, `engine/tests/unit/test_market_data_reliability.py` | Start WP-06 simulated soak coverage |
+| WP-05 Storage Crash and Recovery | PASS | `d1315a1` | Full local validation PASS; GitHub `ci` PASS; GitHub `security` PASS with SQLite rollback, atomic cleanup, and Parquet validation failure coverage | `engine/tests/unit/test_market_data_reliability.py`, `engine/src/openclaw_super_advisor/market_data/collector.py` | Start WP-06 simulated soak coverage |
 | WP-06 Long-running Soak Test | NOT_STARTED | `""` | NOT_RUN | `docs/**`, `engine/tests/**` | Build deterministic simulated soak test |
 | WP-07 Full Post-Patch Audit | NOT_STARTED | `""` | NOT_RUN | `docs/P2_1_POST_PATCH_AUDIT.md` | Run repository-wide hardening audit |
 | WP-08 Phase Closure | NOT_STARTED | `""` | NOT_RUN | `docs/P2_1_TEST_RESULTS.json`, `docs/P2_1_SECURITY_REPORT.json`, `docs/P2_1_REPORT_PROVENANCE.json` | Run full validation suite and close phase |
@@ -109,6 +109,13 @@
    - commit_sha: `7032f5b3876c79f5838ea8758c8925c0f4da1297`
    - evidence_file: `docs/IMPLEMENTATION_LEDGER.md`
    - tool_version: `Python 3.12.10`
+12. WP-03/WP-04/WP-05 GitHub workflow confirmation
+   - command: `gh run watch 27469573908 --exit-status ; gh run watch 27469573895 --exit-status ; gh run list --commit d1315a1e69559c4495b1c5b7ef3441b2916cc4ca --limit 10`
+   - timestamp_utc: `2026-06-13T14:33:39Z`
+   - exit_code: `0`
+   - commit_sha: `d1315a1e69559c4495b1c5b7ef3441b2916cc4ca`
+   - evidence_file: `docs/IMPLEMENTATION_LEDGER.md`
+   - tool_version: `gh 2.89.0`
 
 ## Notes
 
@@ -117,5 +124,6 @@
 - Latest observed GitHub workflows for `1f0ea3f` were `ci=success` and `security=success`, but they still emitted a Node20 deprecation warning for `actions/upload-artifact@v5`.
 - Latest observed GitHub workflows for `0940182` were `ci=success` and `security=success` with the artifact warning removed.
 - Latest observed GitHub workflows for `7032f5b` were `ci=success` and `security=success`.
+- Latest observed GitHub workflows for `d1315a1` were `ci=success` and `security=success`.
 - Live MT5 verification is blocked in the current environment because MT5 is disabled and unavailable.
-- WP-03/WP-04/WP-05 reliability changes are locally validated and awaiting their logical commit/push checkpoint.
+- WP-03/WP-04/WP-05 reliability hardening is now committed, pushed, and GitHub-validated.
