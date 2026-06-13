@@ -437,3 +437,82 @@
   - `Code and workspace metadata still report 1.2.0 / P2.`
   - `Live MT5 verification remains blocked by environment readiness.`
 - Next action: `Advance to WP-07 repository-wide post-patch audit.`
+
+## Entry 0017
+
+- Timestamp UTC: `2026-06-13T15:02:54Z`
+- Phase: `P2.1`
+- Work Package: `WP-07`
+- Operation: `Closed the repository-wide post-patch audit by aligning package/workspace/skill metadata to 1.2.1 / P2.1, fixing naive CLI timestamp handling, extending compatibility-export regression coverage, and correcting stale top-level P1.1 documentation.`
+- Files changed:
+  - `README.md`
+  - `config/settings.schema.json`
+  - `docs/ARCHITECTURE.md`
+  - `docs/ENVIRONMENT_VARIABLES.md`
+  - `docs/SECURITY.md`
+  - `docs/TESTING.md`
+  - `engine/src/openclaw_super_advisor/_version.py`
+  - `engine/src/openclaw_super_advisor/cli.py`
+  - `engine/tests/integration/test_cli.py`
+  - `engine/tests/unit/test_health.py`
+  - `engine/tests/unit/test_misc_runtime.py`
+  - `workspace/AGENTS.md`
+  - `workspace/skills/advisor-safety-contract/SKILL.md`
+  - `workspace/skills/environment-health/SKILL.md`
+  - `workspace/skills/evidence-audit/SKILL.md`
+  - `workspace/skills/incident-reporting/SKILL.md`
+  - `workspace/skills/python-engine-bridge/SKILL.md`
+  - `workspace/skills/super-potential-review/SKILL.md`
+  - `workspace/skills/thai-telegram-publisher/SKILL.md`
+  - `docs/P2_1_POST_PATCH_AUDIT.md`
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `python -m ruff check engine\src\openclaw_super_advisor\cli.py engine\tests\integration\test_cli.py`
+  - `python -m mypy engine\src`
+  - `python -m pytest engine\tests\integration\test_cli.py --no-cov -q`
+- Result: `PASS`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `NOT_RUN`
+- Known defects:
+  - `Live MT5 verification remains blocked by environment readiness.`
+- Next action: `Run the full closure suite, generate phase evidence, then commit and push the WP-07/WP-08 package.`
+
+## Entry 0018
+
+- Timestamp UTC: `2026-06-13T15:02:54Z`
+- Phase: `P2.1`
+- Work Package: `WP-08`
+- Operation: `Ran the full non-live validation suite after the audit fixes, regenerated security/skill/render evidence, refreshed coverage, and created phase-closure evidence reports.`
+- Files changed:
+  - `docs/P2_COVERAGE.json`
+  - `docs/P2_1_RENDER_CONFIG_VALIDATION.json`
+  - `docs/P2_1_REPORT_PROVENANCE.json`
+  - `docs/P2_1_SECURITY_REPORT.json`
+  - `docs/P2_1_SKILL_VALIDATION.json`
+  - `docs/P2_1_TEST_RESULTS.json`
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `python -m pip check`
+  - `python -m ruff check .`
+  - `python -m mypy engine\src`
+  - `python -m pytest -m "not live"`
+  - `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json`
+  - `openclaw-advisor validate-skills --strict`
+  - `openclaw-advisor render-config --validate --strict`
+  - `openclaw-advisor security-scan --include-history --strict`
+  - `python -m pip_audit`
+- Result: `PASS`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `NOT_RUN`
+- Known defects:
+  - `Live MT5 verification remains blocked by environment readiness.`
+  - `Final closure commit and GitHub confirmation are still pending.`
+- Next action: `Commit and push the closure package, then verify GitHub Actions before marking P2.1 as passed.`

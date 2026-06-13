@@ -1,12 +1,12 @@
 ---
 name: incident-reporting
 description: Report operational failures without turning them into trading signals.
-version: 1.2.0
+version: 1.2.1
 ---
 
 # incident-reporting
 
-Version: 1.2.0
+Version: 1.2.1
 
 Purpose: report operational failures without drifting into trade advice.
 

@@ -1,13 +1,14 @@
 # OpenClaw Super Advisor
 
-Advisor-only OpenClaw foundation hardening package for validating environment, skills, config templates, and security boundaries without enabling any trading runtime.
+Advisor-only OpenClaw foundation package for validating environment, skills, config templates,
+security boundaries, and MT5 read-only market-data runtime without enabling trade execution.
 
 ## Status
 
-- Package version: `1.1.1`
-- Phase: `P1.1`
+- Package version: `1.2.1`
+- Phase: `P2.1`
 - Trading execution: disabled by contract
-- CLI surface: validation and audit only
+- CLI surface: validation, audit, and MT5 read-only market-data commands
 - Runtime config source: `config\openclaw.template.json`
 - Runtime state: local only under `state\`
 
@@ -15,8 +16,9 @@ Advisor-only OpenClaw foundation hardening package for validating environment, s
 
 - No order placement, modification, cancellation, or position close logic.
 - No broker execution bridge, execution kernel, or auto trade flow.
-- No MT5 live connector, market data engine, indicators, pattern engine, voting, or Telegram trading alerts.
-- Skills and CLI commands are validation-only and read-only by design.
+- No order placement, broker-write execution, indicators, pattern engine, voting, or Telegram
+  trading alerts.
+- MT5 support is restricted to explicit read-only adapter and market-data collection surfaces.
 
 ## Validation Commands
 

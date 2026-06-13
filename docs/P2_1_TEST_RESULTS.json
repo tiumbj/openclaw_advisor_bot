@@ -1,0 +1,105 @@
+{
+  "schema_version": "p2-1-test-results-v1",
+  "phase": "P2.1",
+  "package_version": "1.2.1",
+  "status": "PASS",
+  "generated_at_utc": "2026-06-13T15:02:54Z",
+  "coverage": {
+    "report_file": "docs/P2_COVERAGE.json",
+    "required_percent": 85.0,
+    "actual_percent": 95.62
+  },
+  "pytest": {
+    "selected": 49,
+    "passed": 49,
+    "deselected": 1,
+    "failed": 0
+  },
+  "commands": [
+    {
+      "name": "pip_check",
+      "status": "PASS",
+      "command": ".venv\\Scripts\\python.exe -m pip check",
+      "timestamp_utc": "2026-06-13T15:02:54Z",
+      "exit_code": 0,
+      "tool_version": "Python 3.12.10",
+      "evidence_file": "docs/P2_1_TEST_RESULTS.json"
+    },
+    {
+      "name": "ruff_check",
+      "status": "PASS",
+      "command": ".venv\\Scripts\\python.exe -m ruff check .",
+      "timestamp_utc": "2026-06-13T15:02:54Z",
+      "exit_code": 0,
+      "tool_version": "Ruff",
+      "evidence_file": "docs/P2_1_TEST_RESULTS.json"
+    },
+    {
+      "name": "mypy",
+      "status": "PASS",
+      "command": ".venv\\Scripts\\python.exe -m mypy engine\\src",
+      "timestamp_utc": "2026-06-13T15:02:54Z",
+      "exit_code": 0,
+      "tool_version": "mypy",
+      "evidence_file": "docs/P2_1_TEST_RESULTS.json"
+    },
+    {
+      "name": "pytest_not_live",
+      "status": "PASS",
+      "command": ".venv\\Scripts\\python.exe -m pytest -m \"not live\"",
+      "timestamp_utc": "2026-06-13T15:02:54Z",
+      "exit_code": 0,
+      "tool_version": "pytest 9.0.3",
+      "evidence_file": "docs/P2_1_TEST_RESULTS.json"
+    },
+    {
+      "name": "pytest_coverage",
+      "status": "PASS",
+      "command": ".venv\\Scripts\\python.exe -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json",
+      "timestamp_utc": "2026-06-13T15:02:54Z",
+      "exit_code": 0,
+      "tool_version": "pytest-cov 7.1.0 / coverage 7.14.1",
+      "evidence_file": "docs/P2_COVERAGE.json"
+    },
+    {
+      "name": "validate_skills",
+      "status": "PASS",
+      "command": ".venv\\Scripts\\openclaw-advisor.exe validate-skills --strict",
+      "timestamp_utc": "2026-06-13T15:02:54Z",
+      "exit_code": 0,
+      "tool_version": "openclaw-advisor 1.2.1",
+      "evidence_file": "docs/P2_1_SKILL_VALIDATION.json"
+    },
+    {
+      "name": "render_config",
+      "status": "PASS",
+      "command": ".venv\\Scripts\\openclaw-advisor.exe render-config --validate --strict",
+      "timestamp_utc": "2026-06-13T15:02:54Z",
+      "exit_code": 0,
+      "tool_version": "openclaw-advisor 1.2.1",
+      "evidence_file": "docs/P2_1_RENDER_CONFIG_VALIDATION.json"
+    },
+    {
+      "name": "security_scan",
+      "status": "PASS",
+      "command": ".venv\\Scripts\\openclaw-advisor.exe security-scan --include-history --strict",
+      "timestamp_utc": "2026-06-13T15:02:54Z",
+      "exit_code": 0,
+      "tool_version": "openclaw-advisor 1.2.1",
+      "evidence_file": "docs/P2_1_SECURITY_REPORT.json"
+    },
+    {
+      "name": "pip_audit",
+      "status": "PASS",
+      "command": ".venv\\Scripts\\python.exe -m pip_audit",
+      "timestamp_utc": "2026-06-13T15:02:54Z",
+      "exit_code": 0,
+      "tool_version": "pip-audit",
+      "evidence_file": "docs/P2_1_TEST_RESULTS.json",
+      "notes": [
+        "No known vulnerabilities found.",
+        "The editable local package openclaw-advisor-foundation 1.2.1 is skipped because it is not published on PyPI."
+      ]
+    }
+  ]
+}

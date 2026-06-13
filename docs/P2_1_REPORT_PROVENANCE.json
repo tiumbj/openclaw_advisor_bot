@@ -1,0 +1,23 @@
+{
+  "schema_version": "p2-1-report-provenance-v1",
+  "phase": "P2.1",
+  "package_version": "1.2.1",
+  "generated_at_utc": "2026-06-13T15:02:54Z",
+  "implementation_commit": "PENDING",
+  "status_report_commit": "PENDING",
+  "observed_remote_head": "8f8bcd38e45008fdc157d166e4d65ad2e4977782",
+  "local_head_at_generation": "8f8bcd38e45008fdc157d166e4d65ad2e4977782",
+  "working_tree_clean": false,
+  "evidence_files": [
+    "docs/P2_1_POST_PATCH_AUDIT.md",
+    "docs/P2_1_TEST_RESULTS.json",
+    "docs/P2_1_SECURITY_REPORT.json",
+    "docs/P2_1_SKILL_VALIDATION.json",
+    "docs/P2_1_RENDER_CONFIG_VALIDATION.json",
+    "docs/P2_COVERAGE.json"
+  ],
+  "notes": [
+    "This file was generated before the final closure commit so the implementation and status-report commit fields are intentionally pending.",
+    "Observed remote HEAD was aligned with local HEAD before the final closure changes were committed."
+  ]
+}

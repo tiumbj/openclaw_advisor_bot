@@ -104,6 +104,8 @@ def _print(payload: dict[str, object]) -> None:
 
 def _parse_datetime(value: str) -> datetime:
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        raise ValueError("datetime must include a UTC offset or Z suffix")
     return parsed.astimezone(UTC)
 
 

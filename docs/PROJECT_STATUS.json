@@ -4,10 +4,10 @@
   "package_version": "1.2.1",
   "phase": "P2.1",
   "phase_status": "IN_PROGRESS",
-  "current_work_package": "WP-07",
-  "updated_at_utc": "2026-06-13T14:47:19Z",
-  "local_commit": "e4f0b7df5adb220ed91cdd8ef7e5443d4fa03739",
-  "remote_commit": "e4f0b7df5adb220ed91cdd8ef7e5443d4fa03739",
+  "current_work_package": "WP-08",
+  "updated_at_utc": "2026-06-13T15:02:54Z",
+  "local_commit": "8f8bcd38e45008fdc157d166e4d65ad2e4977782",
+  "remote_commit": "8f8bcd38e45008fdc157d166e4d65ad2e4977782",
   "local_remote_aligned": true,
   "working_tree_clean": false,
   "ci_status": "PASS",
@@ -130,26 +130,34 @@
     {
       "id": "WP-07",
       "name": "Full Post-Patch Audit",
-      "status": "NOT_STARTED",
-      "commit": "",
-      "tests": [],
+      "status": "PASS",
+      "commit": "PENDING",
+      "tests": [
+        "wp07_repo_audit",
+        "wp07_cli_regression_validation"
+      ],
       "evidence": [
         "docs/P2_1_POST_PATCH_AUDIT.md"
       ],
-      "next_action": "Run repository-wide hardening audit."
+      "next_action": "Commit and push the audit closure package."
     },
     {
       "id": "WP-08",
       "name": "Phase Closure",
-      "status": "NOT_STARTED",
-      "commit": "",
-      "tests": [],
+      "status": "IN_PROGRESS",
+      "commit": "PENDING",
+      "tests": [
+        "wp08_full_local_validation",
+        "wp08_security_evidence_generation"
+      ],
       "evidence": [
         "docs/P2_1_TEST_RESULTS.json",
         "docs/P2_1_SECURITY_REPORT.json",
-        "docs/P2_1_REPORT_PROVENANCE.json"
+        "docs/P2_1_REPORT_PROVENANCE.json",
+        "docs/P2_1_SKILL_VALIDATION.json",
+        "docs/P2_1_RENDER_CONFIG_VALIDATION.json"
       ],
-      "next_action": "Run full validation suite and close the phase."
+      "next_action": "Push the closure package and confirm GitHub `ci` and `security`."
     }
   ],
   "tests": [
@@ -327,10 +335,10 @@
   "blockers": [
     {
       "id": "baseline-version-drift",
-      "status": "IN_PROGRESS",
-      "summary": "Code and workspace metadata are still at 1.2.0 / P2 while P2.1 tracking has started.",
-      "redacted_error": "Metadata drift only; no secret exposure.",
-      "required_action": "Advance package and workspace metadata in a later logical work package with matching validation updates."
+      "status": "PASS",
+      "summary": "Code, workspace, skill, schema-title, and health metadata are now aligned at 1.2.1 / P2.1.",
+      "redacted_error": "None.",
+      "required_action": "No further action."
     },
     {
       "id": "workflow-compatibility-drift",
@@ -354,11 +362,17 @@
       "required_action": "No further action in WP-06."
     }
   ],
-  "next_action": "Start WP-07 repository-wide post-patch audit while keeping metadata-version drift and live MT5 environment blockers tracked.",
+  "next_action": "Commit and push the WP-07/WP-08 closure package, then confirm GitHub `ci` and `security` before marking P2.1 passed.",
   "evidence_files": [
     "docs/P2_1_BASELINE_AUDIT.md",
     "docs/P2_1_LIVE_MT5_REPORT.md",
     "docs/P2_1_LIVE_MT5_REPORT.json",
+    "docs/P2_1_POST_PATCH_AUDIT.md",
+    "docs/P2_1_TEST_RESULTS.json",
+    "docs/P2_1_SECURITY_REPORT.json",
+    "docs/P2_1_REPORT_PROVENANCE.json",
+    "docs/P2_1_SKILL_VALIDATION.json",
+    "docs/P2_1_RENDER_CONFIG_VALIDATION.json",
     "docs/P2_1_SOAK_REPORT.md",
     "docs/P2_1_SOAK_REPORT.json",
     "docs/PROJECT_STATUS.md",

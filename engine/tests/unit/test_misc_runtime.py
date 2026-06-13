@@ -10,6 +10,7 @@ import pytest
 from openclaw_super_advisor._version import __version__
 from openclaw_super_advisor.bridge import bridge_contract_summary
 from openclaw_super_advisor.logging_setup import JsonFormatter, configure_logging
+from openclaw_super_advisor.market_models import SUPPORTED_TIMEFRAMES, QualityEvent
 from openclaw_super_advisor.paths import build_paths
 from openclaw_super_advisor.schemas import BridgeEnvelope, EvidencePacketSchema
 
@@ -39,3 +40,5 @@ def test_bridge_logging_and_main(monkeypatch: pytest.MonkeyPatch, sample_project
 
     paths = build_paths(sample_project)
     assert paths.runtime_config_path.name == "openclaw.json"
+    assert QualityEvent.__name__ == "QualityIncident"
+    assert "H1" in SUPPORTED_TIMEFRAMES

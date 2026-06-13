@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "OpenClaw Advisor Render Settings 1.2.0",
+  "title": "OpenClaw Advisor Render Settings 1.2.1",
   "type": "object",
   "required": ["gateway", "skills", "agents", "marketData", "tools"],
   "properties": {

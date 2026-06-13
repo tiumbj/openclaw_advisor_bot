@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from openclaw_super_advisor.cli import build_parser, main
+from openclaw_super_advisor.cli import _parse_datetime, build_parser, main
 from openclaw_super_advisor.market_data import build_market_data_service
 from openclaw_super_advisor.market_data.fake_backend import FakeMt5Backend, FakeMt5Scenario
 from openclaw_super_advisor.paths import build_paths
@@ -24,6 +24,17 @@ def _run(command: list[str]) -> dict[str, object]:
         sys.stdout = stdout
     assert exit_code == 0
     return json.loads(buffer.getvalue())
+
+
+def _run_result(command: list[str]) -> tuple[int, dict[str, object]]:
+    buffer = StringIO()
+    stdout = sys.stdout
+    try:
+        sys.stdout = buffer
+        exit_code = main(command)
+    finally:
+        sys.stdout = stdout
+    return exit_code, json.loads(buffer.getvalue())
 
 
 def _enable_mt5(sample_project: Path) -> Path:
@@ -200,3 +211,49 @@ def test_cli_help_and_no_trade_commands() -> None:
     assert "buy" not in help_text.lower()
     assert "sell" not in help_text.lower()
     assert "trade" not in help_text.lower()
+
+
+def test_parse_datetime_rejects_naive_timestamp() -> None:
+    with pytest.raises(ValueError, match="UTC offset or Z suffix"):
+        _parse_datetime("2026-01-01T00:00:00")
+
+
+def test_market_backfill_rejects_naive_timestamps(
+    monkeypatch: pytest.MonkeyPatch, sample_project: Path
+) -> None:
+    root = str(sample_project)
+    env_path = _enable_mt5(sample_project)
+
+    def _service_builder(_paths: object, env_path: Path | None = None) -> object:
+        project_paths = build_paths(sample_project)
+        selected_env = env_path or project_paths.runtime_env_path
+        return build_market_data_service(
+            project_paths,
+            env_path=selected_env,
+            backend=FakeMt5Backend(_scenario()),
+        )
+
+    monkeypatch.setattr("openclaw_super_advisor.cli.build_market_data_service", _service_builder)
+
+    exit_code, payload = _run_result(
+        [
+            "market-backfill",
+            "--project-root",
+            root,
+            "--env-file",
+            str(env_path),
+            "--symbol",
+            "XAUUSD",
+            "--timeframe",
+            "H1",
+            "--start",
+            "2025-12-31T23:00:00",
+            "--end",
+            "2026-01-01T01:00:00Z",
+            "--json",
+            "--dry-run",
+        ]
+    )
+
+    assert exit_code == 1
+    assert "UTC offset or Z suffix" in str(payload["error"])

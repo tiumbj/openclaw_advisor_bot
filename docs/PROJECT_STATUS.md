@@ -1,20 +1,20 @@
 # Project Status
 
 - Project: `openclaw_advisor_bot`
-- Current package version: `1.2.0` baseline code, target `1.2.1`
+- Current package version: `1.2.1`
 - Current phase: `P2.1`
-- Current work package: `WP-07`
+- Current work package: `WP-08`
 - Overall phase status: `IN_PROGRESS`
-- Last update UTC: `2026-06-13T14:47:19Z`
-- Last local commit: `e4f0b7df5adb220ed91cdd8ef7e5443d4fa03739`
-- Last remote commit: `e4f0b7df5adb220ed91cdd8ef7e5443d4fa03739`
+- Last update UTC: `2026-06-13T15:02:54Z`
+- Last local commit: `8f8bcd38e45008fdc157d166e4d65ad2e4977782`
+- Last remote commit: `8f8bcd38e45008fdc157d166e4d65ad2e4977782`
 - Local/remote alignment: `PASS`
 - Working tree status: `DIRTY`
 - CI status: `PASS`
 - Security workflow status: `PASS`
 - Live MT5 status: `BLOCKED`
-- Latest blocker: `Live MT5 verification remains blocked because MT5 is disabled and the MetaTrader5 package/terminal/session settings are unavailable locally.`
-- Next action: `Start WP-07 repository-wide post-patch audit while keeping metadata-version drift and live MT5 environment blockers tracked.`
+- Latest blocker: `Live MT5 verification remains blocked by environment readiness, and the final WP-07/WP-08 closure commit still needs to be pushed and GitHub-validated.`
+- Next action: `Commit and push the WP-07/WP-08 closure package, then confirm GitHub Actions before declaring P2.1 passed.`
 
 ## Progress Matrix
 
@@ -27,8 +27,8 @@
 | WP-04 Tick and Bar Integrity Failure Injection | PASS | `d1315a1` | Full local validation PASS; GitHub `ci` PASS; GitHub `security` PASS with same-timestamp tick collision coverage and integrity failure injection tests | `engine/src/openclaw_super_advisor/market_data/quality.py`, `engine/tests/unit/test_market_data_reliability.py` | Start WP-06 simulated soak coverage |
 | WP-05 Storage Crash and Recovery | PASS | `d1315a1` | Full local validation PASS; GitHub `ci` PASS; GitHub `security` PASS with SQLite rollback, atomic cleanup, and Parquet validation failure coverage | `engine/tests/unit/test_market_data_reliability.py`, `engine/src/openclaw_super_advisor/market_data/collector.py` | Start WP-06 simulated soak coverage |
 | WP-06 Long-running Soak Test | PASS | `e4f0b7d` | Local validation PASS; GitHub `ci` PASS; GitHub `security` PASS after hosted-runner-safe latency threshold fix; simulated soak PASS; live soak `NOT_RUN` | `engine/tests/unit/test_market_data_reliability.py`, `docs/P2_1_SOAK_REPORT.md`, `docs/P2_1_SOAK_REPORT.json` | Start WP-07 post-patch audit |
-| WP-07 Full Post-Patch Audit | NOT_STARTED | `""` | NOT_RUN | `docs/P2_1_POST_PATCH_AUDIT.md` | Run repository-wide hardening audit |
-| WP-08 Phase Closure | NOT_STARTED | `""` | NOT_RUN | `docs/P2_1_TEST_RESULTS.json`, `docs/P2_1_SECURITY_REPORT.json`, `docs/P2_1_REPORT_PROVENANCE.json` | Run full validation suite and close phase |
+| WP-07 Full Post-Patch Audit | PASS | `PENDING` | Repository-wide audit PASS; targeted CLI regression PASS; metadata/doc drift and naive timestamp defect fixed | `docs/P2_1_POST_PATCH_AUDIT.md`, `engine/src/openclaw_super_advisor/cli.py`, `engine/tests/integration/test_cli.py`, `README.md`, `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/TESTING.md`, `docs/ENVIRONMENT_VARIABLES.md` | Commit and push audit closure package |
+| WP-08 Phase Closure | IN_PROGRESS | `PENDING` | Full local validation PASS; coverage PASS at 95.62%; security scan PASS; final GitHub confirmation pending | `docs/P2_1_TEST_RESULTS.json`, `docs/P2_1_SECURITY_REPORT.json`, `docs/P2_1_REPORT_PROVENANCE.json`, `docs/P2_1_SKILL_VALIDATION.json`, `docs/P2_1_RENDER_CONFIG_VALIDATION.json` | Push closure package and verify GitHub `ci` and `security` |
 
 ## Current Evidence
 
@@ -154,7 +154,7 @@
 
 ## Notes
 
-- Baseline code metadata is still `1.2.0 / P2`.
+- Baseline metadata drift is fixed locally at `1.2.1 / P2.1`.
 - Latest observed GitHub workflows for `eca0c72` were `ci=success` and `security=success`.
 - Latest observed GitHub workflows for `1f0ea3f` were `ci=success` and `security=success`, but they still emitted a Node20 deprecation warning for `actions/upload-artifact@v5`.
 - Latest observed GitHub workflows for `0940182` were `ci=success` and `security=success` with the artifact warning removed.
@@ -166,3 +166,5 @@
 - Live MT5 verification is blocked in the current environment because MT5 is disabled and unavailable.
 - WP-03/WP-04/WP-05 reliability hardening is now committed, pushed, and GitHub-validated.
 - WP-06 simulated soak coverage is now committed, pushed, and GitHub-validated after the latency-threshold fix.
+- WP-07 post-patch audit is complete locally and includes the naive timestamp root-cause fix plus core-documentation drift cleanup.
+- WP-08 closure evidence is generated locally and awaits commit/push plus GitHub confirmation before the phase verdict can move to `PASSED`.
