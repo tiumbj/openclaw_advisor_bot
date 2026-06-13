@@ -294,3 +294,60 @@
   - `Code and workspace metadata still report 1.2.0 / P2.`
   - `Live MT5 verification remains blocked by environment readiness.`
 - Next action: `Advance to WP-06 deterministic soak coverage.`
+
+## Entry 0012
+
+- Timestamp UTC: `2026-06-13T14:39:53Z`
+- Phase: `P2.1`
+- Work Package: `WP-03/WP-04/WP-05`
+- Operation: `Verified that the WP-03/WP-04/WP-05 status-report commit also completed successfully on both GitHub Actions workflows.`
+- Files changed:
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `gh run list --commit 80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906 --limit 10`
+- Result: `PASS`
+- Commit: `80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906`
+- Remote push: `PASS`
+- CI result: `PASS`
+- Security result: `PASS`
+- Known defects:
+  - `Code and workspace metadata still report 1.2.0 / P2.`
+  - `Live MT5 verification remains blocked by environment readiness.`
+- Next action: `Start WP-06 deterministic simulated soak coverage.`
+
+## Entry 0013
+
+- Timestamp UTC: `2026-06-13T14:39:53Z`
+- Phase: `P2.1`
+- Work Package: `WP-06`
+- Operation: `Added a deterministic 24-hour fake-backend soak simulation, recorded soak metrics, and reran the full local validation suite.`
+- Files changed:
+  - `engine/tests/unit/test_market_data_reliability.py`
+  - `docs/P2_COVERAGE.json`
+  - `docs/P2_1_SOAK_REPORT.md`
+  - `docs/P2_1_SOAK_REPORT.json`
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `python -m pip check`
+  - `python -m ruff check .`
+  - `python -m mypy engine\src`
+  - `python -m pytest -m "not live"`
+  - `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json`
+  - `openclaw-advisor validate-skills --strict`
+  - `openclaw-advisor render-config --validate --strict`
+  - `openclaw-advisor security-scan --include-history --strict`
+  - `python -m pip_audit`
+  - `python -c "from engine.tests.unit.test_market_data_reliability import run_simulated_24h_soak; ..."`
+- Result: `PASS`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `NOT_RUN`
+- Known defects:
+  - `Code and workspace metadata still report 1.2.0 / P2.`
+  - `Live MT5 verification remains blocked by environment readiness.`
+- Next action: `Commit and push the validated WP-06 simulated soak package, then verify GitHub Actions on the new commit.`

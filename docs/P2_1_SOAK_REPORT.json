@@ -1,0 +1,31 @@
+{
+  "phase": "P2.1",
+  "work_package": "WP-06",
+  "status": "PASS",
+  "simulated_soak_status": "PASS",
+  "live_soak_status": "NOT_RUN",
+  "timestamp_utc": "2026-06-13T14:39:53Z",
+  "commit_baseline": "80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906",
+  "command": "python -c \"from engine.tests.unit.test_market_data_reliability import run_simulated_24h_soak; ...\"",
+  "metrics": {
+    "cycles": 48,
+    "timeframe_count": 4,
+    "heartbeat_count": 48,
+    "cursor_count": 5,
+    "latest_tick_count": 1,
+    "latest_bar_count": 8,
+    "total_ticks": 144,
+    "recovery_count": 8,
+    "error_count": 0,
+    "duplicate_incidents": 0,
+    "parquet_file_count": 162,
+    "sqlite_size_bytes": 77824,
+    "peak_memory_bytes": 538870,
+    "max_loop_latency_ms": 49.85540000052424,
+    "max_write_latency_ms": 33.9142999946489
+  },
+  "notes": [
+    "The soak run is a deterministic fake-backend simulation covering 24 hours of runtime-equivalent collection with reconnect events, storage writes, heartbeat recording, and multiple timeframe transitions.",
+    "Live soak remains NOT_RUN because live MT5 is still blocked in the current environment."
+  ]
+}

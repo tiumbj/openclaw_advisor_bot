@@ -5,16 +5,16 @@
 - Current phase: `P2.1`
 - Current work package: `WP-06`
 - Overall phase status: `IN_PROGRESS`
-- Last update UTC: `2026-06-13T14:33:39Z`
-- Last local commit: `d1315a1e69559c4495b1c5b7ef3441b2916cc4ca`
-- Last remote commit: `d1315a1e69559c4495b1c5b7ef3441b2916cc4ca`
+- Last update UTC: `2026-06-13T14:39:53Z`
+- Last local commit: `80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906`
+- Last remote commit: `80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906`
 - Local/remote alignment: `PASS`
 - Working tree status: `DIRTY`
 - CI status: `PASS`
 - Security workflow status: `PASS`
 - Live MT5 status: `BLOCKED`
 - Latest blocker: `Live MT5 verification remains blocked because MT5 is disabled and the MetaTrader5 package/terminal/session settings are unavailable locally.`
-- Next action: `Start WP-06 deterministic simulated soak coverage while keeping the unresolved metadata-version drift tracked for later closure.`
+- Next action: `Commit and push the validated WP-06 simulated soak package, then verify GitHub Actions on the new commit.`
 
 ## Progress Matrix
 
@@ -26,7 +26,7 @@
 | WP-03 Disconnect and Reconnect Reliability | PASS | `d1315a1` | Full local validation PASS; GitHub `ci` PASS; GitHub `security` PASS after retry root-cause fix for `None + last_error` backend responses | `engine/src/openclaw_super_advisor/market_data/collector.py`, `engine/src/openclaw_super_advisor/market_data/fake_backend.py`, `engine/tests/unit/test_market_data_reliability.py` | Start WP-06 simulated soak coverage |
 | WP-04 Tick and Bar Integrity Failure Injection | PASS | `d1315a1` | Full local validation PASS; GitHub `ci` PASS; GitHub `security` PASS with same-timestamp tick collision coverage and integrity failure injection tests | `engine/src/openclaw_super_advisor/market_data/quality.py`, `engine/tests/unit/test_market_data_reliability.py` | Start WP-06 simulated soak coverage |
 | WP-05 Storage Crash and Recovery | PASS | `d1315a1` | Full local validation PASS; GitHub `ci` PASS; GitHub `security` PASS with SQLite rollback, atomic cleanup, and Parquet validation failure coverage | `engine/tests/unit/test_market_data_reliability.py`, `engine/src/openclaw_super_advisor/market_data/collector.py` | Start WP-06 simulated soak coverage |
-| WP-06 Long-running Soak Test | NOT_STARTED | `""` | NOT_RUN | `docs/**`, `engine/tests/**` | Build deterministic simulated soak test |
+| WP-06 Long-running Soak Test | IN_PROGRESS | `""` | Full local validation PASS with deterministic 24-hour fake-backend soak metrics; live soak `NOT_RUN` | `engine/tests/unit/test_market_data_reliability.py`, `docs/P2_1_SOAK_REPORT.md`, `docs/P2_1_SOAK_REPORT.json` | Commit and push simulated soak evidence |
 | WP-07 Full Post-Patch Audit | NOT_STARTED | `""` | NOT_RUN | `docs/P2_1_POST_PATCH_AUDIT.md` | Run repository-wide hardening audit |
 | WP-08 Phase Closure | NOT_STARTED | `""` | NOT_RUN | `docs/P2_1_TEST_RESULTS.json`, `docs/P2_1_SECURITY_REPORT.json`, `docs/P2_1_REPORT_PROVENANCE.json` | Run full validation suite and close phase |
 
@@ -116,6 +116,20 @@
    - commit_sha: `d1315a1e69559c4495b1c5b7ef3441b2916cc4ca`
    - evidence_file: `docs/IMPLEMENTATION_LEDGER.md`
    - tool_version: `gh 2.89.0`
+13. WP-03/WP-04/WP-05 status commit workflow confirmation
+   - command: `gh run list --commit 80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906 --limit 10`
+   - timestamp_utc: `2026-06-13T14:39:53Z`
+   - exit_code: `0`
+   - commit_sha: `80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906`
+   - evidence_file: `docs/IMPLEMENTATION_LEDGER.md`
+   - tool_version: `gh 2.89.0`
+14. WP-06 simulated soak validation
+   - command: `python -m pip check ; python -m ruff check . ; python -m mypy engine\src ; python -m pytest -m "not live" ; python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json ; openclaw-advisor validate-skills --strict ; openclaw-advisor render-config --validate --strict ; openclaw-advisor security-scan --include-history --strict ; python -m pip_audit ; python -c "from engine.tests.unit.test_market_data_reliability import run_simulated_24h_soak; ..."`
+   - timestamp_utc: `2026-06-13T14:39:53Z`
+   - exit_code: `0`
+   - commit_sha: `80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906`
+   - evidence_file: `docs/P2_1_SOAK_REPORT.md`
+   - tool_version: `Python 3.12.10`
 
 ## Notes
 
@@ -125,5 +139,7 @@
 - Latest observed GitHub workflows for `0940182` were `ci=success` and `security=success` with the artifact warning removed.
 - Latest observed GitHub workflows for `7032f5b` were `ci=success` and `security=success`.
 - Latest observed GitHub workflows for `d1315a1` were `ci=success` and `security=success`.
+- Latest observed GitHub workflows for `80ebe31` were `ci=success` and `security=success`.
 - Live MT5 verification is blocked in the current environment because MT5 is disabled and unavailable.
 - WP-03/WP-04/WP-05 reliability hardening is now committed, pushed, and GitHub-validated.
+- WP-06 simulated soak coverage is locally validated with recorded metrics and awaits its logical commit/push checkpoint.

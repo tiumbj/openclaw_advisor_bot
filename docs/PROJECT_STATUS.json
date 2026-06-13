@@ -5,9 +5,9 @@
   "phase": "P2.1",
   "phase_status": "IN_PROGRESS",
   "current_work_package": "WP-06",
-  "updated_at_utc": "2026-06-13T14:33:39Z",
-  "local_commit": "d1315a1e69559c4495b1c5b7ef3441b2916cc4ca",
-  "remote_commit": "d1315a1e69559c4495b1c5b7ef3441b2916cc4ca",
+  "updated_at_utc": "2026-06-13T14:39:53Z",
+  "local_commit": "80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906",
+  "remote_commit": "80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906",
   "local_remote_aligned": true,
   "working_tree_clean": false,
   "ci_status": "PASS",
@@ -112,11 +112,17 @@
     {
       "id": "WP-06",
       "name": "Long-running Soak Test",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "commit": "",
-      "tests": [],
-      "evidence": [],
-      "next_action": "Create deterministic simulated soak coverage."
+      "tests": [
+        "wp06_simulated_soak_validation"
+      ],
+      "evidence": [
+        "engine/tests/unit/test_market_data_reliability.py",
+        "docs/P2_1_SOAK_REPORT.md",
+        "docs/P2_1_SOAK_REPORT.json"
+      ],
+      "next_action": "Commit and push simulated soak evidence."
     },
     {
       "id": "WP-07",
@@ -263,6 +269,26 @@
       "commit_sha": "d1315a1e69559c4495b1c5b7ef3441b2916cc4ca",
       "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
       "tool_version": "gh 2.89.0"
+    },
+    {
+      "name": "wp03_wp05_status_commit_workflow_confirmation",
+      "status": "PASS",
+      "command": "gh run list --commit 80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906 --limit 10",
+      "timestamp_utc": "2026-06-13T14:39:53Z",
+      "exit_code": 0,
+      "commit_sha": "80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906",
+      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
+      "tool_version": "gh 2.89.0"
+    },
+    {
+      "name": "wp06_simulated_soak_validation",
+      "status": "PASS",
+      "command": "python -m pip check; python -m ruff check .; python -m mypy engine\\\\src; python -m pytest -m \"not live\"; python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json; openclaw-advisor validate-skills --strict; openclaw-advisor render-config --validate --strict; openclaw-advisor security-scan --include-history --strict; python -m pip_audit; python -c \"from engine.tests.unit.test_market_data_reliability import run_simulated_24h_soak; ...\"",
+      "timestamp_utc": "2026-06-13T14:39:53Z",
+      "exit_code": 0,
+      "commit_sha": "80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906",
+      "evidence_file": "docs/P2_1_SOAK_REPORT.md",
+      "tool_version": "Python 3.12.10"
     }
   ],
   "blockers": [
@@ -288,11 +314,13 @@
       "required_action": "Enable MT5 and provide a live terminal/session environment to run WP-02 later."
     }
   ],
-  "next_action": "Start WP-06 deterministic simulated soak coverage while keeping the unresolved metadata-version drift tracked for later closure.",
+  "next_action": "Commit and push the validated WP-06 simulated soak package, then verify GitHub Actions on the new commit.",
   "evidence_files": [
     "docs/P2_1_BASELINE_AUDIT.md",
     "docs/P2_1_LIVE_MT5_REPORT.md",
     "docs/P2_1_LIVE_MT5_REPORT.json",
+    "docs/P2_1_SOAK_REPORT.md",
+    "docs/P2_1_SOAK_REPORT.json",
     "docs/PROJECT_STATUS.md",
     "docs/PROJECT_STATUS.json",
     "docs/IMPLEMENTATION_LEDGER.md",
