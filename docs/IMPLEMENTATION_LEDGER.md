@@ -164,3 +164,52 @@
   - `Package/workspace metadata still remain at 1.2.0 / P2.`
   - `Remote confirmation of upload-artifact v7 is still pending.`
 - Next action: `Commit and push the v7 remediation, then verify GitHub Actions annotations are clean.`
+
+## Entry 0007
+
+- Timestamp UTC: `2026-06-13T14:25:04Z`
+- Phase: `P2.1`
+- Work Package: `WP-01`
+- Operation: `Verified that the v7 remediation commit passed on GitHub Actions without the prior upload-artifact Node20 deprecation warning.`
+- Files changed:
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `gh run watch 27469376996 --exit-status`
+  - `gh run watch 27469377019 --exit-status`
+  - `gh run list --commit 0940182d7b14b44bd72dbd353f315d796c3c2765 --limit 10`
+- Result: `PASS`
+- Commit: `0940182d7b14b44bd72dbd353f315d796c3c2765`
+- Remote push: `PASS`
+- CI result: `PASS`
+- Security result: `PASS`
+- Known defects:
+  - `Package/workspace metadata still remain at 1.2.0 / P2.`
+- Next action: `Start WP-02 MT5 readiness check.`
+
+## Entry 0008
+
+- Timestamp UTC: `2026-06-13T14:25:04Z`
+- Phase: `P2.1`
+- Work Package: `WP-02`
+- Operation: `Ran a redacted MT5 readiness probe and determined that live verification is blocked in the current environment.`
+- Files changed:
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+  - `docs/P2_1_LIVE_MT5_REPORT.md`
+  - `docs/P2_1_LIVE_MT5_REPORT.json`
+- Tests run:
+  - `python -c "load_settings(...)" redacted MT5 readiness probe`
+- Result: `BLOCKED`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `PASS`
+- Security result: `PASS`
+- Known defects:
+  - `MT5_ENABLED=false`
+  - `MetaTrader5 package not installed`
+  - `MT5 terminal path not configured`
+  - `MT5 server/login/password not configured`
+- Next action: `Commit the blocked MT5 evidence and continue with WP-03 reconnect hardening.`

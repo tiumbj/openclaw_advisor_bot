@@ -4,21 +4,21 @@
   "package_version": "1.2.1",
   "phase": "P2.1",
   "phase_status": "IN_PROGRESS",
-  "current_work_package": "WP-01",
-  "updated_at_utc": "2026-06-13T14:22:43Z",
-  "local_commit": "1f0ea3f08d2b3686f57192f2461acaf325617224",
-  "remote_commit": "1f0ea3f08d2b3686f57192f2461acaf325617224",
+  "current_work_package": "WP-02",
+  "updated_at_utc": "2026-06-13T14:25:04Z",
+  "local_commit": "0940182d7b14b44bd72dbd353f315d796c3c2765",
+  "remote_commit": "0940182d7b14b44bd72dbd353f315d796c3c2765",
   "local_remote_aligned": true,
   "working_tree_clean": false,
-  "ci_status": "NOT_RUN",
-  "security_status": "NOT_RUN",
-  "live_mt5_status": "NOT_RUN",
+  "ci_status": "PASS",
+  "security_status": "PASS",
+  "live_mt5_status": "BLOCKED",
   "work_packages": [
     {
       "id": "WP-00",
       "name": "Repository and Report Bootstrap",
       "status": "PASS",
-      "commit": "1f0ea3f08d2b3686f57192f2461acaf325617224",
+      "commit": "0940182d7b14b44bd72dbd353f315d796c3c2765",
       "tests": [
         "baseline_git_audit",
         "remote_alignment_check",
@@ -32,32 +32,35 @@
     {
       "id": "WP-01",
       "name": "GitHub Actions Future Compatibility",
-      "status": "IN_PROGRESS",
-      "commit": "eca0c72b7dfc38c541636324e46298df21ac3124",
+      "status": "PASS",
+      "commit": "0940182d7b14b44bd72dbd353f315d796c3c2765",
       "tests": [
         "official_action_release_audit",
         "official_runner_guidance_audit",
         "wp01_local_validation",
         "wp01_github_warning_confirmation",
-        "wp01_artifact_v7_validation"
+        "wp01_artifact_v7_validation",
+        "wp01_github_clean_confirmation"
       ],
       "evidence": [
         ".github/workflows/ci.yml",
         ".github/workflows/security.yml"
       ],
-      "next_action": "Commit and push final upload-artifact v7 remediation."
+      "next_action": "Start WP-02 readiness check."
     },
     {
       "id": "WP-02",
       "name": "Live MT5 Read-only Verification",
-      "status": "NOT_STARTED",
-      "commit": "",
-      "tests": [],
+      "status": "BLOCKED",
+      "commit": "0940182d7b14b44bd72dbd353f315d796c3c2765",
+      "tests": [
+        "wp02_redacted_mt5_readiness"
+      ],
       "evidence": [
         "docs/P2_1_LIVE_MT5_REPORT.md",
         "docs/P2_1_LIVE_MT5_REPORT.json"
       ],
-      "next_action": "Check MT5 readiness after WP-01."
+      "next_action": "Continue with WP-03 fake-backend reliability hardening."
     },
     {
       "id": "WP-03",
@@ -190,6 +193,26 @@
       "commit_sha": "1f0ea3f08d2b3686f57192f2461acaf325617224",
       "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
       "tool_version": "Python 3.12.10"
+    },
+    {
+      "name": "wp01_github_clean_confirmation",
+      "status": "PASS",
+      "command": "gh run watch 27469376996 --exit-status; gh run watch 27469377019 --exit-status; gh run list --commit 0940182d7b14b44bd72dbd353f315d796c3c2765 --limit 10",
+      "timestamp_utc": "2026-06-13T14:25:04Z",
+      "exit_code": 0,
+      "commit_sha": "0940182d7b14b44bd72dbd353f315d796c3c2765",
+      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
+      "tool_version": "gh 2.89.0"
+    },
+    {
+      "name": "wp02_redacted_mt5_readiness",
+      "status": "BLOCKED",
+      "command": "python -c \"load_settings(...)\" redacted MT5 readiness probe",
+      "timestamp_utc": "2026-06-13T14:25:04Z",
+      "exit_code": 0,
+      "commit_sha": "0940182d7b14b44bd72dbd353f315d796c3c2765",
+      "evidence_file": "docs/P2_1_LIVE_MT5_REPORT.md",
+      "tool_version": "Python 3.12.10"
     }
   ],
   "blockers": [
@@ -202,15 +225,24 @@
     },
     {
       "id": "workflow-compatibility-drift",
-      "status": "IN_PROGRESS",
-      "summary": "The first WP-01 workflow commit passed on GitHub but exposed a residual Node20 deprecation warning from actions/upload-artifact@v5. A v7 remediation has been applied locally and validated, but remote confirmation is still pending.",
-      "redacted_error": "Residual compatibility warning only; no secret exposure.",
-      "required_action": "Push the upload-artifact v7 remediation and confirm the warning is gone in GitHub Actions."
+      "status": "PASS",
+      "summary": "Workflows now use Node24-compatible actions, the Windows 2025 VS2026 test image, pip caching, minimal permissions, and artifact upload without the prior Node20 warning.",
+      "redacted_error": "None.",
+      "required_action": "No further action in WP-01."
+    },
+    {
+      "id": "wp02-live-mt5-unavailable",
+      "status": "BLOCKED",
+      "summary": "Live MT5 verification cannot run in the current environment because MT5 is disabled and the MetaTrader5 package, terminal path, and session credentials are unavailable.",
+      "redacted_error": "MT5 readiness probe returned disabled/unavailable booleans only.",
+      "required_action": "Enable MT5 and provide a live terminal/session environment to run WP-02 later."
     }
   ],
-  "next_action": "Commit and push the upload-artifact v7 remediation, then verify ci/security workflow results.",
+  "next_action": "Publish the blocked live MT5 evidence and continue with WP-03 reconnect reliability hardening.",
   "evidence_files": [
     "docs/P2_1_BASELINE_AUDIT.md",
+    "docs/P2_1_LIVE_MT5_REPORT.md",
+    "docs/P2_1_LIVE_MT5_REPORT.json",
     "docs/PROJECT_STATUS.md",
     "docs/PROJECT_STATUS.json",
     "docs/IMPLEMENTATION_LEDGER.md"

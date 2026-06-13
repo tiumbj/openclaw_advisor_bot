@@ -1,0 +1,23 @@
+{
+  "schema_version": "p2.1-live-mt5-report-v1",
+  "timestamp_utc": "2026-06-13T14:25:04Z",
+  "status": "BLOCKED",
+  "checks": {
+    "mt5_enabled": false,
+    "use_existing_session": true,
+    "terminal_path_present": false,
+    "terminal_path_exists": false,
+    "metatrader5_installed": false,
+    "server_present": false,
+    "login_present": false,
+    "password_present": false
+  },
+  "reason": "Live MT5 verification was not run because the local environment is not ready for read-only terminal access.",
+  "required_action": [
+    "Enable MT5 in the runtime environment.",
+    "Install the MetaTrader5 package on the host.",
+    "Configure a valid MT5 terminal path or live existing session.",
+    "Provide a safe live session suitable for read-only verification."
+  ],
+  "secret_redaction": "No credential values were emitted."
+}

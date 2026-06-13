@@ -3,26 +3,26 @@
 - Project: `openclaw_advisor_bot`
 - Current package version: `1.2.0` baseline code, target `1.2.1`
 - Current phase: `P2.1`
-- Current work package: `WP-01`
+- Current work package: `WP-02`
 - Overall phase status: `IN_PROGRESS`
-- Last update UTC: `2026-06-13T14:22:43Z`
-- Last local commit: `1f0ea3f08d2b3686f57192f2461acaf325617224`
-- Last remote commit: `1f0ea3f08d2b3686f57192f2461acaf325617224`
+- Last update UTC: `2026-06-13T14:25:04Z`
+- Last local commit: `0940182d7b14b44bd72dbd353f315d796c3c2765`
+- Last remote commit: `0940182d7b14b44bd72dbd353f315d796c3c2765`
 - Local/remote alignment: `PASS`
 - Working tree status: `DIRTY`
-- CI status: `NOT_RUN`
-- Security workflow status: `NOT_RUN`
-- Live MT5 status: `NOT_RUN`
-- Latest blocker: `WP-01 remediation for upload-artifact Node24 compatibility is locally validated but not yet confirmed on GitHub Actions.`
-- Next action: `Commit and push the upload-artifact v7 fix, then verify ci/security runs for the new commit.`
+- CI status: `PASS`
+- Security workflow status: `PASS`
+- Live MT5 status: `BLOCKED`
+- Latest blocker: `Live MT5 verification cannot run because MT5 is disabled and the MetaTrader5 package/terminal/session settings are unavailable locally.`
+- Next action: `Publish the blocked live MT5 evidence, then continue with WP-03 reconnect reliability hardening using fake backend coverage.`
 
 ## Progress Matrix
 
 | Work Package | Status | Commit | Tests | Evidence | Next Action |
 | ------------ | ------ | ------ | ----- | -------- | ----------- |
 | WP-00 Repository and Report Bootstrap | PASS | `eca0c72` | Baseline git/remote/actions audit observed; GitHub Actions passed | `docs/P2_1_BASELINE_AUDIT.md` | Start WP-01 workflow hardening |
-| WP-01 GitHub Actions Future Compatibility | IN_PROGRESS | `1f0ea3f` | Remote workflows PASS with residual Node20 warning; remediation locally PASS with `upload-artifact@v7` | `.github/workflows/ci.yml`, `.github/workflows/security.yml`, `docs/IMPLEMENTATION_LEDGER.md` | Commit and push final WP-01 remediation |
-| WP-02 Live MT5 Read-only Verification | NOT_STARTED | `""` | NOT_RUN | `docs/P2_1_LIVE_MT5_REPORT.md`, `docs/P2_1_LIVE_MT5_REPORT.json` | Check MT5 readiness after WP-01 |
+| WP-01 GitHub Actions Future Compatibility | PASS | `0940182` | Local validation PASS; GitHub `ci` PASS; GitHub `security` PASS; Node20 warning removed | `.github/workflows/ci.yml`, `.github/workflows/security.yml`, `docs/IMPLEMENTATION_LEDGER.md` | Start WP-02 readiness check |
+| WP-02 Live MT5 Read-only Verification | BLOCKED | `0940182` | Redacted readiness check shows MT5 disabled and unavailable | `docs/P2_1_LIVE_MT5_REPORT.md`, `docs/P2_1_LIVE_MT5_REPORT.json` | Continue with WP-03 fake-backend reliability hardening |
 | WP-03 Disconnect and Reconnect Reliability | NOT_STARTED | `""` | NOT_RUN | `engine/tests/**` | Add failure-injection reconnect tests |
 | WP-04 Tick and Bar Integrity Failure Injection | NOT_STARTED | `""` | NOT_RUN | `engine/tests/**` | Expand integrity failure coverage |
 | WP-05 Storage Crash and Recovery | NOT_STARTED | `""` | NOT_RUN | `engine/tests/**` | Add SQLite/Parquet crash recovery tests |
@@ -81,11 +81,25 @@
    - commit_sha: `1f0ea3f08d2b3686f57192f2461acaf325617224`
    - evidence_file: `docs/IMPLEMENTATION_LEDGER.md`
    - tool_version: `Python 3.12.10`
+8. WP-01 GitHub clean workflow confirmation
+   - command: `gh run watch 27469376996 --exit-status; gh run watch 27469377019 --exit-status; gh run list --commit 0940182d7b14b44bd72dbd353f315d796c3c2765 --limit 10`
+   - timestamp_utc: `2026-06-13T14:25:04Z`
+   - exit_code: `0`
+   - commit_sha: `0940182d7b14b44bd72dbd353f315d796c3c2765`
+   - evidence_file: `docs/IMPLEMENTATION_LEDGER.md`
+   - tool_version: `gh 2.89.0`
+9. WP-02 redacted MT5 readiness check
+   - command: `python -c "load_settings(...)"` redacted readiness probe
+   - timestamp_utc: `2026-06-13T14:25:04Z`
+   - exit_code: `0`
+   - commit_sha: `0940182d7b14b44bd72dbd353f315d796c3c2765`
+   - evidence_file: `docs/P2_1_LIVE_MT5_REPORT.md`
+   - tool_version: `Python 3.12.10`
 
 ## Notes
 
 - Baseline code metadata is still `1.2.0 / P2`.
 - Latest observed GitHub workflows for `eca0c72` were `ci=success` and `security=success`.
 - Latest observed GitHub workflows for `1f0ea3f` were `ci=success` and `security=success`, but they still emitted a Node20 deprecation warning for `actions/upload-artifact@v5`.
-- WP-01 local validation passed against the updated workflow command set, and the artifact action has been advanced to `actions/upload-artifact@v7` locally.
-- No live MT5 verification has been performed in P2.1 yet.
+- Latest observed GitHub workflows for `0940182` were `ci=success` and `security=success` with the artifact warning removed.
+- Live MT5 verification is blocked in the current environment because MT5 is disabled and unavailable.
