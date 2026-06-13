@@ -1,12 +1,12 @@
 ---
 name: super-potential-review
 description: Review Python-produced candidates without creating thresholds or changing scores.
-version: 1.1.1
+version: 1.2.0
 ---
 
 # super-potential-review
 
-Version: 1.1.1
+Version: 1.2.0
 
 Purpose: review a Python-produced candidate tagged for later SUPER_POTENTIAL handling.
 

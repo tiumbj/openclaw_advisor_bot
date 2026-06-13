@@ -95,9 +95,10 @@ def test_config_helpers_and_validation_errors(sample_project: Path) -> None:
 
     re_match = re.match(r'"{{([A-Z0-9_]+)}}"', '"{{OPENCLAW_HOME}}"')
     assert re_match is not None
-    assert json.loads(
-        _replace_string_placeholder(re_match, {"OPENCLAW_HOME": "C:\\Demo"})
-    ) == "C:\\Demo"
+    assert (
+        json.loads(_replace_string_placeholder(re_match, {"OPENCLAW_HOME": "C:\\Demo"}))
+        == "C:\\Demo"
+    )
 
     raw_match = re.match(r"\{\{([A-Z0-9_]+)\}\}", "{{OPENCLAW_GATEWAY_PORT}}")
     assert raw_match is not None

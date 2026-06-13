@@ -195,6 +195,36 @@ def _template_text() -> str:
           }
         ]
       },
+      "marketData": {
+        "backend": {
+          "kind": "mt5",
+          "mode": "readonly"
+        },
+        "symbols": [
+          {
+            "canonical": "XAUUSD",
+            "aliases": ["XAUUSD", "GOLD", "XAUUSD."]
+          },
+          {
+            "canonical": "DXY",
+            "aliases": ["DXY", "USDX"]
+          }
+        ],
+        "timeframes": ["M1", "M5", "M15", "H1", "H4", "D1"],
+        "storage": {
+          "baseDir": "{{ADVISOR_DATA_DIR}}",
+          "sqlitePath": "market-data\\\\market-data.db",
+          "parquetDir": "market-data\\\\parquet"
+        },
+        "collection": {
+          "pollSeconds": 30,
+          "tickLookbackSeconds": 120,
+          "barLookbackCount": 500,
+          "freshnessThresholdSeconds": 180,
+          "retryMaxAttempts": 3,
+          "retryBackoffSeconds": 2
+        }
+      },
       "tools": {
         "allow": [
           "read",

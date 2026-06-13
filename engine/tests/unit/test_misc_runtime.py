@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from openclaw_super_advisor._version import __version__
 from openclaw_super_advisor.bridge import bridge_contract_summary
 from openclaw_super_advisor.logging_setup import JsonFormatter, configure_logging
 from openclaw_super_advisor.paths import build_paths
@@ -19,7 +20,7 @@ def test_bridge_logging_and_main(monkeypatch: pytest.MonkeyPatch, sample_project
     assert "schema_version" in summary["required_fields"]
 
     schema = EvidencePacketSchema()
-    envelope = BridgeEnvelope("1.1.1", "evt", "2026-01-01T00:00:00Z", True, False)
+    envelope = BridgeEnvelope(__version__, "evt", "2026-01-01T00:00:00Z", True, False)
     assert schema.execution_allowed is False
     assert envelope.event_id == "evt"
 

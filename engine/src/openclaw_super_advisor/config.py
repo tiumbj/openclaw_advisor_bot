@@ -95,6 +95,15 @@ def _require_equal(
         issues.append(ConfigValidationIssue(path, f"expected {expected!r}, got {actual!r}"))
 
 
+def _require_positive_int(
+    issues: list[ConfigValidationIssue],
+    actual: object,
+    path: str,
+) -> None:
+    if not isinstance(actual, int) or actual <= 0:
+        issues.append(ConfigValidationIssue(path, f"expected positive integer, got {actual!r}"))
+
+
 def validate_rendered_config(
     config: dict[str, object],
     paths: ProjectPaths,
@@ -135,8 +144,97 @@ def validate_rendered_config(
             _as_object(agent.get("tools"), "agents.list[0].tools"), "agents.list[0].tools", issues
         )
 
+    _validate_market_data(_as_object(config.get("marketData"), "marketData"), issues)
     _validate_tools(_as_object(config.get("tools"), "tools"), "tools", issues)
     return ConfigValidationReport(valid=not issues, issues=tuple(issues))
+
+
+def _validate_market_data(
+    market_data: dict[str, object],
+    issues: list[ConfigValidationIssue],
+) -> None:
+    backend = _as_object(market_data.get("backend"), "marketData.backend")
+    _require_equal(issues, backend.get("kind"), "mt5", "marketData.backend.kind")
+    _require_equal(issues, backend.get("mode"), "readonly", "marketData.backend.mode")
+
+    symbols = _as_list(market_data.get("symbols"), "marketData.symbols")
+    if not symbols:
+        issues.append(ConfigValidationIssue("marketData.symbols", "expected at least one symbol"))
+    for index, item in enumerate(symbols):
+        symbol = _as_object(item, f"marketData.symbols[{index}]")
+        canonical = symbol.get("canonical")
+        aliases = symbol.get("aliases")
+        if not isinstance(canonical, str) or not canonical:
+            issues.append(
+                ConfigValidationIssue(
+                    f"marketData.symbols[{index}].canonical",
+                    "expected non-empty canonical symbol",
+                )
+            )
+        alias_list = aliases if isinstance(aliases, list) else None
+        if not alias_list or not all(isinstance(alias, str) and alias for alias in alias_list):
+            issues.append(
+                ConfigValidationIssue(
+                    f"marketData.symbols[{index}].aliases",
+                    "expected non-empty string alias list",
+                )
+            )
+
+    timeframes = _as_list(market_data.get("timeframes"), "marketData.timeframes")
+    supported = {"M1", "M5", "M15", "H1", "H4", "D1"}
+    has_supported_timeframes = all(
+        isinstance(item, str) and item in supported for item in timeframes
+    )
+    if not timeframes or not has_supported_timeframes:
+        issues.append(
+            ConfigValidationIssue(
+                "marketData.timeframes",
+                f"expected supported timeframe list from {sorted(supported)!r}",
+            )
+        )
+
+    storage = _as_object(market_data.get("storage"), "marketData.storage")
+    for path_name in ("baseDir", "sqlitePath", "parquetDir"):
+        value = storage.get(path_name)
+        if not isinstance(value, str) or not value:
+            issues.append(
+                ConfigValidationIssue(
+                    f"marketData.storage.{path_name}",
+                    "expected non-empty string path",
+                )
+            )
+
+    collection = _as_object(market_data.get("collection"), "marketData.collection")
+    _require_positive_int(
+        issues,
+        collection.get("pollSeconds"),
+        "marketData.collection.pollSeconds",
+    )
+    _require_positive_int(
+        issues,
+        collection.get("tickLookbackSeconds"),
+        "marketData.collection.tickLookbackSeconds",
+    )
+    _require_positive_int(
+        issues,
+        collection.get("barLookbackCount"),
+        "marketData.collection.barLookbackCount",
+    )
+    _require_positive_int(
+        issues,
+        collection.get("freshnessThresholdSeconds"),
+        "marketData.collection.freshnessThresholdSeconds",
+    )
+    _require_positive_int(
+        issues,
+        collection.get("retryMaxAttempts"),
+        "marketData.collection.retryMaxAttempts",
+    )
+    _require_positive_int(
+        issues,
+        collection.get("retryBackoffSeconds"),
+        "marketData.collection.retryBackoffSeconds",
+    )
 
 
 def _validate_tools(

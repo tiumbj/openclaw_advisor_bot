@@ -1,58 +1,89 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "OpenClaw Advisor Render Settings 1.1.1",
+  "title": "OpenClaw Advisor Render Settings 1.2.0",
   "type": "object",
-  "required": [
-    "paths",
-    "safety",
-    "gateway",
-    "skills"
-  ],
+  "required": ["gateway", "skills", "agents", "marketData", "tools"],
   "properties": {
-    "paths": {
-      "type": "object",
-      "required": [
-        "home",
-        "state_dir",
-        "config_path",
-        "workspace_dir"
-      ],
-      "properties": {
-        "home": { "type": "string" },
-        "state_dir": { "type": "string" },
-        "config_path": { "type": "string" },
-        "workspace_dir": { "type": "string" }
-      }
-    },
-    "safety": {
-      "type": "object",
-      "required": [
-        "advisor_only",
-        "execution_allowed",
-        "allow_order_send"
-      ],
-      "properties": {
-        "advisor_only": { "const": true },
-        "execution_allowed": { "const": false },
-        "allow_order_send": { "const": false }
-      }
-    },
     "gateway": {
       "type": "object",
-      "required": [
-        "host",
-        "port",
-        "hooks_path"
-      ],
+      "required": ["mode", "bind", "port"],
       "properties": {
-        "host": { "type": "string" },
-        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
-        "hooks_path": { "type": "string" }
+        "mode": { "const": "local" },
+        "bind": { "const": "loopback" },
+        "port": { "type": "string" }
       }
     },
     "skills": {
       "type": "array",
       "items": { "type": "string" }
+    },
+    "agents": {
+      "type": "object"
+    },
+    "marketData": {
+      "type": "object",
+      "required": ["backend", "symbols", "timeframes", "storage", "collection"],
+      "properties": {
+        "backend": {
+          "type": "object",
+          "required": ["kind", "mode"],
+          "properties": {
+            "kind": { "const": "mt5" },
+            "mode": { "const": "readonly" }
+          }
+        },
+        "symbols": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["canonical", "aliases"],
+            "properties": {
+              "canonical": { "type": "string" },
+              "aliases": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "timeframes": {
+          "type": "array",
+          "items": {
+            "enum": ["M1", "M5", "M15", "M30", "H1", "H4", "D1"]
+          }
+        },
+        "storage": {
+          "type": "object",
+          "required": ["baseDir", "sqlitePath", "parquetDir"],
+          "properties": {
+            "baseDir": { "type": "string" },
+            "sqlitePath": { "type": "string" },
+            "parquetDir": { "type": "string" }
+          }
+        },
+        "collection": {
+          "type": "object",
+          "required": [
+            "pollSeconds",
+            "tickLookbackSeconds",
+            "barLookbackCount",
+            "freshnessThresholdSeconds",
+            "retryMaxAttempts",
+            "retryBackoffSeconds"
+          ],
+          "properties": {
+            "pollSeconds": { "type": "integer", "minimum": 1 },
+            "tickLookbackSeconds": { "type": "integer", "minimum": 1 },
+            "barLookbackCount": { "type": "integer", "minimum": 1 },
+            "freshnessThresholdSeconds": { "type": "integer", "minimum": 1 },
+            "retryMaxAttempts": { "type": "integer", "minimum": 1 },
+            "retryBackoffSeconds": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "tools": {
+      "type": "object"
     }
   }
 }

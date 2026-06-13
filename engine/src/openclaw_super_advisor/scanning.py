@@ -207,11 +207,7 @@ def scan_ast(paths: ProjectPaths) -> list[ScanFinding]:
                             module_name,
                         )
                     )
-            if (
-                isinstance(node.func, ast.Name)
-                and node.func.id == "__import__"
-                and node.args
-            ):
+            if isinstance(node.func, ast.Name) and node.func.id == "__import__" and node.args:
                 module_name = _resolve_string(node.args[0], constants)
                 if module_name is not None:
                     findings.append(
@@ -404,11 +400,7 @@ def scan_ast_for_file(path: Path, tree: ast.AST | None = None) -> list[ScanFindi
                     node.func.attr,
                 )
             )
-        if (
-            isinstance(node.func, ast.Name)
-            and node.func.id == "getattr"
-            and len(node.args) >= 2
-        ):
+        if isinstance(node.func, ast.Name) and node.func.id == "getattr" and len(node.args) >= 2:
             name = _resolve_string(node.args[1], constants)
             if name in FORBIDDEN_SYMBOLS:
                 findings.append(

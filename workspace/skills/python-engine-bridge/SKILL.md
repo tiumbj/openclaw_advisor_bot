@@ -1,12 +1,12 @@
 ---
 name: python-engine-bridge
 description: Define the future read-only contract between Python evidence packets and OpenClaw.
-version: 1.1.1
+version: 1.2.0
 ---
 
 # python-engine-bridge
 
-Version: 1.1.1
+Version: 1.2.0
 
 Purpose: define the future read-only bridge between Python and OpenClaw.
 

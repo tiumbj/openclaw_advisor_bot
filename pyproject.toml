@@ -11,6 +11,7 @@ requires-python = ">=3.12,<3.13"
 license = { text = "Proprietary" }
 authors = [{ name = "Teera" }]
 dependencies = [
+  "pyarrow>=23.0.1,<24",
   "PyYAML>=6.0.1,<7",
 ]
 
@@ -22,6 +23,9 @@ dev = [
   "pytest-cov>=7.0,<8",
   "ruff>=0.13,<0.14",
   "types-PyYAML>=6.0.12,<7",
+]
+mt5 = [
+  "MetaTrader5>=5.0; sys_platform == 'win32'",
 ]
 
 [project.scripts]
@@ -38,11 +42,13 @@ version = { attr = "openclaw_super_advisor._version.__version__" }
 
 [tool.pytest.ini_options]
 testpaths = ["engine/tests"]
-addopts = "-ra --strict-markers --cov=openclaw_super_advisor --cov-branch --cov-report=term-missing --cov-report=json:docs/P1_1_COVERAGE.json"
+addopts = "-ra --strict-markers --cov=openclaw_super_advisor --cov-branch --cov-report=term-missing --cov-report=json:docs/P2_COVERAGE.json"
 markers = [
   "live: requires local services, credentials, or network",
   "security: security boundary test",
   "integration: multi-component local integration test",
+  "windows: requires Windows platform behavior",
+  "mt5: requires MetaTrader5 terminal integration",
 ]
 
 [tool.coverage.run]
@@ -55,7 +61,7 @@ show_missing = true
 skip_covered = false
 
 [tool.coverage.json]
-output = "docs/P1_1_COVERAGE.json"
+output = "docs/P2_COVERAGE.json"
 
 [tool.ruff]
 line-length = 100
@@ -81,3 +87,8 @@ packages = ["openclaw_super_advisor"]
 strict = true
 warn_unreachable = true
 show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["pyarrow", "pyarrow.*", "MetaTrader5"]
+ignore_missing_imports = true
+ignore_errors = true

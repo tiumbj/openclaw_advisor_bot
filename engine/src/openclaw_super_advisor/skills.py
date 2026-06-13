@@ -63,9 +63,7 @@ def _parse_skill(path: Path) -> SkillDocument:
         or not isinstance(description, str)
         or not isinstance(version, str)
     ):
-        raise ValueError(
-            f"{path} frontmatter must define string name, description, and version"
-        )
+        raise ValueError(f"{path} frontmatter must define string name, description, and version")
     return SkillDocument(name=name, description=description, version=version, path=path, body=body)
 
 
