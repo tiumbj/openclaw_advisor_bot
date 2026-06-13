@@ -5,16 +5,16 @@
 - Current phase: `P2.1`
 - Current work package: `WP-06`
 - Overall phase status: `IN_PROGRESS`
-- Last update UTC: `2026-06-13T14:39:53Z`
-- Last local commit: `80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906`
-- Last remote commit: `80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906`
+- Last update UTC: `2026-06-13T14:44:48Z`
+- Last local commit: `1fe8070a7f4b23a6fc4a5c15bbd58f926c471767`
+- Last remote commit: `1fe8070a7f4b23a6fc4a5c15bbd58f926c471767`
 - Local/remote alignment: `PASS`
 - Working tree status: `DIRTY`
-- CI status: `PASS`
+- CI status: `FAIL`
 - Security workflow status: `PASS`
 - Live MT5 status: `BLOCKED`
-- Latest blocker: `Live MT5 verification remains blocked because MT5 is disabled and the MetaTrader5 package/terminal/session settings are unavailable locally.`
-- Next action: `Commit and push the validated WP-06 simulated soak package, then verify GitHub Actions on the new commit.`
+- Latest blocker: `GitHub ci failed for WP-06 because the soak test used a local-only max loop latency threshold that was too strict under coverage instrumentation on the hosted runner.`
+- Next action: `Commit and push the WP-06 latency-threshold fix, then verify GitHub Actions on the new commit.`
 
 ## Progress Matrix
 
@@ -26,7 +26,7 @@
 | WP-03 Disconnect and Reconnect Reliability | PASS | `d1315a1` | Full local validation PASS; GitHub `ci` PASS; GitHub `security` PASS after retry root-cause fix for `None + last_error` backend responses | `engine/src/openclaw_super_advisor/market_data/collector.py`, `engine/src/openclaw_super_advisor/market_data/fake_backend.py`, `engine/tests/unit/test_market_data_reliability.py` | Start WP-06 simulated soak coverage |
 | WP-04 Tick and Bar Integrity Failure Injection | PASS | `d1315a1` | Full local validation PASS; GitHub `ci` PASS; GitHub `security` PASS with same-timestamp tick collision coverage and integrity failure injection tests | `engine/src/openclaw_super_advisor/market_data/quality.py`, `engine/tests/unit/test_market_data_reliability.py` | Start WP-06 simulated soak coverage |
 | WP-05 Storage Crash and Recovery | PASS | `d1315a1` | Full local validation PASS; GitHub `ci` PASS; GitHub `security` PASS with SQLite rollback, atomic cleanup, and Parquet validation failure coverage | `engine/tests/unit/test_market_data_reliability.py`, `engine/src/openclaw_super_advisor/market_data/collector.py` | Start WP-06 simulated soak coverage |
-| WP-06 Long-running Soak Test | IN_PROGRESS | `""` | Full local validation PASS with deterministic 24-hour fake-backend soak metrics; live soak `NOT_RUN` | `engine/tests/unit/test_market_data_reliability.py`, `docs/P2_1_SOAK_REPORT.md`, `docs/P2_1_SOAK_REPORT.json` | Commit and push simulated soak evidence |
+| WP-06 Long-running Soak Test | IN_PROGRESS | `1fe8070` | Local validation PASS with deterministic 24-hour fake-backend soak metrics and latency-threshold fix; first GitHub `security` PASS; first GitHub `ci` FAIL due overly strict coverage-time latency ceiling | `engine/tests/unit/test_market_data_reliability.py`, `docs/P2_1_SOAK_REPORT.md`, `docs/P2_1_SOAK_REPORT.json` | Commit and push latency-threshold fix |
 | WP-07 Full Post-Patch Audit | NOT_STARTED | `""` | NOT_RUN | `docs/P2_1_POST_PATCH_AUDIT.md` | Run repository-wide hardening audit |
 | WP-08 Phase Closure | NOT_STARTED | `""` | NOT_RUN | `docs/P2_1_TEST_RESULTS.json`, `docs/P2_1_SECURITY_REPORT.json`, `docs/P2_1_REPORT_PROVENANCE.json` | Run full validation suite and close phase |
 
@@ -130,6 +130,20 @@
    - commit_sha: `80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906`
    - evidence_file: `docs/P2_1_SOAK_REPORT.md`
    - tool_version: `Python 3.12.10`
+15. WP-06 first GitHub workflow confirmation
+   - command: `gh run watch 27469789876 --exit-status ; gh run watch 27469789877 --exit-status ; gh run list --commit 1fe8070a7f4b23a6fc4a5c15bbd58f926c471767 --limit 10`
+   - timestamp_utc: `2026-06-13T14:44:48Z`
+   - exit_code: `1`
+   - commit_sha: `1fe8070a7f4b23a6fc4a5c15bbd58f926c471767`
+   - evidence_file: `docs/IMPLEMENTATION_LEDGER.md`
+   - tool_version: `gh 2.89.0`
+16. WP-06 latency-threshold fix validation
+   - command: `python -m pip check ; python -m ruff check . ; python -m mypy engine\src ; python -m pytest -m "not live" ; python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json ; openclaw-advisor validate-skills --strict ; openclaw-advisor render-config --validate --strict ; openclaw-advisor security-scan --include-history --strict ; python -m pip_audit`
+   - timestamp_utc: `2026-06-13T14:44:48Z`
+   - exit_code: `0`
+   - commit_sha: `1fe8070a7f4b23a6fc4a5c15bbd58f926c471767`
+   - evidence_file: `docs/IMPLEMENTATION_LEDGER.md`
+   - tool_version: `Python 3.12.10`
 
 ## Notes
 
@@ -140,6 +154,7 @@
 - Latest observed GitHub workflows for `7032f5b` were `ci=success` and `security=success`.
 - Latest observed GitHub workflows for `d1315a1` were `ci=success` and `security=success`.
 - Latest observed GitHub workflows for `80ebe31` were `ci=success` and `security=success`.
+- Latest observed GitHub workflows for `1fe8070` were `ci=failure` and `security=success`; the failure was a too-strict hosted-runner latency ceiling in the soak test.
 - Live MT5 verification is blocked in the current environment because MT5 is disabled and unavailable.
 - WP-03/WP-04/WP-05 reliability hardening is now committed, pushed, and GitHub-validated.
-- WP-06 simulated soak coverage is locally validated with recorded metrics and awaits its logical commit/push checkpoint.
+- WP-06 simulated soak coverage is locally revalidated after the CI-only latency-threshold failure and awaits the remediation push.

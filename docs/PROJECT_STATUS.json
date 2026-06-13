@@ -5,12 +5,12 @@
   "phase": "P2.1",
   "phase_status": "IN_PROGRESS",
   "current_work_package": "WP-06",
-  "updated_at_utc": "2026-06-13T14:39:53Z",
-  "local_commit": "80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906",
-  "remote_commit": "80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906",
+  "updated_at_utc": "2026-06-13T14:44:48Z",
+  "local_commit": "1fe8070a7f4b23a6fc4a5c15bbd58f926c471767",
+  "remote_commit": "1fe8070a7f4b23a6fc4a5c15bbd58f926c471767",
   "local_remote_aligned": true,
   "working_tree_clean": false,
-  "ci_status": "PASS",
+  "ci_status": "FAIL",
   "security_status": "PASS",
   "live_mt5_status": "BLOCKED",
   "work_packages": [
@@ -113,16 +113,18 @@
       "id": "WP-06",
       "name": "Long-running Soak Test",
       "status": "IN_PROGRESS",
-      "commit": "",
+      "commit": "1fe8070a7f4b23a6fc4a5c15bbd58f926c471767",
       "tests": [
-        "wp06_simulated_soak_validation"
+        "wp06_simulated_soak_validation",
+        "wp06_first_github_workflow_confirmation",
+        "wp06_latency_threshold_fix_validation"
       ],
       "evidence": [
         "engine/tests/unit/test_market_data_reliability.py",
         "docs/P2_1_SOAK_REPORT.md",
         "docs/P2_1_SOAK_REPORT.json"
       ],
-      "next_action": "Commit and push simulated soak evidence."
+      "next_action": "Commit and push the latency-threshold fix."
     },
     {
       "id": "WP-07",
@@ -289,6 +291,26 @@
       "commit_sha": "80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906",
       "evidence_file": "docs/P2_1_SOAK_REPORT.md",
       "tool_version": "Python 3.12.10"
+    },
+    {
+      "name": "wp06_first_github_workflow_confirmation",
+      "status": "FAIL",
+      "command": "gh run watch 27469789876 --exit-status; gh run watch 27469789877 --exit-status; gh run list --commit 1fe8070a7f4b23a6fc4a5c15bbd58f926c471767 --limit 10",
+      "timestamp_utc": "2026-06-13T14:44:48Z",
+      "exit_code": 1,
+      "commit_sha": "1fe8070a7f4b23a6fc4a5c15bbd58f926c471767",
+      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
+      "tool_version": "gh 2.89.0"
+    },
+    {
+      "name": "wp06_latency_threshold_fix_validation",
+      "status": "PASS",
+      "command": "python -m pip check; python -m ruff check .; python -m mypy engine\\\\src; python -m pytest -m \"not live\"; python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json; openclaw-advisor validate-skills --strict; openclaw-advisor render-config --validate --strict; openclaw-advisor security-scan --include-history --strict; python -m pip_audit",
+      "timestamp_utc": "2026-06-13T14:44:48Z",
+      "exit_code": 0,
+      "commit_sha": "1fe8070a7f4b23a6fc4a5c15bbd58f926c471767",
+      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
+      "tool_version": "Python 3.12.10"
     }
   ],
   "blockers": [
@@ -312,9 +334,16 @@
       "summary": "Live MT5 verification cannot run in the current environment because MT5 is disabled and the MetaTrader5 package, terminal path, and session credentials are unavailable.",
       "redacted_error": "MT5 readiness probe returned disabled/unavailable booleans only.",
       "required_action": "Enable MT5 and provide a live terminal/session environment to run WP-02 later."
+    },
+    {
+      "id": "wp06-ci-latency-threshold",
+      "status": "IN_PROGRESS",
+      "summary": "The first WP-06 GitHub ci run failed because the soak test asserted a local-only max loop latency threshold that was too strict under coverage instrumentation on the hosted runner.",
+      "redacted_error": "Hosted-runner coverage execution reported max_loop_latency_ms=3117.7615000000287 against a 250 ms assertion.",
+      "required_action": "Push the threshold fix and re-verify GitHub Actions for WP-06."
     }
   ],
-  "next_action": "Commit and push the validated WP-06 simulated soak package, then verify GitHub Actions on the new commit.",
+  "next_action": "Commit and push the WP-06 latency-threshold fix, then verify GitHub Actions on the new commit.",
   "evidence_files": [
     "docs/P2_1_BASELINE_AUDIT.md",
     "docs/P2_1_LIVE_MT5_REPORT.md",
