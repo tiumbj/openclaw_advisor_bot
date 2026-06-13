@@ -55,12 +55,17 @@ def render_config(
     env_path: Path | None = None,
 ) -> dict[str, object]:
     settings = load_settings(paths, env_path=env_path, strict=False)
+    render_values = settings.render_context()
+    for name, value in settings.parsed_values.items():
+        if isinstance(value, Path):
+            normalized = (paths.root_dir / value).resolve() if not value.is_absolute() else value
+            render_values[name] = str(normalized)
     template_text = paths.config_template_path.read_text(encoding="utf-8")
     rendered = PLACEHOLDER_IN_STRING.sub(
-        lambda match: _replace_string_placeholder(match, settings.raw_values), template_text
+        lambda match: _replace_string_placeholder(match, render_values), template_text
     )
     rendered = PLACEHOLDER_RAW.sub(
-        lambda match: _replace_raw_placeholder(match, settings.raw_values), rendered
+        lambda match: _replace_raw_placeholder(match, render_values), rendered
     )
     payload = json.loads(rendered)
     if not isinstance(payload, dict):

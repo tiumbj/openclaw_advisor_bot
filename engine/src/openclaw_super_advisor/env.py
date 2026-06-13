@@ -232,11 +232,12 @@ def detect_duplicate_env_files(
     return tuple(sorted(duplicates))
 
 
-def _validate_expected(spec: EnvVarSpec, raw: str, parsed: object) -> None:
+def _validate_expected(spec: EnvVarSpec, raw: str, parsed: object, base_dir: Path) -> None:
     if spec.expected is None:
         return
     if isinstance(parsed, Path):
-        if str(parsed) != spec.expected:
+        actual_path = parsed if parsed.is_absolute() else (base_dir / parsed)
+        if actual_path.resolve() != Path(spec.expected).resolve():
             raise ValueError(f"expected {spec.expected}")
         return
     if raw.lower() != spec.expected.lower():
@@ -268,7 +269,7 @@ def audit_environment(paths: ProjectPaths, env_path: Path | None = None) -> EnvA
             continue
         try:
             parsed = spec.parser(raw)
-            _validate_expected(spec, raw, parsed)
+            _validate_expected(spec, raw, parsed, paths.root_dir)
             statuses[spec.name] = "PRESENT"
         except ValueError as exc:
             statuses[spec.name] = "INVALID_FORMAT"
