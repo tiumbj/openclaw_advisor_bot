@@ -43,6 +43,28 @@ def normalize_tick_batch(
                 "batch",
             )
         )
+    tick_collisions = {
+        record.market_time_msc
+        for record in records
+        if len(
+            {
+                item.sequence_id
+                for item in records
+                if item.market_time_msc == record.market_time_msc
+            }
+        )
+        > 1
+    }
+    if tick_collisions:
+        incidents.append(
+            _incident(
+                "tick_time_collision",
+                records[0].logical_symbol,
+                None,
+                f"detected {len(tick_collisions)} timestamps with differing tick payloads",
+                str(min(tick_collisions)),
+            )
+        )
     deduped: list[TickRecord] = []
     seen: set[str] = set()
     duplicate_count = 0

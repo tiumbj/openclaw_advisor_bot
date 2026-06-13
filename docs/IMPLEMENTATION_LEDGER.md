@@ -213,3 +213,60 @@
   - `MT5 terminal path not configured`
   - `MT5 server/login/password not configured`
 - Next action: `Commit the blocked MT5 evidence and continue with WP-03 reconnect hardening.`
+
+## Entry 0009
+
+- Timestamp UTC: `2026-06-13T14:30:37Z`
+- Phase: `P2.1`
+- Work Package: `WP-02`
+- Operation: `Verified that the blocked MT5 evidence commit was pushed, local and remote were aligned, and both GitHub Actions workflows completed successfully.`
+- Files changed:
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `gh run list --commit 7032f5b3876c79f5838ea8758c8925c0f4da1297 --limit 10`
+- Result: `PASS`
+- Commit: `7032f5b3876c79f5838ea8758c8925c0f4da1297`
+- Remote push: `PASS`
+- CI result: `PASS`
+- Security result: `PASS`
+- Known defects:
+  - `Code and workspace metadata still report 1.2.0 / P2.`
+  - `Live MT5 verification remains blocked by environment readiness.`
+- Next action: `Continue with WP-03/WP-04/WP-05 reliability hardening.`
+
+## Entry 0010
+
+- Timestamp UTC: `2026-06-13T14:30:37Z`
+- Phase: `P2.1`
+- Work Package: `WP-03/WP-04/WP-05`
+- Operation: `Fixed retry handling for None + last_error backend responses, expanded deterministic fake-backend scripting, added tick collision detection, and added reconnect, integrity, and storage recovery regression coverage.`
+- Files changed:
+  - `engine/src/openclaw_super_advisor/market_data/collector.py`
+  - `engine/src/openclaw_super_advisor/market_data/fake_backend.py`
+  - `engine/src/openclaw_super_advisor/market_data/quality.py`
+  - `engine/tests/unit/test_market_data_reliability.py`
+  - `docs/P2_COVERAGE.json`
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `python -m pip check`
+  - `python -m ruff check .`
+  - `python -m mypy engine\src`
+  - `python -m pytest -m "not live"`
+  - `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json`
+  - `openclaw-advisor validate-skills --strict`
+  - `openclaw-advisor render-config --validate --strict`
+  - `openclaw-advisor security-scan --include-history --strict`
+  - `python -m pip_audit`
+- Result: `PASS`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `NOT_RUN`
+- Known defects:
+  - `Code and workspace metadata still report 1.2.0 / P2.`
+  - `Live MT5 verification remains blocked by environment readiness.`
+- Next action: `Commit and push the validated WP-03/WP-04/WP-05 package, then verify GitHub Actions on the new commit.`

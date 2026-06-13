@@ -4,10 +4,10 @@
   "package_version": "1.2.1",
   "phase": "P2.1",
   "phase_status": "IN_PROGRESS",
-  "current_work_package": "WP-02",
-  "updated_at_utc": "2026-06-13T14:25:04Z",
-  "local_commit": "0940182d7b14b44bd72dbd353f315d796c3c2765",
-  "remote_commit": "0940182d7b14b44bd72dbd353f315d796c3c2765",
+  "current_work_package": "WP-03/WP-04/WP-05",
+  "updated_at_utc": "2026-06-13T14:30:37Z",
+  "local_commit": "7032f5b3876c79f5838ea8758c8925c0f4da1297",
+  "remote_commit": "7032f5b3876c79f5838ea8758c8925c0f4da1297",
   "local_remote_aligned": true,
   "working_tree_clean": false,
   "ci_status": "PASS",
@@ -52,42 +52,59 @@
       "id": "WP-02",
       "name": "Live MT5 Read-only Verification",
       "status": "BLOCKED",
-      "commit": "0940182d7b14b44bd72dbd353f315d796c3c2765",
+      "commit": "7032f5b3876c79f5838ea8758c8925c0f4da1297",
       "tests": [
-        "wp02_redacted_mt5_readiness"
+        "wp02_redacted_mt5_readiness",
+        "wp02_github_workflow_confirmation"
       ],
       "evidence": [
         "docs/P2_1_LIVE_MT5_REPORT.md",
         "docs/P2_1_LIVE_MT5_REPORT.json"
       ],
-      "next_action": "Continue with WP-03 fake-backend reliability hardening."
+      "next_action": "Keep blocked state recorded and continue reliability hardening."
     },
     {
       "id": "WP-03",
       "name": "Disconnect and Reconnect Reliability",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "commit": "",
-      "tests": [],
-      "evidence": [],
-      "next_action": "Add reconnect failure-injection tests."
+      "tests": [
+        "wp03_wp05_local_reliability_validation"
+      ],
+      "evidence": [
+        "engine/src/openclaw_super_advisor/market_data/collector.py",
+        "engine/src/openclaw_super_advisor/market_data/fake_backend.py",
+        "engine/tests/unit/test_market_data_reliability.py"
+      ],
+      "next_action": "Commit and push reconnect hardening."
     },
     {
       "id": "WP-04",
       "name": "Tick and Bar Integrity Failure Injection",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "commit": "",
-      "tests": [],
-      "evidence": [],
-      "next_action": "Expand tick/bar integrity failure coverage."
+      "tests": [
+        "wp03_wp05_local_reliability_validation"
+      ],
+      "evidence": [
+        "engine/src/openclaw_super_advisor/market_data/quality.py",
+        "engine/tests/unit/test_market_data_reliability.py"
+      ],
+      "next_action": "Commit and push integrity hardening."
     },
     {
       "id": "WP-05",
       "name": "Storage Crash and Recovery",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "commit": "",
-      "tests": [],
-      "evidence": [],
-      "next_action": "Add SQLite and Parquet crash recovery tests."
+      "tests": [
+        "wp03_wp05_local_reliability_validation"
+      ],
+      "evidence": [
+        "engine/tests/unit/test_market_data_reliability.py",
+        "engine/src/openclaw_super_advisor/market_data/collector.py"
+      ],
+      "next_action": "Commit and push storage recovery hardening."
     },
     {
       "id": "WP-06",
@@ -213,6 +230,26 @@
       "commit_sha": "0940182d7b14b44bd72dbd353f315d796c3c2765",
       "evidence_file": "docs/P2_1_LIVE_MT5_REPORT.md",
       "tool_version": "Python 3.12.10"
+    },
+    {
+      "name": "wp02_github_workflow_confirmation",
+      "status": "PASS",
+      "command": "gh run list --commit 7032f5b3876c79f5838ea8758c8925c0f4da1297 --limit 10",
+      "timestamp_utc": "2026-06-13T14:30:37Z",
+      "exit_code": 0,
+      "commit_sha": "7032f5b3876c79f5838ea8758c8925c0f4da1297",
+      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
+      "tool_version": "gh 2.89.0"
+    },
+    {
+      "name": "wp03_wp05_local_reliability_validation",
+      "status": "PASS",
+      "command": "python -m pip check; python -m ruff check .; python -m mypy engine\\\\src; python -m pytest -m \"not live\"; python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json; openclaw-advisor validate-skills --strict; openclaw-advisor render-config --validate --strict; openclaw-advisor security-scan --include-history --strict; python -m pip_audit",
+      "timestamp_utc": "2026-06-13T14:30:37Z",
+      "exit_code": 0,
+      "commit_sha": "7032f5b3876c79f5838ea8758c8925c0f4da1297",
+      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
+      "tool_version": "Python 3.12.10"
     }
   ],
   "blockers": [
@@ -238,13 +275,17 @@
       "required_action": "Enable MT5 and provide a live terminal/session environment to run WP-02 later."
     }
   ],
-  "next_action": "Publish the blocked live MT5 evidence and continue with WP-03 reconnect reliability hardening.",
+  "next_action": "Commit and push the validated WP-03/WP-04/WP-05 reliability hardening package, then verify GitHub Actions on the new commit.",
   "evidence_files": [
     "docs/P2_1_BASELINE_AUDIT.md",
     "docs/P2_1_LIVE_MT5_REPORT.md",
     "docs/P2_1_LIVE_MT5_REPORT.json",
     "docs/PROJECT_STATUS.md",
     "docs/PROJECT_STATUS.json",
-    "docs/IMPLEMENTATION_LEDGER.md"
+    "docs/IMPLEMENTATION_LEDGER.md",
+    "engine/src/openclaw_super_advisor/market_data/collector.py",
+    "engine/src/openclaw_super_advisor/market_data/fake_backend.py",
+    "engine/src/openclaw_super_advisor/market_data/quality.py",
+    "engine/tests/unit/test_market_data_reliability.py"
   ]
 }

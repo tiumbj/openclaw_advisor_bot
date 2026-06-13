@@ -578,11 +578,15 @@ class MarketDataService:
         return self.retry.run(_operation)
 
     def _list_symbols(self) -> list[DiscoveredSymbol]:
-        payload = self.retry.run(self.backend.symbols_get)
-        if payload is None:
-            raise BackendConnectionError(
-                f"MetaTrader5 symbols_get failed: {self.backend.last_error()!r}"
-            )
+        def _operation() -> object:
+            payload = self.backend.symbols_get()
+            if payload is None:
+                raise BackendConnectionError(
+                    f"MetaTrader5 symbols_get failed: {self.backend.last_error()!r}"
+                )
+            return payload
+
+        payload = self.retry.run(_operation)
         return [discovered_symbol_from_payload(item) for item in cast(list[object], payload)]
 
     def _resolve_symbols(self) -> tuple[list[ResolvedSymbol], list[QualityIncident]]:
@@ -709,29 +713,30 @@ class MarketDataService:
         start_at: datetime,
         end_at: datetime,
     ) -> tuple[list[TickRecord], list[QualityIncident]]:
-        def _range_operation() -> object | None:
-            return self.backend.copy_ticks_range(
+        def _range_operation() -> object:
+            payload = self.backend.copy_ticks_range(
                 symbol.broker_symbol,
                 start_at,
                 end_at,
                 COPY_TICKS_ALL,
             )
+            if payload is None:
+                raise BackendConnectionError(
+                    f"MetaTrader5 copy_ticks_range failed: {self.backend.last_error()!r}"
+                )
+            return payload
 
         payload = self.retry.run(_range_operation)
-        records = (
-            []
-            if payload is None
-            else [
-                normalize_tick(
-                    symbol.logical_symbol,
-                    symbol.broker_symbol,
-                    item,
-                    utc_now(),
-                    symbol.point,
-                )
-                for item in cast(list[object], payload)
-            ]
-        )
+        records = [
+            normalize_tick(
+                symbol.logical_symbol,
+                symbol.broker_symbol,
+                item,
+                utc_now(),
+                symbol.point,
+            )
+            for item in cast(list[object], payload)
+        ]
 
         latest_tick = self.retry.run(lambda: self.backend.symbol_info_tick(symbol.broker_symbol))
         if latest_tick is not None:
@@ -755,19 +760,20 @@ class MarketDataService:
         end_at: datetime,
         as_of_utc: datetime,
     ) -> list[BarRecord]:
-        def _range_operation() -> object | None:
-            return self.backend.copy_rates_range(
+        def _range_operation() -> object:
+            payload = self.backend.copy_rates_range(
                 symbol.broker_symbol,
                 MT5_TIMEFRAME_MAP[timeframe],
                 start_at,
                 end_at,
             )
+            if payload is None:
+                raise BackendConnectionError(
+                    f"MetaTrader5 copy_rates_range failed: {self.backend.last_error()!r}"
+                )
+            return payload
 
         payload = self.retry.run(_range_operation)
-        if payload is None:
-            raise BackendConnectionError(
-                f"MetaTrader5 copy_rates_range failed: {self.backend.last_error()!r}"
-            )
         return [
             normalize_bar(symbol.logical_symbol, symbol.broker_symbol, timeframe, item, as_of_utc)
             for item in cast(list[object], payload)

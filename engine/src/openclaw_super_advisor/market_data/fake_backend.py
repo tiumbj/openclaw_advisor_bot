@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from typing import cast
 
 
 @dataclass
@@ -9,9 +10,17 @@ class FakeMt5Scenario:
     initialize_success: bool = True
     visible_symbols: set[str] = field(default_factory=set)
     last_error_value: tuple[int, str] = (0, "ok")
+    initialize_sequence: list[bool | Exception] = field(default_factory=list)
     symbols: list[object] = field(default_factory=list)
+    symbols_get_sequence: list[object | None | Exception] = field(default_factory=list)
     ticks_by_symbol: dict[str, list[object]] = field(default_factory=dict)
+    copy_ticks_range_sequence: dict[str, list[object | None | Exception]] = field(
+        default_factory=dict
+    )
     bars_by_symbol_and_timeframe: dict[tuple[str, int], list[object]] = field(default_factory=dict)
+    copy_rates_range_sequence: dict[tuple[str, int], list[object | None | Exception]] = field(
+        default_factory=dict
+    )
     latest_tick_by_symbol: dict[str, object] = field(default_factory=dict)
     terminal_info_payload: object | None = None
     account_info_payload: object | None = None
@@ -33,8 +42,25 @@ class FakeMt5Backend:
         self.backend_name = "fake-mt5"
         self.scenario = scenario or FakeMt5Scenario()
         self.connected = False
+        self.initialize_calls = 0
+        self.shutdown_calls = 0
+
+    def _consume(self, sequence: list[object | None | Exception]) -> object | None:
+        item = sequence.pop(0)
+        if isinstance(item, Exception):
+            raise item
+        return item
 
     def initialize(self) -> bool:
+        self.initialize_calls += 1
+        if self.scenario.initialize_sequence:
+            sequence = cast(
+                list[object | None | Exception],
+                self.scenario.initialize_sequence,
+            )
+            item = self._consume(sequence)
+            self.connected = bool(item)
+            return self.connected
         if self.scenario.fail_once and not self.scenario._failed:
             self.scenario._failed = True
             self.scenario.last_error_value = (1001, "temporary initialize failure")
@@ -44,6 +70,7 @@ class FakeMt5Backend:
         return self.connected
 
     def shutdown(self) -> None:
+        self.shutdown_calls += 1
         self.connected = False
 
     def version(self) -> tuple[int, ...] | None:
@@ -63,6 +90,8 @@ class FakeMt5Backend:
         return self.scenario.last_error_value
 
     def symbols_get(self) -> object | None:
+        if self.scenario.symbols_get_sequence:
+            return self._consume(self.scenario.symbols_get_sequence)
         return self.scenario.symbols
 
     def symbol_info(self, symbol: str) -> object | None:
@@ -100,6 +129,9 @@ class FakeMt5Backend:
         date_to: object,
     ) -> object | None:
         _ = (date_from, date_to)
+        sequence = self.scenario.copy_rates_range_sequence.get((symbol, timeframe))
+        if sequence:
+            return self._consume(sequence)
         return self.scenario.bars_by_symbol_and_timeframe.get((symbol, timeframe), [])
 
     def copy_ticks_from(
@@ -117,6 +149,9 @@ class FakeMt5Backend:
         flags: int,
     ) -> object | None:
         _ = (date_from, date_to, flags)
+        sequence = self.scenario.copy_ticks_range_sequence.get(symbol)
+        if sequence:
+            return self._consume(sequence)
         return self.scenario.ticks_by_symbol.get(symbol, [])
 
 
