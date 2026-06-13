@@ -3,11 +3,11 @@
   "phase": "P2.1",
   "package_version": "1.2.1",
   "generated_at_utc": "2026-06-13T15:02:54Z",
-  "implementation_commit": "PENDING",
-  "status_report_commit": "PENDING",
-  "observed_remote_head": "8f8bcd38e45008fdc157d166e4d65ad2e4977782",
-  "local_head_at_generation": "8f8bcd38e45008fdc157d166e4d65ad2e4977782",
-  "working_tree_clean": false,
+  "implementation_commit": "c9b67235a42db155b40bbacbc43f2918b53d796d",
+  "status_report_commit": "PENDING_CURRENT_COMMIT",
+  "observed_remote_head": "c9b67235a42db155b40bbacbc43f2918b53d796d",
+  "local_head_at_generation": "c9b67235a42db155b40bbacbc43f2918b53d796d",
+  "working_tree_clean": true,
   "evidence_files": [
     "docs/P2_1_POST_PATCH_AUDIT.md",
     "docs/P2_1_TEST_RESULTS.json",
@@ -17,7 +17,7 @@
     "docs/P2_COVERAGE.json"
   ],
   "notes": [
-    "This file was generated before the final closure commit so the implementation and status-report commit fields are intentionally pending.",
-    "Observed remote HEAD was aligned with local HEAD before the final closure changes were committed."
+    "The implementation commit was pushed and validated on GitHub Actions before this status-report update was prepared.",
+    "The status-report commit field is intentionally marked PENDING_CURRENT_COMMIT because this file is part of the status-report commit itself."
   ]
 }

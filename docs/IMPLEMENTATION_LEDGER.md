@@ -516,3 +516,28 @@
   - `Live MT5 verification remains blocked by environment readiness.`
   - `Final closure commit and GitHub confirmation are still pending.`
 - Next action: `Commit and push the closure package, then verify GitHub Actions before marking P2.1 as passed.`
+
+## Entry 0019
+
+- Timestamp UTC: `2026-06-13T15:08:00Z`
+- Phase: `P2.1`
+- Work Package: `WP-08`
+- Operation: `Pushed the closure commit c9b6723 and verified that both GitHub Actions workflows completed successfully, closing P2.1.`
+- Files changed:
+  - `docs/P2_1_REPORT_PROVENANCE.json`
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `git push origin main`
+  - `gh run watch 27470365255 --exit-status`
+  - `gh run watch 27470365230 --exit-status`
+  - `gh run list --commit c9b67235a42db155b40bbacbc43f2918b53d796d --limit 10`
+- Result: `PASS`
+- Commit: `PENDING`
+- Remote push: `PASS`
+- CI result: `PASS`
+- Security result: `PASS`
+- Known defects:
+  - `Live MT5 verification remains blocked by environment readiness, but it is non-blocking for P2.1.`
+- Next action: `Re-run the mandatory P2.2 gate using the validated P2.1 status artifacts.`
