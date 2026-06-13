@@ -1,0 +1,155 @@
+{
+  "schema_version": "project-status-v1",
+  "project": "openclaw_advisor_bot",
+  "package_version": "1.2.1",
+  "phase": "P2.1",
+  "phase_status": "IN_PROGRESS",
+  "current_work_package": "WP-00",
+  "updated_at_utc": "2026-06-13T14:14:44Z",
+  "local_commit": "5a3774e979de56f19381097abc511a939c86ec49",
+  "remote_commit": "5a3774e979de56f19381097abc511a939c86ec49",
+  "local_remote_aligned": true,
+  "working_tree_clean": true,
+  "ci_status": "PASS",
+  "security_status": "PASS",
+  "live_mt5_status": "NOT_RUN",
+  "work_packages": [
+    {
+      "id": "WP-00",
+      "name": "Repository and Report Bootstrap",
+      "status": "IN_PROGRESS",
+      "commit": "5a3774e979de56f19381097abc511a939c86ec49",
+      "tests": [
+        "baseline_git_audit",
+        "remote_alignment_check",
+        "github_actions_observation"
+      ],
+      "evidence": [
+        "docs/P2_1_BASELINE_AUDIT.md"
+      ],
+      "next_action": "Commit and push bootstrap reports."
+    },
+    {
+      "id": "WP-01",
+      "name": "GitHub Actions Future Compatibility",
+      "status": "NOT_STARTED",
+      "commit": "",
+      "tests": [],
+      "evidence": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/security.yml"
+      ],
+      "next_action": "Audit Node 20 and windows-latest warnings."
+    },
+    {
+      "id": "WP-02",
+      "name": "Live MT5 Read-only Verification",
+      "status": "NOT_STARTED",
+      "commit": "",
+      "tests": [],
+      "evidence": [
+        "docs/P2_1_LIVE_MT5_REPORT.md",
+        "docs/P2_1_LIVE_MT5_REPORT.json"
+      ],
+      "next_action": "Check MT5 readiness after WP-01."
+    },
+    {
+      "id": "WP-03",
+      "name": "Disconnect and Reconnect Reliability",
+      "status": "NOT_STARTED",
+      "commit": "",
+      "tests": [],
+      "evidence": [],
+      "next_action": "Add reconnect failure-injection tests."
+    },
+    {
+      "id": "WP-04",
+      "name": "Tick and Bar Integrity Failure Injection",
+      "status": "NOT_STARTED",
+      "commit": "",
+      "tests": [],
+      "evidence": [],
+      "next_action": "Expand tick/bar integrity failure coverage."
+    },
+    {
+      "id": "WP-05",
+      "name": "Storage Crash and Recovery",
+      "status": "NOT_STARTED",
+      "commit": "",
+      "tests": [],
+      "evidence": [],
+      "next_action": "Add SQLite and Parquet crash recovery tests."
+    },
+    {
+      "id": "WP-06",
+      "name": "Long-running Soak Test",
+      "status": "NOT_STARTED",
+      "commit": "",
+      "tests": [],
+      "evidence": [],
+      "next_action": "Create deterministic simulated soak coverage."
+    },
+    {
+      "id": "WP-07",
+      "name": "Full Post-Patch Audit",
+      "status": "NOT_STARTED",
+      "commit": "",
+      "tests": [],
+      "evidence": [
+        "docs/P2_1_POST_PATCH_AUDIT.md"
+      ],
+      "next_action": "Run repository-wide hardening audit."
+    },
+    {
+      "id": "WP-08",
+      "name": "Phase Closure",
+      "status": "NOT_STARTED",
+      "commit": "",
+      "tests": [],
+      "evidence": [
+        "docs/P2_1_TEST_RESULTS.json",
+        "docs/P2_1_SECURITY_REPORT.json",
+        "docs/P2_1_REPORT_PROVENANCE.json"
+      ],
+      "next_action": "Run full validation suite and close the phase."
+    }
+  ],
+  "tests": [
+    {
+      "name": "baseline_git_audit",
+      "status": "PASS",
+      "command": "git status; git branch --show-current; git remote -v; git fetch origin --prune; git log --oneline --decorate --graph -n 30; git rev-parse HEAD; git rev-parse origin/main",
+      "timestamp_utc": "2026-06-13T14:14:44Z",
+      "exit_code": 0,
+      "commit_sha": "5a3774e979de56f19381097abc511a939c86ec49",
+      "evidence_file": "docs/P2_1_BASELINE_AUDIT.md",
+      "tool_version": "git 2.53.0.windows.2"
+    },
+    {
+      "name": "github_actions_observation",
+      "status": "PASS",
+      "command": "gh run list --commit 5a3774e979de56f19381097abc511a939c86ec49 --limit 10",
+      "timestamp_utc": "2026-06-13T14:14:44Z",
+      "exit_code": 0,
+      "commit_sha": "5a3774e979de56f19381097abc511a939c86ec49",
+      "evidence_file": "docs/P2_1_BASELINE_AUDIT.md",
+      "tool_version": "gh 2.89.0"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "baseline-version-drift",
+      "status": "IN_PROGRESS",
+      "summary": "Code and workspace metadata are still at 1.2.0 / P2 while P2.1 tracking has started.",
+      "redacted_error": "Metadata drift only; no secret exposure.",
+      "required_action": "Advance package and workspace metadata in a later logical work package with matching validation updates."
+    }
+  ],
+  "next_action": "Commit and push WP-00 baseline tracking files, then begin WP-01 workflow compatibility audit.",
+  "evidence_files": [
+    "docs/P2_1_BASELINE_AUDIT.md",
+    "docs/PROJECT_STATUS.md",
+    "docs/PROJECT_STATUS.json",
+    "docs/IMPLEMENTATION_LEDGER.md"
+  ]
+}
