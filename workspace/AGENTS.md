@@ -1,7 +1,7 @@
 # OpenClaw Super Advisor
 
-Version: 1.1.1
-Phase: P1.1
+Version: 1.2.0
+Phase: P2
 
 - Advisor-only.
 - Never execute trades, place orders, modify orders, cancel orders, or close positions.
