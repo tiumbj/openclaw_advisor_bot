@@ -4,21 +4,21 @@
   "package_version": "1.2.1",
   "phase": "P2.1",
   "phase_status": "IN_PROGRESS",
-  "current_work_package": "WP-00",
-  "updated_at_utc": "2026-06-13T14:14:44Z",
-  "local_commit": "5a3774e979de56f19381097abc511a939c86ec49",
-  "remote_commit": "5a3774e979de56f19381097abc511a939c86ec49",
+  "current_work_package": "WP-01",
+  "updated_at_utc": "2026-06-13T14:18:28Z",
+  "local_commit": "eca0c72b7dfc38c541636324e46298df21ac3124",
+  "remote_commit": "eca0c72b7dfc38c541636324e46298df21ac3124",
   "local_remote_aligned": true,
-  "working_tree_clean": true,
-  "ci_status": "PASS",
-  "security_status": "PASS",
+  "working_tree_clean": false,
+  "ci_status": "NOT_RUN",
+  "security_status": "NOT_RUN",
   "live_mt5_status": "NOT_RUN",
   "work_packages": [
     {
       "id": "WP-00",
       "name": "Repository and Report Bootstrap",
-      "status": "IN_PROGRESS",
-      "commit": "5a3774e979de56f19381097abc511a939c86ec49",
+      "status": "PASS",
+      "commit": "eca0c72b7dfc38c541636324e46298df21ac3124",
       "tests": [
         "baseline_git_audit",
         "remote_alignment_check",
@@ -27,19 +27,23 @@
       "evidence": [
         "docs/P2_1_BASELINE_AUDIT.md"
       ],
-      "next_action": "Commit and push bootstrap reports."
+      "next_action": "Start WP-01 workflow hardening."
     },
     {
       "id": "WP-01",
       "name": "GitHub Actions Future Compatibility",
-      "status": "NOT_STARTED",
-      "commit": "",
-      "tests": [],
+      "status": "IN_PROGRESS",
+      "commit": "eca0c72b7dfc38c541636324e46298df21ac3124",
+      "tests": [
+        "official_action_release_audit",
+        "official_runner_guidance_audit",
+        "wp01_local_validation"
+      ],
       "evidence": [
         ".github/workflows/ci.yml",
         ".github/workflows/security.yml"
       ],
-      "next_action": "Audit Node 20 and windows-latest warnings."
+      "next_action": "Commit and push workflow hardening."
     },
     {
       "id": "WP-02",
@@ -134,6 +138,36 @@
       "commit_sha": "5a3774e979de56f19381097abc511a939c86ec49",
       "evidence_file": "docs/P2_1_BASELINE_AUDIT.md",
       "tool_version": "gh 2.89.0"
+    },
+    {
+      "name": "wp00_bootstrap_workflow_validation",
+      "status": "PASS",
+      "command": "gh run watch 27469195284 --exit-status; gh run watch 27469195276 --exit-status; gh run list --commit eca0c72b7dfc38c541636324e46298df21ac3124 --limit 10",
+      "timestamp_utc": "2026-06-13T14:17:16Z",
+      "exit_code": 0,
+      "commit_sha": "eca0c72b7dfc38c541636324e46298df21ac3124",
+      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
+      "tool_version": "gh 2.89.0"
+    },
+    {
+      "name": "official_action_release_audit",
+      "status": "PASS",
+      "command": "gh release list -R actions/checkout --limit 5; gh release list -R actions/setup-python --limit 5; review official GitHub changelog entries for Node24 migration and Windows 2025 VS2026 migration",
+      "timestamp_utc": "2026-06-13T14:17:16Z",
+      "exit_code": 0,
+      "commit_sha": "eca0c72b7dfc38c541636324e46298df21ac3124",
+      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
+      "tool_version": "gh 2.89.0 / web fetch"
+    },
+    {
+      "name": "wp01_local_validation",
+      "status": "PASS",
+      "command": "python -c \"yaml.safe_load(...)\"; python -m pip check; python -m ruff check .; python -m mypy engine\\\\src; python -m pytest -m \"not live\"; python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json; openclaw-advisor validate-skills --strict; openclaw-advisor render-config --validate --strict; openclaw-advisor security-scan --include-history --strict; python -m pip_audit",
+      "timestamp_utc": "2026-06-13T14:18:28Z",
+      "exit_code": 0,
+      "commit_sha": "eca0c72b7dfc38c541636324e46298df21ac3124",
+      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
+      "tool_version": "Python 3.12.10"
     }
   ],
   "blockers": [
@@ -143,9 +177,16 @@
       "summary": "Code and workspace metadata are still at 1.2.0 / P2 while P2.1 tracking has started.",
       "redacted_error": "Metadata drift only; no secret exposure.",
       "required_action": "Advance package and workspace metadata in a later logical work package with matching validation updates."
+    },
+    {
+      "id": "workflow-compatibility-drift",
+      "status": "IN_PROGRESS",
+      "summary": "Workflow changes for Node24-compatible action versions and Windows 2025 VS2026 runner have been applied locally and validated, but GitHub workflow confirmation is still pending.",
+      "redacted_error": "Awaiting remote workflow confirmation only; no secret exposure.",
+      "required_action": "Commit and push WP-01 changes, then verify GitHub Actions success."
     }
   ],
-  "next_action": "Commit and push WP-00 baseline tracking files, then begin WP-01 workflow compatibility audit.",
+  "next_action": "Commit and push WP-01 workflow hardening, then verify ci/security workflow results.",
   "evidence_files": [
     "docs/P2_1_BASELINE_AUDIT.md",
     "docs/PROJECT_STATUS.md",

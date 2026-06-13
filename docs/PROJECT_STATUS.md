@@ -3,25 +3,25 @@
 - Project: `openclaw_advisor_bot`
 - Current package version: `1.2.0` baseline code, target `1.2.1`
 - Current phase: `P2.1`
-- Current work package: `WP-00`
+- Current work package: `WP-01`
 - Overall phase status: `IN_PROGRESS`
-- Last update UTC: `2026-06-13T14:14:44Z`
-- Last local commit: `5a3774e979de56f19381097abc511a939c86ec49`
-- Last remote commit: `5a3774e979de56f19381097abc511a939c86ec49`
+- Last update UTC: `2026-06-13T14:18:28Z`
+- Last local commit: `eca0c72b7dfc38c541636324e46298df21ac3124`
+- Last remote commit: `eca0c72b7dfc38c541636324e46298df21ac3124`
 - Local/remote alignment: `PASS`
-- Working tree status: `PASS`
-- CI status: `PASS`
-- Security workflow status: `PASS`
+- Working tree status: `DIRTY`
+- CI status: `NOT_RUN`
+- Security workflow status: `NOT_RUN`
 - Live MT5 status: `NOT_RUN`
-- Latest blocker: `Package metadata and workspace metadata still report 1.2.0 / P2 while P2.1 tracking has started.`
-- Next action: `Commit and push WP-00 baseline tracking files, then start WP-01 GitHub Actions compatibility audit.`
+- Latest blocker: `WP-01 workflow changes are locally validated but not yet committed and confirmed on GitHub Actions.`
+- Next action: `Commit and push WP-01 workflow hardening, then verify ci/security runs for the new commit.`
 
 ## Progress Matrix
 
 | Work Package | Status | Commit | Tests | Evidence | Next Action |
 | ------------ | ------ | ------ | ----- | -------- | ----------- |
-| WP-00 Repository and Report Bootstrap | IN_PROGRESS | `5a3774e` | Baseline git/remote/actions audit observed | `docs/P2_1_BASELINE_AUDIT.md` | Commit and push bootstrap reports |
-| WP-01 GitHub Actions Future Compatibility | NOT_STARTED | `""` | NOT_RUN | `.github/workflows/ci.yml`, `.github/workflows/security.yml` | Audit Node 20 and runner warnings |
+| WP-00 Repository and Report Bootstrap | PASS | `eca0c72` | Baseline git/remote/actions audit observed; GitHub Actions passed | `docs/P2_1_BASELINE_AUDIT.md` | Start WP-01 workflow hardening |
+| WP-01 GitHub Actions Future Compatibility | IN_PROGRESS | `eca0c72` | YAML parse PASS; local lint/type/test/security/coverage/audit PASS | `.github/workflows/ci.yml`, `.github/workflows/security.yml`, `docs/IMPLEMENTATION_LEDGER.md` | Commit and push workflow hardening |
 | WP-02 Live MT5 Read-only Verification | NOT_STARTED | `""` | NOT_RUN | `docs/P2_1_LIVE_MT5_REPORT.md`, `docs/P2_1_LIVE_MT5_REPORT.json` | Check MT5 readiness after WP-01 |
 | WP-03 Disconnect and Reconnect Reliability | NOT_STARTED | `""` | NOT_RUN | `engine/tests/**` | Add failure-injection reconnect tests |
 | WP-04 Tick and Bar Integrity Failure Injection | NOT_STARTED | `""` | NOT_RUN | `engine/tests/**` | Expand integrity failure coverage |
@@ -46,9 +46,31 @@
    - commit_sha: `5a3774e979de56f19381097abc511a939c86ec49`
    - evidence_file: `docs/P2_1_BASELINE_AUDIT.md`
    - tool_version: `gh 2.89.0`
+3. WP-00 bootstrap workflow validation
+   - command: `gh run watch 27469195284 --exit-status; gh run watch 27469195276 --exit-status; gh run list --commit eca0c72b7dfc38c541636324e46298df21ac3124 --limit 10`
+   - timestamp_utc: `2026-06-13T14:17:16Z`
+   - exit_code: `0`
+   - commit_sha: `eca0c72b7dfc38c541636324e46298df21ac3124`
+   - evidence_file: `docs/IMPLEMENTATION_LEDGER.md`
+   - tool_version: `gh 2.89.0`
+4. WP-01 official compatibility audit
+   - command: `gh release list -R actions/checkout --limit 5; gh release list -R actions/setup-python --limit 5; fetch official GitHub changelog entries for Node 20 deprecation and Windows 2025 VS 2026 migration`
+   - timestamp_utc: `2026-06-13T14:17:16Z`
+   - exit_code: `0`
+   - commit_sha: `eca0c72b7dfc38c541636324e46298df21ac3124`
+   - evidence_file: `docs/IMPLEMENTATION_LEDGER.md`
+   - tool_version: `gh 2.89.0 / web fetch`
+5. WP-01 local workflow validation
+   - command: `python -c "yaml.safe_load(...)" ; python -m pip check ; ruff check . ; mypy engine\\src ; pytest -m "not live" ; pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json ; openclaw-advisor validate-skills --strict ; openclaw-advisor render-config --validate --strict ; openclaw-advisor security-scan --include-history --strict ; python -m pip_audit`
+   - timestamp_utc: `2026-06-13T14:18:28Z`
+   - exit_code: `0`
+   - commit_sha: `eca0c72b7dfc38c541636324e46298df21ac3124`
+   - evidence_file: `docs/IMPLEMENTATION_LEDGER.md`
+   - tool_version: `Python 3.12.10`
 
 ## Notes
 
 - Baseline code metadata is still `1.2.0 / P2`.
-- Latest observed GitHub workflows for `5a3774e` were `ci=success` and `security=success`.
+- Latest observed GitHub workflows for `eca0c72` were `ci=success` and `security=success`.
+- WP-01 local validation passed against the updated workflow command set.
 - No live MT5 verification has been performed in P2.1 yet.
