@@ -413,3 +413,27 @@
   - `Code and workspace metadata still report 1.2.0 / P2.`
   - `Live MT5 verification remains blocked by environment readiness.`
 - Next action: `Commit and push the WP-06 latency-threshold fix, then verify GitHub Actions on the new commit.`
+
+## Entry 0016
+
+- Timestamp UTC: `2026-06-13T14:47:19Z`
+- Phase: `P2.1`
+- Work Package: `WP-06`
+- Operation: `Verified that the hosted-runner-safe latency-threshold fix passed on both GitHub Actions workflows, closing WP-06.`
+- Files changed:
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `gh run watch 27469903679 --exit-status`
+  - `gh run watch 27469903671 --exit-status`
+  - `gh run list --commit e4f0b7df5adb220ed91cdd8ef7e5443d4fa03739 --limit 10`
+- Result: `PASS`
+- Commit: `e4f0b7df5adb220ed91cdd8ef7e5443d4fa03739`
+- Remote push: `PASS`
+- CI result: `PASS`
+- Security result: `PASS`
+- Known defects:
+  - `Code and workspace metadata still report 1.2.0 / P2.`
+  - `Live MT5 verification remains blocked by environment readiness.`
+- Next action: `Advance to WP-07 repository-wide post-patch audit.`
