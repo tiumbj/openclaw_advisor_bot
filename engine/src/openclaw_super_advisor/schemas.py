@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from ._version import __version__
+
 
 @dataclass(frozen=True)
 class EvidencePacketSchema:
-    schema_version: str = "0.0.0-placeholder"
+    schema_version: str = __version__
     advisor_only: bool = True
     execution_allowed: bool = False
 

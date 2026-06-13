@@ -1,52 +1,26 @@
-# Secrets
-.env
-.env.*
-!.env.example
-state/.env
-state/credentials/
-state/sessions/
-state/logs/
-state/plugin-skills/
-state/workspace-attestations/
-state/state/
-*.key
-*.pem
-*.p12
-*.pfx
-*.token
-*secret*
-*credential*
-!docs/P1_SECRET_SCAN.json
-
-# Python
+# Python environments and caches
 .venv/
 venv/
 __pycache__/
 *.py[cod]
+*.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
 htmlcov/
 
-# Runtime
-data/
+# Runtime state
+state/*
+!state/.gitkeep
+data/runtime/
 logs/
 archive/
+
+# Local data
 *.db
 *.sqlite
 *.sqlite3
-*.parquet
-*.csv
-*.jsonl
-*.log
-
-# OpenClaw runtime state
-state/agents/
-state/cache/
-state/tmp/
-state/runtime/
-state/*.lock
 
 # IDE / OS
 .vscode/

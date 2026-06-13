@@ -1,45 +1,55 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 
-from .config import load_agent_policy, validate_config_paths
-from .constants import CANONICAL_ENV_PATH, CONFIG_PATH, LEGACY_ARCHIVE_PATH, STATE_DIR, WORKSPACE_DIR
-from .env import audit_environment, load_settings
+from ._version import PHASE, __version__
+from .config import render_config, validate_rendered_config
+from .env import EnvAuditReport, audit_environment
+from .paths import ProjectPaths
+from .skills import SkillValidationReport, validate_skills
 
 
 @dataclass(frozen=True)
 class HealthReport:
-    state_dir: str
-    config_path: str
-    workspace_path: str
-    canonical_env_path: str
-    legacy_archive_path: str
+    version: str
+    phase: str
+    project_root: str
+    env_valid: bool
     env_status: dict[str, str]
-    env_issues: tuple[dict[str, str], ...]
-    agent_id: str
+    config_valid: bool
+    skills_valid: bool
+    runtime_agent_id: str
     allowed_tools: tuple[str, ...]
 
 
-def run_health_check() -> HealthReport:
-    validate_config_paths()
-    env_snapshot = audit_environment()
-    settings = load_settings(strict=False)
-    agent_policy = load_agent_policy()
+def run_health_check(paths: ProjectPaths) -> HealthReport:
+    env_report: EnvAuditReport = audit_environment(paths)
+    rendered_config = render_config(paths, env_path=paths.canonical_env_example_path)
+    config_report = validate_rendered_config(rendered_config, paths)
+    skill_report: SkillValidationReport = validate_skills(paths, rendered_config=rendered_config)
     return HealthReport(
-        state_dir=str(STATE_DIR),
-        config_path=str(CONFIG_PATH),
-        workspace_path=str(WORKSPACE_DIR),
-        canonical_env_path=str(CANONICAL_ENV_PATH),
-        legacy_archive_path=str(LEGACY_ARCHIVE_PATH),
-        env_status={name: env_snapshot.status(name) for name in env_snapshot.values},
-        env_issues=tuple(
-            {"name": issue.name, "status": issue.status, "message": issue.message}
-            for issue in env_snapshot.issues
-        ),
-        agent_id=agent_policy.agent_id,
-        allowed_tools=agent_policy.allowed_tools,
+        version=__version__,
+        phase=PHASE,
+        project_root=str(paths.root_dir),
+        env_valid=env_report.valid,
+        env_status=dict(env_report.statuses),
+        config_valid=config_report.valid,
+        skills_valid=skill_report.valid,
+        runtime_agent_id="super-advisor",
+        allowed_tools=("read", "session_status"),
     )
 
 
-def run_health_check_as_dict() -> dict[str, object]:
-    return asdict(run_health_check())
+def run_health_check_as_dict(paths: ProjectPaths) -> dict[str, object]:
+    report = run_health_check(paths)
+    return {
+        "version": report.version,
+        "phase": report.phase,
+        "project_root": report.project_root,
+        "env_valid": report.env_valid,
+        "env_status": report.env_status,
+        "config_valid": report.config_valid,
+        "skills_valid": report.skills_valid,
+        "runtime_agent_id": report.runtime_agent_id,
+        "allowed_tools": list(report.allowed_tools),
+    }

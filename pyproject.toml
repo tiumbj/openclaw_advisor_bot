@@ -1,0 +1,83 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openclaw-advisor-foundation"
+dynamic = ["version"]
+description = "Advisor-only OpenClaw foundation hardening package."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "Proprietary" }
+authors = [{ name = "Teera" }]
+dependencies = [
+  "PyYAML>=6.0.1,<7",
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.18,<2",
+  "pip-audit>=2.9,<3",
+  "pytest>=8.4,<9",
+  "pytest-cov>=7.0,<8",
+  "ruff>=0.13,<0.14",
+  "types-PyYAML>=6.0.12,<7",
+]
+
+[project.scripts]
+openclaw-advisor = "openclaw_super_advisor.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "engine/src" }
+
+[tool.setuptools.packages.find]
+where = ["engine/src"]
+
+[tool.setuptools.dynamic]
+version = { attr = "openclaw_super_advisor._version.__version__" }
+
+[tool.pytest.ini_options]
+testpaths = ["engine/tests"]
+addopts = "-ra --strict-markers --cov=openclaw_super_advisor --cov-branch --cov-report=term-missing --cov-report=json:docs/P1_1_COVERAGE.json"
+markers = [
+  "live: requires local services, credentials, or network",
+  "security: security boundary test",
+  "integration: multi-component local integration test",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["openclaw_super_advisor"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = false
+
+[tool.coverage.json]
+output = "docs/P1_1_COVERAGE.json"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["engine/src", "engine/tests", "scripts"]
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+  "I",
+  "B",
+  "UP",
+  "N",
+  "ARG",
+  "RUF",
+]
+
+[tool.mypy]
+python_version = "3.12"
+mypy_path = ["engine/src"]
+packages = ["openclaw_super_advisor"]
+strict = true
+warn_unreachable = true
+show_error_codes = true

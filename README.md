@@ -1,58 +1,42 @@
 # OpenClaw Super Advisor
 
-Advisor-only OpenClaw foundation for validating structured evidence packets and preparing controlled notifications.
+Advisor-only OpenClaw foundation hardening package for validating environment, skills, config templates, and security boundaries without enabling any trading runtime.
 
 ## Status
 
-- Current phase: v1.1.0-P1
-- Automatic trading: not implemented
+- Package version: `1.1.1`
+- Phase: `P1.1`
 - Trading execution: disabled by contract
-- MT5 bridge: read-only placeholder
-- Telegram publishing: disabled until environment validation passes
+- CLI surface: validation and audit only
+- Runtime config source: `config\openclaw.template.json`
+- Runtime state: local only under `state\`
 
-## Architecture
+## Safety Contract
 
-MT5 Terminal -> Python Deterministic Engine -> Structured Evidence Packet -> OpenClaw Super Advisor -> Telegram after explicit approval
+- No order placement, modification, cancellation, or position close logic.
+- No broker execution bridge, execution kernel, or auto trade flow.
+- No MT5 live connector, market data engine, indicators, pattern engine, voting, or Telegram trading alerts.
+- Skills and CLI commands are validation-only and read-only by design.
 
-## Folder Structure
-
-- `state/` OpenClaw state, config, and canonical `.env`
-- `workspace/` super-advisor bootstrap files and local skills
-- `engine/` Python runtime skeleton and tests
-- `scripts/` validation/report helpers
-- `docs/` validation and publication artifacts
-
-## Installation Summary
-
-1. Install Node 24 and Python 3.12.
-2. Install OpenClaw with the official PowerShell installer.
-3. Fill `state/.env` manually from `.env.example` or `state/.env.example`.
-4. Validate config and run tests.
-
-## Environment Template
-
-Use `.env.example` as the publication-safe template and `state/.env` as the only runtime env file.
-
-## Test Commands
+## Validation Commands
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest discover -s engine\tests -p 'test_*.py'
-.\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_*.py'
-.\.venv\Scripts\python.exe scripts\p1_validate.py
+.\.venv\Scripts\python.exe -m pip install -e .[dev]
+.\.venv\Scripts\python.exe -m ruff check .
+.\.venv\Scripts\python.exe -m mypy engine\src
+.\.venv\Scripts\python.exe -m pytest -m "not live"
+.\.venv\Scripts\openclaw-advisor.exe health
+.\.venv\Scripts\openclaw-advisor.exe validate-env
+.\.venv\Scripts\openclaw-advisor.exe validate-skills --strict
+.\.venv\Scripts\openclaw-advisor.exe security-scan --strict
+.\.venv\Scripts\openclaw-advisor.exe render-config --validate --strict
 ```
 
-## Security Boundary
+## Test Layout
 
-- No broker write APIs
-- No shell access for the production agent
-- No secrets committed to Git
-- No legacy archive used at runtime
+- `engine\tests\unit`
+- `engine\tests\integration`
+- `engine\tests\security`
+- `engine\tests\live`
 
-## Not Implemented Yet
-
-- market data engine
-- indicators
-- pattern logic
-- voting
-- scoring thresholds
-- trading alerts
+Live tests use `@pytest.mark.live` and are excluded by default.

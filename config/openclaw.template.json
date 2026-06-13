@@ -7,7 +7,7 @@
   "gateway": {
     "mode": "local",
     "bind": "loopback",
-    "port": 18789,
+    "port": "{{OPENCLAW_GATEWAY_PORT}}",
     "auth": {
       "mode": "token",
       "token": {
@@ -22,16 +22,25 @@
   },
   "hooks": {
     "enabled": false,
-    "path": "/hooks",
+    "path": "{{OPENCLAW_HOOKS_PATH}}",
     "allowRequestSessionKey": false,
     "allowedAgentIds": [
       "super-advisor"
     ],
     "maxBodyBytes": 65536
   },
+  "skills": [
+    "advisor-safety-contract",
+    "environment-health",
+    "python-engine-bridge",
+    "evidence-audit",
+    "super-potential-review",
+    "thai-telegram-publisher",
+    "incident-reporting"
+  ],
   "agents": {
     "defaults": {
-      "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace",
+      "workspace": "{{OPENCLAW_WORKSPACE_DIR}}",
       "skills": [
         "advisor-safety-contract",
         "environment-health",
@@ -53,8 +62,8 @@
         "default": true,
         "name": "OpenClaw Super Advisor",
         "description": "Advisor-only validation agent for structured evidence packets and approved health reporting.",
-        "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace",
-        "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\super-advisor\\agent",
+        "workspace": "{{OPENCLAW_WORKSPACE_DIR}}",
+        "agentDir": "state\\agents\\super-advisor\\agent",
         "skills": [
           "advisor-safety-contract",
           "environment-health",
@@ -114,13 +123,14 @@
               "allowAcrossProviders": false
             },
             "actions": {
-              "allow": [
-                "send"
-              ]
+              "allow": []
             },
             "broadcast": {
               "enabled": false
             }
+          },
+          "agentToAgent": {
+            "enabled": false
           },
           "elevated": {
             "enabled": false
@@ -138,15 +148,26 @@
                 "group:automation",
                 "group:messaging",
                 "group:plugins",
+                "group:memory",
+                "group:sessions",
                 "write",
                 "edit",
                 "apply_patch",
                 "exec",
                 "process",
+                "code_execution",
                 "browser",
                 "canvas",
+                "gateway",
                 "message",
-                "gateway"
+                "subagents",
+                "memory_search",
+                "memory_get",
+                "sessions_list",
+                "sessions_history",
+                "sessions_send",
+                "sessions_spawn",
+                "sessions_yield"
               ]
             }
           }
@@ -204,9 +225,7 @@
         "allowAcrossProviders": false
       },
       "actions": {
-        "allow": [
-          "send"
-        ]
+        "allow": []
       },
       "broadcast": {
         "enabled": false
@@ -231,23 +250,32 @@
           "group:automation",
           "group:messaging",
           "group:plugins",
+          "group:memory",
+          "group:sessions",
           "write",
           "edit",
           "apply_patch",
           "exec",
           "process",
+          "code_execution",
           "browser",
           "canvas",
+          "gateway",
           "message",
-          "gateway"
+          "subagents",
+          "memory_search",
+          "memory_get",
+          "sessions_list",
+          "sessions_history",
+          "sessions_send",
+          "sessions_spawn",
+          "sessions_yield"
         ]
       }
     },
     "subagents": {
       "tools": {
-        "allow": [
-          "session_status"
-        ],
+        "allow": [],
         "deny": [
           "group:openclaw",
           "group:plugins"

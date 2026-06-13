@@ -1,0 +1,16 @@
+{
+  "version": "1.1.1",
+  "phase": "P1.1",
+  "valid": true,
+  "skills": [
+    "advisor-safety-contract",
+    "environment-health",
+    "python-engine-bridge",
+    "evidence-audit",
+    "super-potential-review",
+    "thai-telegram-publisher",
+    "incident-reporting"
+  ],
+  "issues": [],
+  "runtime_issues": []
+}

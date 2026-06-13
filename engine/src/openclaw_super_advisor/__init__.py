@@ -1,5 +1,5 @@
-"""OpenClaw Super Advisor engine bootstrap package."""
+"""OpenClaw Super Advisor foundation hardening package."""
 
-from .health import run_health_check
+from ._version import PHASE, __version__
 
-__all__ = ["run_health_check"]
+__all__ = ["PHASE", "__version__"]

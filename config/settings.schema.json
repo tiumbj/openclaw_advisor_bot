@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenClaw Advisor Render Settings 1.1.1",
+  "type": "object",
+  "required": [
+    "paths",
+    "safety",
+    "gateway",
+    "skills"
+  ],
+  "properties": {
+    "paths": {
+      "type": "object",
+      "required": [
+        "home",
+        "state_dir",
+        "config_path",
+        "workspace_dir"
+      ],
+      "properties": {
+        "home": { "type": "string" },
+        "state_dir": { "type": "string" },
+        "config_path": { "type": "string" },
+        "workspace_dir": { "type": "string" }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": [
+        "advisor_only",
+        "execution_allowed",
+        "allow_order_send"
+      ],
+      "properties": {
+        "advisor_only": { "const": true },
+        "execution_allowed": { "const": false },
+        "allow_order_send": { "const": false }
+      }
+    },
+    "gateway": {
+      "type": "object",
+      "required": [
+        "host",
+        "port",
+        "hooks_path"
+      ],
+      "properties": {
+        "host": { "type": "string" },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "hooks_path": { "type": "string" }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

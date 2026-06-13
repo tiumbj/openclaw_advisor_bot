@@ -1,11 +1,12 @@
 ---
 name: evidence-audit
 description: Audit structured evidence integrity without recalculating or altering scores.
+version: 1.1.1
 ---
 
 # evidence-audit
 
-Version: v1.0.0-P0
+Version: 1.1.1
 
 Purpose: audit evidence quality without recalculating it.
 

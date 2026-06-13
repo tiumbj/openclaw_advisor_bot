@@ -1,0 +1,294 @@
+{
+  "version": "1.1.1",
+  "phase": "P1.1",
+  "config": {
+    "env": {
+      "shellEnv": {
+        "enabled": false
+      }
+    },
+    "gateway": {
+      "mode": "local",
+      "bind": "loopback",
+      "port": "18789",
+      "auth": {
+        "mode": "token",
+        "token": {
+          "source": "env",
+          "provider": "default",
+          "id": "OPENCLAW_GATEWAY_TOKEN"
+        }
+      },
+      "controlUi": {
+        "enabled": false
+      }
+    },
+    "hooks": {
+      "enabled": false,
+      "path": "/hooks",
+      "allowRequestSessionKey": false,
+      "allowedAgentIds": [
+        "super-advisor"
+      ],
+      "maxBodyBytes": 65536
+    },
+    "skills": [
+      "advisor-safety-contract",
+      "environment-health",
+      "python-engine-bridge",
+      "evidence-audit",
+      "super-potential-review",
+      "thai-telegram-publisher",
+      "incident-reporting"
+    ],
+    "agents": {
+      "defaults": {
+        "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace",
+        "skills": [
+          "advisor-safety-contract",
+          "environment-health",
+          "python-engine-bridge",
+          "evidence-audit",
+          "super-potential-review",
+          "thai-telegram-publisher",
+          "incident-reporting"
+        ],
+        "contextInjection": "always",
+        "memorySearch": {
+          "enabled": false,
+          "sources": []
+        }
+      },
+      "list": [
+        {
+          "id": "super-advisor",
+          "default": true,
+          "name": "OpenClaw Super Advisor",
+          "description": "Advisor-only validation agent for structured evidence packets and approved health reporting.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace",
+          "agentDir": "state\\agents\\super-advisor\\agent",
+          "skills": [
+            "advisor-safety-contract",
+            "environment-health",
+            "python-engine-bridge",
+            "evidence-audit",
+            "super-potential-review",
+            "thai-telegram-publisher",
+            "incident-reporting"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "tools": {
+      "allow": [
+        "read",
+        "session_status"
+      ],
+      "deny": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "exec": {
+        "mode": "deny",
+        "applyPatch": {
+          "enabled": false,
+          "workspaceOnly": true
+        }
+      },
+      "fs": {
+        "workspaceOnly": true
+      },
+      "message": {
+        "allowCrossContextSend": false,
+        "crossContext": {
+          "allowWithinProvider": false,
+          "allowAcrossProviders": false
+        },
+        "actions": {
+          "allow": []
+        },
+        "broadcast": {
+          "enabled": false
+        }
+      },
+      "agentToAgent": {
+        "enabled": false
+      },
+      "elevated": {
+        "enabled": false
+      },
+      "sandbox": {
+        "tools": {
+          "allow": [
+            "read",
+            "session_status"
+          ],
+          "deny": [
+            "group:runtime",
+            "group:web",
+            "group:ui",
+            "group:automation",
+            "group:messaging",
+            "group:plugins",
+            "group:memory",
+            "group:sessions",
+            "write",
+            "edit",
+            "apply_patch",
+            "exec",
+            "process",
+            "code_execution",
+            "browser",
+            "canvas",
+            "gateway",
+            "message",
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "sessions_list",
+            "sessions_history",
+            "sessions_send",
+            "sessions_spawn",
+            "sessions_yield"
+          ]
+        }
+      },
+      "subagents": {
+        "tools": {
+          "allow": [],
+          "deny": [
+            "group:openclaw",
+            "group:plugins"
+          ]
+        }
+      }
+    }
+  },
+  "validation": {
+    "valid": true,
+    "issues": []
+  }
+}

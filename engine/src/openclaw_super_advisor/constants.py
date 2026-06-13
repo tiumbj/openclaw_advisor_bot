@@ -1,85 +1,42 @@
-from pathlib import Path
+from __future__ import annotations
 
-ROOT_DIR = Path(r"C:\Data\OpenClawSuperAdvisor")
-STATE_DIR = ROOT_DIR / "state"
-WORKSPACE_DIR = ROOT_DIR / "workspace"
-ENGINE_DIR = ROOT_DIR / "engine"
-CANONICAL_ENV_PATH = STATE_DIR / ".env"
-CONFIG_PATH = STATE_DIR / "openclaw.json"
-LEGACY_PROJECT_DIR = Path(r"C:\Data\OpenClawBot")
-LEGACY_ARCHIVE_PATH = Path(r"C:\Data\OpenClaw_PreReset_Audit_20260613\OpenClawBot_Legacy.zip")
-PROHIBITED_ENV_PATHS = (
-    ROOT_DIR / ".env",
-    WORKSPACE_DIR / ".env",
-    ENGINE_DIR / ".env",
-    Path.home() / ".env",
-    LEGACY_PROJECT_DIR / ".env",
-)
-REQUIRED_ENV_VARS = (
-    "OPENCLAW_HOME",
-    "OPENCLAW_STATE_DIR",
-    "OPENCLAW_CONFIG_PATH",
-    "OPENCLAW_WORKSPACE_DIR",
-    "OPENCLAW_LOG_LEVEL",
-    "OPENCLAW_GATEWAY_TOKEN",
-    "OPENCLAW_HOOKS_TOKEN",
-    "ADVISOR_ENGINE_API_TOKEN",
-    "AI_PRIMARY_PROVIDER",
-    "AI_PRIMARY_MODEL",
-    "AI_FALLBACK_PROVIDER_1",
-    "AI_FALLBACK_MODEL_1",
-    "AI_FALLBACK_PROVIDER_2",
-    "AI_FALLBACK_MODEL_2",
-    "AI_FALLBACK_PROVIDER_3",
-    "AI_FALLBACK_MODEL_3",
-    "DEEPSEEK_API_KEY",
-    "OPENAI_API_KEY",
-    "ANTHROPIC_API_KEY",
-    "GEMINI_API_KEY",
-    "GOOGLE_API_KEY",
-    "TELEGRAM_ENABLED",
-    "TELEGRAM_BOT_TOKEN",
-    "TELEGRAM_ALLOWED_USER_ID",
-    "TELEGRAM_TARGET_CHAT_ID",
-    "TELEGRAM_GROUP_CHAT_ID",
-    "TELEGRAM_THREAD_ID",
-    "MT5_ENABLED",
-    "MT5_TERMINAL_PATH",
-    "MT5_USE_EXISTING_SESSION",
-    "MT5_LOGIN",
-    "MT5_PASSWORD",
-    "MT5_SERVER",
-    "MT5_XAUUSD_SYMBOL",
-    "MT5_DXY_SYMBOL",
-    "MT5_EURUSD_SYMBOL",
-    "MT5_AUDUSD_SYMBOL",
-    "MT5_US10Y_SYMBOL",
-    "ADVISOR_ONLY",
-    "EXECUTION_ALLOWED",
-    "ALLOW_ORDER" "_SEND",
-    "ADVISOR_ENGINE_HOST",
-    "ADVISOR_ENGINE_PORT",
-    "ADVISOR_ENGINE_BASE_URL",
-    "ADVISOR_TIMEZONE",
-    "ADVISOR_PRIMARY_SYMBOL",
-    "ADVISOR_RUNTIME_MODE",
-    "OPENCLAW_HOOKS_ENABLED",
-    "OPENCLAW_HOOKS_PATH",
-    "OPENCLAW_GATEWAY_HOST",
-    "OPENCLAW_GATEWAY_PORT",
-    "ADVISOR_DATA_DIR",
-    "ADVISOR_LOG_DIR",
-    "ADVISOR_DB_PATH",
-    "APP_ENV",
-    "DRY_RUN",
-    "SHADOW_MODE",
-    "LIVE_TELEGRAM_ALLOWED",
-    "REVEAL_SECRET_VALUES",
+from ._version import PHASE, __version__
+
+PACKAGE_VERSION = __version__
+PACKAGE_PHASE = PHASE
+CANONICAL_RUNTIME_AGENT_ID = "super-advisor"
+SKILL_NAMES = (
+    "advisor-safety-contract",
+    "environment-health",
+    "python-engine-bridge",
+    "evidence-audit",
+    "super-potential-review",
+    "thai-telegram-publisher",
+    "incident-reporting",
 )
 FORBIDDEN_SYMBOLS = (
-    "order" "_send",
-    "TRADE" "_ACTION",
-    "Execution" "Kernel",
-    "execution" "_dispatch_bridge",
-    "position" "_close",
+    "order_send",
+    "order_check",
+    "TRADE_ACTION",
+    "ExecutionKernel",
+    "execution_kernel",
+    "execution_dispatch_bridge",
+    "position_close",
+    "close_position",
+    "modify_order",
+    "cancel_order",
+    "execute_order",
+    "auto_trade",
 )
+FORBIDDEN_TRACKED_PATHS = (
+    r"state\.env",
+    r"state\openclaw.json",
+    r"state\credentials",
+    r"state\sessions",
+    r"state\logs",
+    r"\.venv",
+    r"logs",
+    r"data\runtime",
+    r"archive",
+)
+ENV_STATUSES = ("PRESENT", "MISSING", "BLANK", "INVALID_FORMAT")
