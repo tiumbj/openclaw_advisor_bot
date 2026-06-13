@@ -105,3 +105,62 @@
   - `Package/workspace metadata still remain at 1.2.0 / P2.`
   - `Live MT5 verification is still not run.`
 - Next action: `Commit and push WP-01 workflow hardening, then verify GitHub Actions on the new commit.`
+
+## Entry 0005
+
+- Timestamp UTC: `2026-06-13T14:21:37Z`
+- Phase: `P2.1`
+- Work Package: `WP-01`
+- Operation: `Observed GitHub Actions success for the first WP-01 workflow commit and identified a residual Node20 deprecation warning from actions/upload-artifact@v5 under forced Node24 execution.`
+- Files changed:
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `gh run watch 27469283454 --exit-status`
+  - `gh run watch 27469283464 --exit-status`
+  - `gh run list --commit 1f0ea3f08d2b3686f57192f2461acaf325617224 --limit 10`
+  - `gh api repos/actions/upload-artifact/contents/action.yml?ref=v5`
+  - `gh api repos/actions/upload-artifact/contents/action.yml?ref=v7`
+- Result: `PASS`
+- Commit: `1f0ea3f08d2b3686f57192f2461acaf325617224`
+- Remote push: `PASS`
+- CI result: `PASS_WITH_WARNING`
+- Security result: `PASS_WITH_WARNING`
+- Known defects:
+  - `actions/upload-artifact@v5 targets node20 on the v5 ref.`
+  - `Package/workspace metadata still remain at 1.2.0 / P2.`
+- Next action: `Update the artifact action to v7 and rerun validation.`
+
+## Entry 0006
+
+- Timestamp UTC: `2026-06-13T14:22:43Z`
+- Phase: `P2.1`
+- Work Package: `WP-01`
+- Operation: `Applied the upload-artifact v7 remediation and reran the full local validation suite that mirrors workflow steps.`
+- Files changed:
+  - `.github/workflows/ci.yml`
+  - `.github/workflows/security.yml`
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `python -c "yaml.safe_load(...)"` on both workflow files
+  - `python -m pip check`
+  - `python -m ruff check .`
+  - `python -m mypy engine\src`
+  - `python -m pytest -m "not live"`
+  - `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json`
+  - `openclaw-advisor validate-skills --strict`
+  - `openclaw-advisor render-config --validate --strict`
+  - `openclaw-advisor security-scan --include-history --strict`
+  - `python -m pip_audit`
+- Result: `PASS`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `NOT_RUN`
+- Known defects:
+  - `Package/workspace metadata still remain at 1.2.0 / P2.`
+  - `Remote confirmation of upload-artifact v7 is still pending.`
+- Next action: `Commit and push the v7 remediation, then verify GitHub Actions annotations are clean.`

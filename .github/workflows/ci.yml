@@ -38,7 +38,7 @@ jobs:
         run: openclaw-advisor render-config --validate --strict
       - name: Upload coverage artifact
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: ci-coverage-json
           path: docs/P2_COVERAGE.json

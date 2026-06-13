@@ -5,9 +5,9 @@
   "phase": "P2.1",
   "phase_status": "IN_PROGRESS",
   "current_work_package": "WP-01",
-  "updated_at_utc": "2026-06-13T14:18:28Z",
-  "local_commit": "eca0c72b7dfc38c541636324e46298df21ac3124",
-  "remote_commit": "eca0c72b7dfc38c541636324e46298df21ac3124",
+  "updated_at_utc": "2026-06-13T14:22:43Z",
+  "local_commit": "1f0ea3f08d2b3686f57192f2461acaf325617224",
+  "remote_commit": "1f0ea3f08d2b3686f57192f2461acaf325617224",
   "local_remote_aligned": true,
   "working_tree_clean": false,
   "ci_status": "NOT_RUN",
@@ -18,7 +18,7 @@
       "id": "WP-00",
       "name": "Repository and Report Bootstrap",
       "status": "PASS",
-      "commit": "eca0c72b7dfc38c541636324e46298df21ac3124",
+      "commit": "1f0ea3f08d2b3686f57192f2461acaf325617224",
       "tests": [
         "baseline_git_audit",
         "remote_alignment_check",
@@ -37,13 +37,15 @@
       "tests": [
         "official_action_release_audit",
         "official_runner_guidance_audit",
-        "wp01_local_validation"
+        "wp01_local_validation",
+        "wp01_github_warning_confirmation",
+        "wp01_artifact_v7_validation"
       ],
       "evidence": [
         ".github/workflows/ci.yml",
         ".github/workflows/security.yml"
       ],
-      "next_action": "Commit and push workflow hardening."
+      "next_action": "Commit and push final upload-artifact v7 remediation."
     },
     {
       "id": "WP-02",
@@ -168,6 +170,26 @@
       "commit_sha": "eca0c72b7dfc38c541636324e46298df21ac3124",
       "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
       "tool_version": "Python 3.12.10"
+    },
+    {
+      "name": "wp01_github_warning_confirmation",
+      "status": "PASS",
+      "command": "gh run watch 27469283454 --exit-status; gh run watch 27469283464 --exit-status; gh run list --commit 1f0ea3f08d2b3686f57192f2461acaf325617224 --limit 10",
+      "timestamp_utc": "2026-06-13T14:21:37Z",
+      "exit_code": 0,
+      "commit_sha": "1f0ea3f08d2b3686f57192f2461acaf325617224",
+      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
+      "tool_version": "gh 2.89.0"
+    },
+    {
+      "name": "wp01_artifact_v7_validation",
+      "status": "PASS",
+      "command": "python -c \"yaml.safe_load(...)\"; python -m pip check; python -m ruff check .; python -m mypy engine\\\\src; python -m pytest -m \"not live\"; python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json; openclaw-advisor validate-skills --strict; openclaw-advisor render-config --validate --strict; openclaw-advisor security-scan --include-history --strict; python -m pip_audit",
+      "timestamp_utc": "2026-06-13T14:22:43Z",
+      "exit_code": 0,
+      "commit_sha": "1f0ea3f08d2b3686f57192f2461acaf325617224",
+      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
+      "tool_version": "Python 3.12.10"
     }
   ],
   "blockers": [
@@ -181,12 +203,12 @@
     {
       "id": "workflow-compatibility-drift",
       "status": "IN_PROGRESS",
-      "summary": "Workflow changes for Node24-compatible action versions and Windows 2025 VS2026 runner have been applied locally and validated, but GitHub workflow confirmation is still pending.",
-      "redacted_error": "Awaiting remote workflow confirmation only; no secret exposure.",
-      "required_action": "Commit and push WP-01 changes, then verify GitHub Actions success."
+      "summary": "The first WP-01 workflow commit passed on GitHub but exposed a residual Node20 deprecation warning from actions/upload-artifact@v5. A v7 remediation has been applied locally and validated, but remote confirmation is still pending.",
+      "redacted_error": "Residual compatibility warning only; no secret exposure.",
+      "required_action": "Push the upload-artifact v7 remediation and confirm the warning is gone in GitHub Actions."
     }
   ],
-  "next_action": "Commit and push WP-01 workflow hardening, then verify ci/security workflow results.",
+  "next_action": "Commit and push the upload-artifact v7 remediation, then verify ci/security workflow results.",
   "evidence_files": [
     "docs/P2_1_BASELINE_AUDIT.md",
     "docs/PROJECT_STATUS.md",
