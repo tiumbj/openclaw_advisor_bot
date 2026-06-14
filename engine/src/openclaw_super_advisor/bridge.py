@@ -14,5 +14,5 @@ def bridge_contract_summary() -> dict[str, object]:
         "advisor_only": True,
         "execution_allowed": False,
         "required_fields": list(asdict(BridgeEnvelope(__version__, "", "", True, False)).keys()),
-        "schema_placeholder": asdict(EvidencePacketSchema()),
+        "evidence_packet_schema": asdict(EvidencePacketSchema()),
     }

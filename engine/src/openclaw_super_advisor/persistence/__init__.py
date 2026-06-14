@@ -518,12 +518,31 @@ class BackupManager:
             shutil.rmtree(restored_dir, ignore_errors=True)
 
 
+_SYSTEM_EVENT_SEVERITY: dict[str, str] = {
+    "SYSTEM_STARTED": "INFO",
+    "SYSTEM_RECOVERED": "INFO",
+    "SYSTEM_SHUTTING_DOWN": "INFO",
+    "SYSTEM_OFFLINE_DETECTED": "CRITICAL",
+    "GATEWAY_FAILED": "CRITICAL",
+    "PYTHON_ENGINE_FAILED": "CRITICAL",
+    "QUEUE_STALLED": "WARNING",
+    "DATA_STALE": "WARNING",
+    "MT5_DISCONNECTED": "WARNING",
+    "FRED_UNAVAILABLE": "INFO",
+    "DISK_LOW": "WARNING",
+    "DATABASE_LOCKED": "CRITICAL",
+    "EXPERIMENT_FAILED": "WARNING",
+    "SECURITY_INCIDENT": "CRITICAL",
+}
+
+
 class TelegramPublisher:
     def __init__(self, journal_dir: Path) -> None:
         self.journal_dir = journal_dir
         self.journal_dir.mkdir(parents=True, exist_ok=True)
         self.dead_letter_path = self.journal_dir / "telegram-dead-letter.ndjson"
         self.delivery_log_path = self.journal_dir / "telegram-delivery.ndjson"
+        self._dedup_seen: set[str] = set()
 
     def format_thai(self, payload: dict[str, Any]) -> str:
         title = str(payload.get("title", "OpenClaw"))
@@ -531,8 +550,47 @@ class TelegramPublisher:
         evidence_id = str(payload.get("evidence_id", "UNKNOWN"))
         return f"{title}\nหลักฐาน: {evidence_id}\n{body}".strip()
 
+    def format_system_event(self, event: dict[str, Any]) -> str:
+        """Format a system event payload as a Thai Telegram message."""
+        event_type = str(event.get("event_type", "SYSTEM_INCIDENT"))
+        severity = str(event.get("severity", _SYSTEM_EVENT_SEVERITY.get(event_type, "INFO")))
+        component = str(event.get("component", "unknown"))
+        timestamp_utc = str(event.get("timestamp_utc", utc_now()))
+        message = str(event.get("message", ""))
+        root_cause = str(event.get("root_cause", "unknown"))
+        impact = str(event.get("current_impact", ""))
+        recovery = str(event.get("recovery_action", ""))
+        correlation_id = str(event.get("correlation_id", ""))
+
+        severity_icon = {"CRITICAL": "🔴", "WARNING": "🟡", "INFO": "🟢"}.get(severity, "⚪")
+        lines = [
+            f"{severity_icon} [{severity}] {event_type}",
+            f"ส่วนประกอบ: {component}",
+            f"เวลา UTC: {timestamp_utc}",
+        ]
+        if message:
+            lines.append(message)
+        if root_cause and root_cause != "unknown":
+            lines.append(f"สาเหตุ: {root_cause}")
+        if impact:
+            lines.append(f"ผลกระทบ: {impact}")
+        if recovery:
+            lines.append(f"การแก้ไข: {recovery}")
+        if correlation_id:
+            lines.append(f"ID: {correlation_id[:12]}")
+        return "\n".join(lines)
+
+    def _dedup_key(self, payload: dict[str, Any]) -> str:
+        event_type = str(payload.get("event_type", payload.get("title", "")))
+        component = str(payload.get("component", ""))
+        return f"{event_type}:{component}"
+
     def dry_run(self, payload: dict[str, Any]) -> dict[str, Any]:
-        message = self.format_thai(payload)
+        event_type = payload.get("event_type")
+        if event_type and event_type in _SYSTEM_EVENT_SEVERITY:
+            message = self.format_system_event(payload)
+        else:
+            message = self.format_thai(payload)
         record = {
             "created_at_utc": utc_now(),
             "mode": "dry_run",
@@ -553,3 +611,13 @@ class TelegramPublisher:
         with self.dead_letter_path.open("a", encoding="utf-8") as handle:
             handle.write(canonical_json(record) + "\n")
         return record
+
+    def is_duplicate(self, payload: dict[str, Any]) -> bool:
+        key = self._dedup_key(payload)
+        if key in self._dedup_seen:
+            return True
+        self._dedup_seen.add(key)
+        return False
+
+    def clear_dedup_window(self) -> None:
+        self._dedup_seen.clear()

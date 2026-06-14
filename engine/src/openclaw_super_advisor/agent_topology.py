@@ -71,25 +71,25 @@ class RouteValidationReport:
     issues: tuple[AgentTopologyIssue, ...]
 
 
-def build_agent_topology(paths: ProjectPaths) -> tuple[AgentContract, ...]:
-    agent_specs = {
+def _agent_specs() -> dict[str, dict[str, object]]:
+    return {
         "super-advisor": {
-            "name": "OpenClaw Super Advisor",
-            "description": "Coordinator, policy gate, evidence auditor, and publication approver.",
+            "name": "OpenClaw MAIN Agent Manager",
+            "description": "Sole user-facing coordinator; planner, router, evidence arbiter, release gate.",
             "secret_access": "none",
-            "timeout_seconds": 120,
+            "timeout_seconds": 300,
             "retry_max_attempts": 2,
         },
         "xau-strategy-auditor": {
-            "name": "XAU Strategy Auditor",
-            "description": "Read-only XAUUSD review and setup-quality auditor.",
+            "name": "XAU Strategy Research Agent",
+            "description": "Read-only XAUUSD multi-timeframe research and alert-quality review.",
             "secret_access": "none",
             "timeout_seconds": 90,
             "retry_max_attempts": 2,
         },
         "system-coder-auditor": {
             "name": "System Coder Auditor",
-            "description": "Read-only code-audit agent with isolated worktree patch proposals.",
+            "description": "Read-only code-audit agent; isolated worktree patch proposals only.",
             "secret_access": "none",
             "timeout_seconds": 90,
             "retry_max_attempts": 2,
@@ -101,10 +101,70 @@ def build_agent_topology(paths: ProjectPaths) -> tuple[AgentContract, ...]:
             "timeout_seconds": 60,
             "retry_max_attempts": 3,
         },
+        "market-data-integrity-agent": {
+            "name": "Market Data Integrity Agent",
+            "description": "MT5/FRED data quality audit: missing bars, timezone, provenance.",
+            "secret_access": "none",
+            "timeout_seconds": 120,
+            "retry_max_attempts": 3,
+        },
+        "price-action-microstructure-agent": {
+            "name": "Price Action Microstructure Agent",
+            "description": "Candlestick structure, wick/body, rejection, and M1/M5 trigger analysis.",
+            "secret_access": "none",
+            "timeout_seconds": 90,
+            "retry_max_attempts": 2,
+        },
+        "intermarket-macro-agent": {
+            "name": "Intermarket Macro Agent",
+            "description": "USD basket, US10Y, FX correlation, lead/lag, regime classification.",
+            "secret_access": "none",
+            "timeout_seconds": 120,
+            "retry_max_attempts": 2,
+        },
+        "statistical-backtest-agent": {
+            "name": "Statistical Backtest Agent",
+            "description": "Sample adequacy, walk-forward, stability, overfitting and leakage detection.",
+            "secret_access": "none",
+            "timeout_seconds": 300,
+            "retry_max_attempts": 2,
+        },
+        "failure-root-cause-agent": {
+            "name": "Failure Root Cause Agent",
+            "description": "Alert failure analysis, logic conflict audit, root-cause tree, corrective hypothesis.",
+            "secret_access": "none",
+            "timeout_seconds": 120,
+            "retry_max_attempts": 2,
+        },
+        "security-compliance-agent": {
+            "name": "Security Compliance Agent",
+            "description": "Advisor-only enforcement, secret exposure scan, agent privilege audit.",
+            "secret_access": "none",
+            "timeout_seconds": 60,
+            "retry_max_attempts": 2,
+        },
+        "reliability-watchdog-agent": {
+            "name": "Reliability Watchdog Agent",
+            "description": "Process health, heartbeat monitoring, restart protocol, incident escalation.",
+            "secret_access": "none",
+            "timeout_seconds": 30,
+            "retry_max_attempts": 5,
+        },
+        "knowledge-skill-manager": {
+            "name": "Knowledge and Skill Manager",
+            "description": "Research knowledge lifecycle, experiment records, skill candidate management.",
+            "secret_access": "none",
+            "timeout_seconds": 120,
+            "retry_max_attempts": 2,
+        },
     }
+
+
+def build_agent_topology(paths: ProjectPaths) -> tuple[AgentContract, ...]:
+    specs = _agent_specs()
     agents: list[AgentContract] = []
     for agent_id in RUNTIME_AGENT_IDS:
-        spec = agent_specs[agent_id]
+        spec = specs[agent_id]
         name = cast(str, spec["name"])
         description = cast(str, spec["description"])
         secret_access = cast(str, spec["secret_access"])
@@ -325,8 +385,26 @@ def validate_agent_topology(
                         )
                     )
 
-    if route_issues:
-        pass
+    routing = config.get("routing")
+    if isinstance(routing, dict):
+        realtime = routing.get("realtime", [])
+        if [tuple(r) for r in realtime] != list(REALTIME_ROUTE_ALLOWLIST):
+            route_issues.append(
+                AgentTopologyIssue(
+                    "routing.realtime",
+                    "allowlist_mismatch",
+                    "realtime routing must match the allowlist",
+                )
+            )
+        code_audit = routing.get("code-audit", [])
+        if [tuple(r) for r in code_audit] != list(CODE_AUDIT_ROUTE_ALLOWLIST):
+            route_issues.append(
+                AgentTopologyIssue(
+                    "routing.code-audit",
+                    "allowlist_mismatch",
+                    "code-audit routing must match the allowlist",
+                )
+            )
 
     return AgentTopologyReport(
         version=__version__,
