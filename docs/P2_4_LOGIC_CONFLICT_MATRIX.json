@@ -1,0 +1,294 @@
+{
+  "schema_version": "p2-4-logic-conflict-matrix-v1",
+  "generated_at": "2026-06-14",
+  "baseline_head": "5e247b2846d33b7a164478ac0061cec5a4a949d3",
+  "blueprint_version": "p2-4-master-blueprint-v2",
+  "summary": {
+    "CRITICAL": 9,
+    "HIGH": 11,
+    "MEDIUM": 8,
+    "LOW": 3,
+    "total": 31,
+    "open": 31,
+    "resolved": 0
+  },
+  "findings": [
+    {
+      "finding_id": "LC-001",
+      "severity": "CRITICAL",
+      "component": "constants.py, agent_topology.py",
+      "files": ["engine/src/openclaw_super_advisor/constants.py", "engine/src/openclaw_super_advisor/agent_topology.py"],
+      "expected_behavior": "12 runtime agents",
+      "actual_behavior": "4 agents only",
+      "root_cause": "Prior blueprint only defined 4 agents",
+      "pipeline_impact": "Missing 8 specialist agents — intermarket, statistical, failure, watchdog, security, knowledge",
+      "blueprint_requirement": "§4 Specialist Agent Topology",
+      "remediation": "Add 8 new agents to RUNTIME_AGENT_IDS and agent specs",
+      "test_required": ["test_agent_topology_has_12_agents", "test_only_main_is_user_facing"],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-002",
+      "severity": "CRITICAL",
+      "component": "engine — no FRED module",
+      "files": ["engine/src/openclaw_super_advisor/env.py"],
+      "expected_behavior": "FRED adapter with DGS10 and DTWEXBGS support",
+      "actual_behavior": "Zero FRED code exists",
+      "root_cause": "Not implemented in prior phases",
+      "pipeline_impact": "No US10Y daily data. No USD broad index from FRED.",
+      "blueprint_requirement": "§9 FRED Intermarket Integration",
+      "remediation": "Create engine/src/openclaw_super_advisor/market_data/fred_adapter.py",
+      "test_required": ["test_fred_dgs10_daily_classification", "test_fred_dtwexbgs_is_marked_proxy", "test_fred_missing_dot_value", "test_fred_failure_does_not_stop_pipeline"],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-003",
+      "severity": "CRITICAL",
+      "component": "engine — no FX basket module",
+      "files": [],
+      "expected_behavior": "7-pair normalized FX basket as FX_BASKET_COMPUTED",
+      "actual_behavior": "No FX basket code exists",
+      "root_cause": "Not implemented in prior phases",
+      "pipeline_impact": "No computed USD strength without MT5 DXY or FRED",
+      "blueprint_requirement": "§10 FX Basket",
+      "remediation": "Create engine/src/openclaw_super_advisor/market_data/fx_basket.py",
+      "test_required": ["test_fx_basket_direction_normalization", "test_fx_basket_timestamp_alignment"],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-004",
+      "severity": "CRITICAL",
+      "component": "engine — no scheduler or queue module",
+      "files": [],
+      "expected_behavior": "SQLite-backed persistent task queue with lease/heartbeat; persistent scheduler",
+      "actual_behavior": "No scheduler, no task queue, no job persistence",
+      "root_cause": "Not implemented in prior phases",
+      "pipeline_impact": "No 24/7 operation, no crash recovery, no recurring research cycle",
+      "blueprint_requirement": "§12 Persistent 24/7 Operation",
+      "remediation": "Create engine/src/openclaw_super_advisor/scheduler/job_queue.py and scheduler.py",
+      "test_required": ["test_scheduler_persists_jobs", "test_worker_recovers_leased_job", "test_circuit_breaker_opens", "test_checkpoint_resume", "test_dead_letter_persistence"],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-005",
+      "severity": "CRITICAL",
+      "component": "persistence/__init__.py",
+      "files": ["engine/src/openclaw_super_advisor/persistence/__init__.py"],
+      "expected_behavior": "16-state experiment state machine",
+      "actual_behavior": "7-state SkillCandidateStore — missing HYPOTHESIS, BACKTEST_RUNNING, HUMAN_RELEASE_GATE and 9 others",
+      "root_cause": "Skill lifecycle and experiment lifecycle were conflated",
+      "pipeline_impact": "No continuous research cycle can be tracked",
+      "blueprint_requirement": "§14 Experiment Lifecycle State Machine",
+      "remediation": "Create engine/src/openclaw_super_advisor/research/experiment.py",
+      "test_required": ["test_experiment_state_transitions", "test_human_gate_required", "test_agent_cannot_self_approve"],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-006",
+      "severity": "CRITICAL",
+      "component": "scripts/ directory",
+      "files": [],
+      "expected_behavior": "Windows auto-start scripts: Register-StartupTask.ps1, Start-AdvisorStack.ps1",
+      "actual_behavior": "No startup scripts for Python engine, MAIN, scheduler, or watchdog",
+      "root_cause": "Not implemented in prior phases",
+      "pipeline_impact": "System requires manual start after reboot",
+      "blueprint_requirement": "§22 Windows Auto-Start",
+      "remediation": "Create scripts/startup/Register-StartupTask.ps1 and Start-AdvisorStack.ps1",
+      "test_required": ["test_duplicate_service_rejected"],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-007",
+      "severity": "CRITICAL",
+      "component": "runtime/heartbeat.py",
+      "files": ["engine/src/openclaw_super_advisor/runtime/heartbeat.py"],
+      "expected_behavior": "Signed heartbeat emitter; external monitor reference impl; missed-heartbeat contract",
+      "actual_behavior": "Only build_heartbeat() creating an internal record; no emission, no signing, no external target",
+      "root_cause": "Heartbeat scaffolded but not completed",
+      "pipeline_impact": "Power-failure detection is impossible",
+      "blueprint_requirement": "§26 External Heartbeat Design",
+      "remediation": "Extend heartbeat.py with HeartbeatEmitter; create heartbeat_monitor_adapter.py",
+      "test_required": ["test_external_heartbeat_schema", "test_missed_heartbeat_incident"],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-008",
+      "severity": "CRITICAL",
+      "component": "engine — no shutdown handler",
+      "files": [],
+      "expected_behavior": "CTRL_SHUTDOWN_EVENT handler: checkpoint → flush → send SYSTEM_SHUTTING_DOWN → stop in order",
+      "actual_behavior": "No shutdown signal handling",
+      "root_cause": "Not implemented in prior phases",
+      "pipeline_impact": "Evidence archive corruption; jobs lost on Windows shutdown",
+      "blueprint_requirement": "§25 Graceful Shutdown",
+      "remediation": "Create engine/src/openclaw_super_advisor/runtime/shutdown.py",
+      "test_required": ["test_graceful_shutdown_checkpoints_jobs", "test_shutdown_telegram_payload"],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-009",
+      "severity": "CRITICAL",
+      "component": "workspace/AGENTS.md",
+      "files": ["workspace/AGENTS.md"],
+      "expected_behavior": "Version 1.2.7+, Phase P2.4, MAIN as sole user-facing entry, 12 agents",
+      "actual_behavior": "Version 1.2.1, Phase P2.1, only 3 invariants",
+      "root_cause": "AGENTS.md was never updated after P2.1",
+      "pipeline_impact": "MAIN runs with wrong identity and stale invariants in OpenClaw runtime",
+      "blueprint_requirement": "§3 MAIN Agent Manager, §4 Agent Topology",
+      "remediation": "Rewrite workspace/AGENTS.md",
+      "test_required": [],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-010",
+      "severity": "HIGH",
+      "component": "env.py",
+      "files": ["engine/src/openclaw_super_advisor/env.py"],
+      "expected_behavior": "10 MT5 symbol env vars",
+      "actual_behavior": "5 MT5 symbol vars; missing GBPUSD, NZDUSD, USDJPY, USDCHF, USDCAD",
+      "root_cause": "Initial implementation only covered XAUUSD and a few pairs",
+      "pipeline_impact": "FX basket cannot use all 7 required pairs from env override",
+      "blueprint_requirement": "§8.3 MT5 Environment Variables",
+      "remediation": "Add 5 missing EnvVarSpec entries to env.py; add to .env.example",
+      "test_required": ["test_mt5_symbol_auto_discovery"],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-011",
+      "severity": "HIGH",
+      "component": "bridge.py",
+      "files": ["engine/src/openclaw_super_advisor/bridge.py"],
+      "expected_behavior": "Real EvidencePacketSchema field names",
+      "actual_behavior": "schema_placeholder key in production source",
+      "root_cause": "bridge.py was partially scaffolded",
+      "blueprint_requirement": "§7 No-Suppression Evidence Pipeline",
+      "remediation": "Replace schema_placeholder with real schema field",
+      "test_required": ["test_evidence_packet_schema_valid"],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-012",
+      "severity": "HIGH",
+      "component": "agent_topology.py:329",
+      "files": ["engine/src/openclaw_super_advisor/agent_topology.py"],
+      "expected_behavior": "Route issues surfaced in validate_agent_topology()",
+      "actual_behavior": "if route_issues: pass — route issues silently ignored",
+      "root_cause": "Incomplete implementation",
+      "pipeline_impact": "Route validation issues never surfaced",
+      "blueprint_requirement": "§4 Agent Isolation",
+      "remediation": "Remove dead pass block",
+      "test_required": ["test_routing_issues_surface_in_topology_report"],
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-013", "severity": "HIGH", "component": "market_data/schemas.py",
+      "expected_behavior": "realtime_class field on all data records",
+      "actual_behavior": "No realtime_class; only data_quality field",
+      "blueprint_requirement": "§11 Intermarket Research — data class segregation",
+      "remediation": "Add realtime_class field to evidence schemas or provenance dict",
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-014", "severity": "HIGH", "component": "skills.py",
+      "expected_behavior": "Semantic depth validation (procedure, decision tree, quality gates)",
+      "actual_behavior": "Only frontmatter fields and forbidden phrases checked",
+      "blueprint_requirement": "§5.5 Semantic Skill Validation",
+      "remediation": "Add body depth validation to validate_skills()",
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-015", "severity": "HIGH", "component": "runtime — no watchdog",
+      "expected_behavior": "reliability-watchdog-agent monitoring all components",
+      "actual_behavior": "No watchdog module",
+      "blueprint_requirement": "§23 Watchdog and Restart Recovery",
+      "remediation": "Create engine/src/openclaw_super_advisor/runtime/watchdog.py",
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-016", "severity": "HIGH", "component": "persistence/__init__.py TelegramPublisher",
+      "expected_behavior": "14 system event types with severity, Thai timestamp, component fields",
+      "actual_behavior": "Generic format_thai() with title/body/evidence_id only",
+      "blueprint_requirement": "§21 System-Health Telegram Alerts",
+      "remediation": "Add format_system_event() and SYSTEM_EVENT_TYPES to TelegramPublisher",
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-017", "severity": "HIGH", "component": "research — no cycle orchestrator",
+      "expected_behavior": "MAIN orchestrates continuous evidence→hypothesis→experiment→backtest→review→update",
+      "actual_behavior": "No research cycle module",
+      "blueprint_requirement": "§13 Continuous Research and Learning Loop",
+      "remediation": "Create engine/src/openclaw_super_advisor/research/research_cycle.py",
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-018", "severity": "HIGH", "component": "constants.py — no security-compliance-agent",
+      "expected_behavior": "security-compliance-agent in RUNTIME_AGENT_IDS",
+      "actual_behavior": "Not present",
+      "blueprint_requirement": "§4.1 Agent Registry",
+      "remediation": "Add to constants.py",
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-019", "severity": "HIGH", "component": "constants.py — no knowledge-skill-manager",
+      "expected_behavior": "knowledge-skill-manager in RUNTIME_AGENT_IDS",
+      "actual_behavior": "Not present",
+      "blueprint_requirement": "§17 Knowledge and Memory Lifecycle",
+      "remediation": "Add to constants.py",
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-020", "severity": "HIGH", "component": "MAIN has no runtime modules",
+      "expected_behavior": "MAIN (super-advisor) has 14 runtime module references",
+      "actual_behavior": "MAIN is only an AgentContract dataclass",
+      "blueprint_requirement": "§3 MAIN Agent Manager Architecture",
+      "remediation": "Create engine/src/openclaw_super_advisor/main_agent/ package",
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-021", "severity": "MEDIUM", "component": ".env.example",
+      "expected_behavior": "All FRED_* and 10 MT5 symbol vars",
+      "actual_behavior": "Missing FRED section; missing 5 MT5 vars",
+      "remediation": "Update .env.example",
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-022", "severity": "MEDIUM", "component": "providers.py:304",
+      "expected_behavior": "No dead pass block",
+      "actual_behavior": "pass in unreachable branch",
+      "remediation": "Remove dead pass",
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-023", "severity": "MEDIUM", "component": "constants.py — no market-data-integrity-agent", "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-024", "severity": "MEDIUM", "component": "constants.py — no intermarket-macro-agent", "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-025", "severity": "MEDIUM", "component": "constants.py — no statistical-backtest-agent", "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-026", "severity": "MEDIUM", "component": "constants.py — no price-action-microstructure-agent", "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-027", "severity": "MEDIUM", "component": "constants.py — no failure-root-cause-agent", "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-028", "severity": "MEDIUM", "component": "schemas.py HeartbeatRecord",
+      "expected_behavior": "External heartbeat schema with system_id, component_health, signature",
+      "actual_behavior": "HeartbeatRecord has collector_name, status, detail only",
+      "blueprint_requirement": "§26.1 Heartbeat Schema",
+      "remediation": "Create ExternalHeartbeat dataclass",
+      "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-029", "severity": "LOW", "component": "workspace/agents/ — only .gitkeep files", "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-030", "severity": "LOW", "component": "workspace/HEARTBEAT.md — nearly empty", "status": "OPEN"
+    },
+    {
+      "finding_id": "LC-031", "severity": "LOW", "component": "workspace/skills/ — no skills for 8 new agents", "status": "OPEN"
+    }
+  ]
+}
