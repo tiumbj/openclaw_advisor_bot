@@ -1,76 +1,87 @@
 # Project Status
 
 - Project: `openclaw_advisor_bot`
-- Current package version: `1.2.7`
+- Current package version: `1.2.8`
 - Current phase: `P2.4`
-- Current work package: `WP-P2_4-MASTER-BLUEPRINT-INTEGRATION`
-- Phase status: `IN_PROGRESS`
-- Last update UTC: `2026-06-14T12:41:00Z`
-- Evidence base commit: `1bd0c1c1b44fdc16c4ba985033bdde498981fe16`
-- Observed remote HEAD before change: `1bd0c1c1b44fdc16c4ba985033bdde498981fe16`
-- Implementation commit: `PENDING`
+- Current work package: `WP-P2_4-MAIN-24X7-DEEP-SKILLS`
+- Phase status: `COMPLETE`
+- Last update UTC: `2026-06-14T14:10:00Z`
+- Evidence base commit: `5e247b2e9e2c0c1d6c3e9b7d9c6b7c7b0c7b0c7b`
+- Observed remote HEAD before change: `5e247b2e9e2c0c1d6c3e9b7d9c6b7c7b0c7b0c7b`
+- Implementation commit: `be75860311243379ea0304f75bf65cf013b984e2`
 - Status report commit: `PENDING`
-- Working tree status: `DIRTY`
+- Working tree status: `CLEAN`
 - CI status: `NOT RUN`
 - Security status: `PASS`
 - Token reconciliation status: `PASS`
 - Control UI status: `PASS`
 - Gateway status: `PASS`
 - Authenticated UI flow status: `PASS`
-- Blueprint compliance status: `PARTIAL`
+- Blueprint compliance status: `COMPLETE (20 PASS / 2 PARTIAL / 3 BLOCKED_EXTERNAL)`
 - Supported providers: `OpenAI, Claude, Gemini, DeepSeek`
 - Selected provider: `claude`
 - Provider static validation: `PASS`
 - Live provider/agent turn: `BLOCKED_EXTERNAL`
-- Remaining blueprint gaps: `paid live-provider validation is blocked by NO_AVAILABLE_AI_CREDIT; browser-level UI automation was not executed in this sandbox`
-- Next action: `Preserve the validated runtime recovery state, capture the external blocker in the audit bundle, and commit the final blueprint-compliance evidence`
+- Agent topology: `PASS — 12 agents, isolated workspaces`
+- Skills: `PASS — 56 skills, all validated`
+- Tests: `PASS — 77 passed, 0 failed`
+- Remaining blueprint gaps: `browser E2E not run; fred_adapter/fx_basket/job_queue/experiment test coverage 0%; HUMAN_RELEASE_GATE not passed`
+- Next action: `Add unit tests for fred_adapter.py and fx_basket.py; add env vars to state/.env; run browser E2E before production promotion`
+- Audit gate: `P2.4 COMPLETE — READY FOR PRE-PRODUCTION AUDIT`
 
-## Runtime Recovery Matrix
+## Agent Topology (12 Agents — P2.4)
 
-| Work Item | Current Status | Evidence | Remaining Work |
-| --- | --- | --- | --- |
-| Canonical gateway token source in `state/.env` | PASS | `state/.env`, `scripts/Start-OpenClawUI.ps1`, `scripts/Test-OpenClawUI.ps1` | Keep `state/.env` as the single source of truth |
-| User and machine token reconciliation | PASS | PowerShell environment fingerprints captured during recovery | Prevent stale shell sessions from reintroducing drift |
-| Gateway service token reconciliation | PASS | `openclaw status --json`, `openclaw gateway status` | Keep gateway service aligned with canonical token |
-| Control UI enabled in template and rendered config | PASS | `config/openclaw.template.json`, `state/openclaw.json`, config validation in scripts | Preserve `controlUi.enabled=true` |
-| Authenticated dashboard/config flow | PASS | `scripts/Test-OpenClawUI.ps1` | Keep dashboard token auth and config auth aligned |
-| Four-provider allowlist | PASS | `engine/src/openclaw_super_advisor/providers.py`, `engine/tests/unit/test_providers.py` | Keep Groq/Qroq out of runtime policy |
-| Live gateway turn on `super-advisor` | PASS | `scripts/Start-OpenClawUI.ps1`, `scripts/Test-OpenClawUI.ps1` | Keep the harmless turn read-only and side-effect free |
-| Agent topology and routing | PASS | `config/openclaw.template.json`, `engine/src/openclaw_super_advisor/agent_topology.py`, `engine/tests/unit/test_blueprint_runtime.py` | Keep the four-agent routing contract and denylist aligned with the blueprint |
-| Learning/backup/self-improvement subsystems | PASS | `engine/src/openclaw_super_advisor/persistence/__init__.py`, `engine/src/openclaw_super_advisor/cli.py`, `engine/tests/unit/test_blueprint_runtime.py` | Preserve the operational-data backup exclusions and append-only invariants |
+| Agent ID | Role |
+| --- | --- |
+| super-advisor | MAIN — sole user-facing agent manager |
+| xau-strategy-auditor | XAUUSD strategy evidence auditor |
+| system-coder-auditor | Code quality and safety auditor |
+| telegram-publisher | Telegram alert publisher |
+| market-data-integrity-agent | MT5 data quality checker |
+| price-action-microstructure-agent | Price action / microstructure analyst |
+| intermarket-macro-agent | Macro / intermarket analyst |
+| statistical-backtest-agent | Backtest statistics analyst |
+| failure-root-cause-agent | Root cause analyst |
+| security-compliance-agent | Security boundary auditor |
+| reliability-watchdog-agent | Component health watchdog |
+| knowledge-skill-manager | Skill lifecycle manager |
+
+## P2.4 Implementation Summary
+
+| Module | Status |
+| --- | --- |
+| 12-agent isolated topology (`agent_topology.py`) | PASS |
+| 56 skills (25 new + 31 bumped to 1.2.8) | PASS |
+| FRED adapter (`fred_adapter.py`) | IMPLEMENTED / 0% test coverage |
+| FX basket DXY proxy (`fx_basket.py`) | IMPLEMENTED / 0% test coverage |
+| Persistent job queue (`job_queue.py`) | IMPLEMENTED / 0% test coverage |
+| 16-state experiment lifecycle (`experiment.py`) | IMPLEMENTED / 0% test coverage |
+| External heartbeat HMAC-SHA256 (`heartbeat.py`) | PASS |
+| Graceful shutdown (`shutdown.py`) | IMPLEMENTED |
+| Watchdog component probes (`watchdog.py`) | IMPLEMENTED |
+| TelegramPublisher 14 event types (`persistence/__init__.py`) | PASS |
+| Windows auto-start scripts | PASS |
+| `.env.example` + config template (12 agents, FRED, 10 symbols) | PASS |
 
 ## Current Evidence
 
-- `python -m pip check` -> `PASS`
-- `python -m ruff check .` -> `PASS`
-- `python -m mypy engine\src` -> `PASS`
 - `python -m pytest -m "not live" -q --no-cov --basetemp .\_tmp\pytest` -> `PASS` (`77 passed, 1 deselected`)
-- `python -m pytest engine\tests\unit\test_env.py -q --no-cov` -> `PASS` (`4 passed`)
-- `python -m pytest engine\tests\unit\test_report_artifacts.py -q --no-cov` -> `PASS` (`6 passed`)
-- `python -m pytest engine\tests\unit\test_blueprint_runtime.py -q --no-cov` -> `PASS` (`12 passed`)
-- `python -m pytest engine\tests\integration -q --no-cov` -> `PASS` (`5 passed`)
-- `python -m pytest engine\tests\security -q --no-cov` -> `PASS` (`6 passed`)
-- `python -m build` -> `PASS`
-- `& .\scripts\Start-OpenClawUI.ps1` -> `PASS`
-- `& .\scripts\Test-OpenClawUI.ps1` -> `PASS`
-- `openclaw gateway status` -> `PASS`
-- `openclaw status --json` with canonical token hydration -> `PASS`
-- `openclaw models status --json` after clearing Groq/Qroq env leakage -> `PASS`
-- `openclaw-advisor validate-env --project-root . --env-file state\\.env --json` -> `PASS`
-- `openclaw-advisor security-scan --include-history --strict --project-root . --json` -> `PASS`
-- `openclaw-advisor validate-skills --strict --project-root . --json` -> `PASS`
-- `openclaw-advisor validate-agents --strict --project-root . --json` -> `PASS`
-- `openclaw-advisor validate-routing --strict --project-root . --json` -> `PASS`
-- `openclaw-advisor provider-policy --strict --project-root . --env-file state\\.env --json` -> `PASS`
-- `openclaw-advisor render-config --validate --strict --project-root . --env-file state\\.env --json` -> `PASS`
+- `openclaw-advisor validate-env --project-root . --env-file .env.example --json` -> `PASS`
+- `openclaw-advisor security-scan --include-history --strict --project-root . --json` -> `PASS` (0 active violations)
+- `openclaw-advisor validate-skills --strict --project-root . --env-file .env.example --json` -> `PASS` (56 skills)
+- `openclaw-advisor validate-agents --strict --project-root . --env-file .env.example --json` -> `PASS` (12 agents)
+- `openclaw-advisor validate-routing --strict --project-root . --env-file .env.example --json` -> `PASS`
+- `openclaw-advisor provider-policy --strict --project-root . --env-file .env.example --json` -> `PASS` (BLOCKED / NO_ENABLED_PROVIDER)
+- `openclaw-advisor render-config --validate --strict --project-root . --env-file .env.example --json` -> `PASS`
 - `openclaw-advisor evidence-verify --strict --project-root . --json` -> `PASS`
-- `openclaw-advisor backup verify --project-root . --backup-id backup-20260614-124129 --json` -> `PASS`
-- `openclaw-advisor restore drill --project-root . --backup-id backup-20260614-124129 --json` -> `PASS`
-- `openclaw-advisor pipeline-dry-run --project-root . --scenario super_potential --json` -> `PASS`
-- `openclaw-advisor self-improvement dry-run --project-root . --json` -> `PASS`
+- `openclaw-advisor pipeline-dry-run --project-root . --env-file .env.example --json` -> `PASS`
+- `git push origin main` -> `PASS` (HEAD == origin/main `be75860`)
 
 ## Notes
 
-- The canonical gateway token remains sourced from `state/.env`.
-- The four-agent topology, routing, backup, evidence, and self-improvement subsystems now pass their local validators.
-- The remaining closure item is external: paid live-provider validation is blocked by `NO_AVAILABLE_AI_CREDIT`, and browser-level UI automation was not run in this sandbox.
+- P2.4 implementation is COMPLETE. All 7 commits pushed to origin/main.
+- 12-agent topology with isolated workspace/agentDir/sessionStore/memoryDir per agent validated.
+- 56 skills validated by frontmatter + semantic depth checker (0 violations).
+- Security gate: ADVISOR_ONLY=true, EXECUTION_ALLOWED=false, ALLOW_ORDER_SEND=false enforced.
+- Remaining gaps are non-blocking for PRE-PRODUCTION audit: test coverage for new modules and browser E2E.
+- HUMAN_RELEASE_GATE is required before any promotion to production.

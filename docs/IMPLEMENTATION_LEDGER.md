@@ -797,3 +797,68 @@
   - `The isolated xau-strategy-auditor, system-coder-auditor, and telegram-publisher runtime agents are still missing.`
   - `Backup, evidence archive, and skill-promotion subsystems remain blueprint-only.`
 - Next action: `Audit the remaining blueprint-only subsystems and then commit the final runtime-recovery state.`
+
+## Entry 0026
+
+- Timestamp UTC: `2026-06-14T14:10:00Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-MAIN-24X7-DEEP-SKILLS`
+- Operation: `Implemented the full 12-agent 24x7 research platform: MAIN agent topology with 11 specialist agents, 56 skills (25 new + 31 bumped), FRED adapter, FX basket DXY proxy, persistent job queue, 16-state experiment lifecycle, external HMAC-SHA256 heartbeat, graceful shutdown, watchdog, TelegramPublisher (14 event types), Windows auto-start scripts, expanded config template and .env.example, and 19-file audit readiness evidence bundle. All 77 non-live tests pass. HEAD == origin/main.`
+- Files changed:
+  - `engine/src/openclaw_super_advisor/_version.py`
+  - `engine/src/openclaw_super_advisor/constants.py`
+  - `engine/src/openclaw_super_advisor/agent_topology.py`
+  - `engine/src/openclaw_super_advisor/env.py`
+  - `engine/src/openclaw_super_advisor/market_data/fred_adapter.py`
+  - `engine/src/openclaw_super_advisor/market_data/fx_basket.py`
+  - `engine/src/openclaw_super_advisor/scheduler/__init__.py`
+  - `engine/src/openclaw_super_advisor/scheduler/job_queue.py`
+  - `engine/src/openclaw_super_advisor/research/__init__.py`
+  - `engine/src/openclaw_super_advisor/research/experiment.py`
+  - `engine/src/openclaw_super_advisor/runtime/heartbeat.py`
+  - `engine/src/openclaw_super_advisor/runtime/shutdown.py`
+  - `engine/src/openclaw_super_advisor/runtime/watchdog.py`
+  - `engine/src/openclaw_super_advisor/persistence/__init__.py`
+  - `config/openclaw.template.json`
+  - `.env.example`
+  - `workspace/AGENTS.md`
+  - `workspace/agents/` (8 new directories)
+  - `workspace/skills/` (25 new SKILL.md + 31 version bumps)
+  - `scripts/startup/Register-StartupTask.ps1`
+  - `scripts/startup/Start-AdvisorStack.ps1`
+  - `docs/P2_4_LOGIC_CONFLICT_MATRIX.md`
+  - `docs/P2_4_LOGIC_CONFLICT_MATRIX.json`
+  - `artifacts/p2_4_main_24x7_audit_readiness/` (19 files)
+  - `engine/tests/conftest.py`
+  - `engine/tests/integration/test_cli.py`
+  - `engine/tests/unit/test_blueprint_runtime.py`
+  - `engine/tests/unit/test_config_and_skills.py`
+  - `engine/tests/unit/test_health.py`
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/P2_4_REPORT_PROVENANCE.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `python -m pytest tests/ -q --ignore=tests/live --basetemp ...`
+  - `openclaw-advisor health --project-root .. --json`
+  - `openclaw-advisor validate-agents --project-root .. --env-file ../.env.example --json`
+  - `openclaw-advisor validate-skills --project-root .. --env-file ../.env.example --json`
+  - `openclaw-advisor validate-routing --project-root .. --env-file ../.env.example --json`
+  - `openclaw-advisor validate-env --project-root .. --env-file ../state/.env --json`
+  - `openclaw-advisor security-scan --project-root .. --json`
+  - `openclaw-advisor pipeline-dry-run --project-root .. --env-file ../.env.example --json`
+  - `openclaw-advisor evidence-verify --project-root .. --env-file ../.env.example --json`
+  - `openclaw-advisor render-config --project-root .. --env-file ../.env.example --validate --json`
+  - `openclaw-advisor provider-policy --project-root .. --env-file ../.env.example --json`
+  - `git push origin main`
+- Result: `PASS`
+- Commit: `be75860311243379ea0304f75bf65cf013b984e2`
+- Remote push: `PASS`
+- CI result: `NOT RUN`
+- Security result: `PASS` (0 active violations)
+- Known defects:
+  - `fred_adapter.py, fx_basket.py, job_queue.py, experiment.py: test coverage 0%`
+  - `Browser E2E not run in this sandbox session`
+  - `state/.env missing 6 new vars (MT5_GBPUSD_SYMBOL, MT5_NZDUSD_SYMBOL, MT5_USDJPY_SYMBOL, MT5_USDCHF_SYMBOL, MT5_USDCAD_SYMBOL, FRED_CACHE_TTL_SECONDS)`
+  - `HUMAN_RELEASE_GATE not passed — PRE-PRODUCTION audit only`
+- Next action: `Add unit tests for fred_adapter.py and fx_basket.py; add missing env vars to state/.env; run browser E2E; pass HUMAN_RELEASE_GATE before production promotion.`

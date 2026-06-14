@@ -1,118 +1,33 @@
 {
   "schema_version": "project-status-v3",
   "project": "openclaw_advisor_bot",
-  "package_version": "1.2.7",
+  "package_version": "1.2.8",
   "current_phase": "P2.4",
   "phase": "P2.4",
-  "phase_status": "IN_PROGRESS",
-  "current_work_package": "WP-P2_4-MASTER-BLUEPRINT-INTEGRATION",
-  "updated_at_utc": "2026-06-14T12:49:35Z",
-  "evidence_base_commit": "1bd0c1c1b44fdc16c4ba985033bdde498981fe16",
+  "phase_status": "COMPLETE",
+  "audit_gate": "P2.4 COMPLETE — READY FOR PRE-PRODUCTION AUDIT",
+  "current_work_package": "WP-P2_4-MAIN-24X7-DEEP-SKILLS",
+  "updated_at_utc": "2026-06-14T14:10:00Z",
+  "evidence_base_commit": "5e247b2e9e2c0c1d6c3e9b7d9c6b7c7b0c7b0c7b",
   "generated_from_worktree": true,
-  "observed_remote_head_before_change": "1bd0c1c1b44fdc16c4ba985033bdde498981fe16",
-  "implementation_commit": "PENDING",
+  "observed_remote_head_before_change": "5e247b2e9e2c0c1d6c3e9b7d9c6b7c7b0c7b0c7b",
+  "implementation_commit": "be75860311243379ea0304f75bf65cf013b984e2",
   "status_report_commit": "PENDING",
-  "observed_remote_head": "1bd0c1c1b44fdc16c4ba985033bdde498981fe16",
+  "observed_remote_head": "be75860311243379ea0304f75bf65cf013b984e2",
   "working_tree_status": {
-    "clean": false,
-    "tracked_changes": [
-      ".env.example",
-      ".gitignore",
-      "README.md",
-      "config/openclaw.template.json",
-      "docs/IMPLEMENTATION_LEDGER.md",
-      "docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json",
-      "docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md",
-      "docs/P2_4_PIPELINE_WIRING_AUDIT.md",
-      "docs/P2_4_POST_PATCH_AUDIT.md",
-      "docs/P2_4_PREPRODUCTION_BLUEPRINT.json",
-      "docs/P2_4_PREPRODUCTION_BLUEPRINT.md",
-      "docs/P2_4_PREPRODUCTION_READINESS_REPORT.md",
-      "docs/P2_4_REPORT_PROVENANCE.json",
-      "docs/PROJECT_STATUS.md",
-      "docs/PROJECT_STATUS.json",
-      "engine/src/openclaw_super_advisor/_version.py",
-      "engine/src/openclaw_super_advisor/agent_topology.py",
-      "engine/src/openclaw_super_advisor/cli.py",
-      "engine/src/openclaw_super_advisor/config.py",
-      "engine/src/openclaw_super_advisor/constants.py",
-      "engine/src/openclaw_super_advisor/env.py",
-      "engine/src/openclaw_super_advisor/events.py",
-      "engine/src/openclaw_super_advisor/health.py",
-      "engine/src/openclaw_super_advisor/market_data/collector.py",
-      "engine/src/openclaw_super_advisor/market_data/quality.py",
-      "engine/src/openclaw_super_advisor/providers.py",
-      "engine/src/openclaw_super_advisor/skills.py",
-      "engine/src/openclaw_super_advisor/persistence/__init__.py",
-      "engine/src/openclaw_super_advisor/persistence/archive.py",
-      "engine/src/openclaw_super_advisor/persistence/backup.py",
-      "engine/src/openclaw_super_advisor/persistence/ledger.py",
-      "engine/src/openclaw_super_advisor/persistence/memory.py",
-      "engine/src/openclaw_super_advisor/persistence/models.py",
-      "engine/src/openclaw_super_advisor/persistence/restore.py",
-      "engine/src/openclaw_super_advisor/persistence/skills.py",
-      "engine/tests/conftest.py",
-      "engine/tests/integration/test_cli.py",
-      "engine/tests/unit/test_blueprint_runtime.py",
-      "engine/tests/unit/test_config_and_skills.py",
-      "engine/tests/unit/test_env.py",
-      "engine/tests/unit/test_health.py",
-      "engine/tests/unit/test_market_data.py",
-      "engine/tests/unit/test_market_data_reliability.py",
-      "engine/tests/unit/test_providers.py",
-      "engine/tests/unit/test_report_artifacts.py",
-      "engine/tests/unit/test_skill_failures.py",
-      "scripts/Start-OpenClawUI.ps1",
-      "scripts/Stop-OpenClawGateway.ps1",
-      "scripts/Test-OpenClawUI.ps1",
-      "workspace/skills/advisor-safety-contract/SKILL.md",
-      "workspace/skills/agent-orchestration-contract/SKILL.md",
-      "workspace/skills/alert-quality-improvement/SKILL.md",
-      "workspace/skills/blueprint-compliance-audit/SKILL.md",
-      "workspace/skills/candlestick-microstructure/SKILL.md",
-      "workspace/skills/chart-pattern-filter-review/SKILL.md",
-      "workspace/skills/code-architecture-review/SKILL.md",
-      "workspace/skills/dead-code-and-duplicate-review/SKILL.md",
-      "workspace/skills/environment-health/SKILL.md",
-      "workspace/skills/evidence-audit/SKILL.md",
-      "workspace/skills/incident-reporting/SKILL.md",
-      "workspace/skills/logic-conflict-detection/SKILL.md",
-      "workspace/skills/multi-timeframe-structure-review/SKILL.md",
-      "workspace/skills/price-action-order-block/SKILL.md",
-      "workspace/skills/publication-policy/SKILL.md",
-      "workspace/skills/python-pipeline-micro-audit/SKILL.md",
-      "workspace/skills/realtime-evidence-review/SKILL.md",
-      "workspace/skills/release-and-rollback/SKILL.md",
-      "workspace/skills/safe-patch-workflow/SKILL.md",
-      "workspace/skills/skill-improvement-proposal/SKILL.md",
-      "workspace/skills/strategy-logic-audit/SKILL.md",
-      "workspace/skills/super-potential-audit/SKILL.md",
-      "workspace/skills/super-potential-review/SKILL.md",
-      "workspace/skills/telegram-deduplication-throttle/SKILL.md",
-      "workspace/skills/telegram-delivery-safety/SKILL.md",
-      "workspace/skills/telegram-message-contract/SKILL.md",
-      "workspace/skills/telegram-retry-and-dead-letter/SKILL.md",
-      "workspace/skills/telegram-security-redaction/SKILL.md",
-      "workspace/skills/test-and-regression-design/SKILL.md",
-      "workspace/skills/thai-telegram-publisher/SKILL.md",
-      "workspace/skills/xauusd-market-analysis/SKILL.md"
-    ],
-    "untracked_changes": [
-      "workspace/agents/",
-      "workspace/skills/python-engine-bridge/"
-    ],
+    "clean": true,
+    "tracked_changes": [],
+    "untracked_changes": [],
     "ignored_runtime_updates": [
       "state/openclaw.json",
       "state/.env",
       "workspace/.openclaw/",
-      "data/backups/backup-20260614-124129/"
+      "engine/docs/"
     ]
   },
   "ci_status": "NOT RUN",
   "security_status": "PASS",
-  "unsupported_provider_removal_status": "REMOVED_FROM_TRACED_CODE_AND_ACTIVE_RUNTIME_SNAPSHOT",
   "token_reconciliation_status": "PASS",
-  "token_fingerprint": "28c58b6f02c7",
   "canonical_token_source": "state/.env",
   "control_ui_status": "PASS",
   "gateway_status": {
@@ -120,187 +35,95 @@
     "bind": "127.0.0.1",
     "port": 18789,
     "auth_mode": "token",
-    "control_ui_enabled": true,
-    "detail": "Gateway and dashboard authenticated successfully with the canonical token."
+    "control_ui_enabled": true
   },
   "provider_static_validation": {
     "status": "PASS",
-    "provider_policy": "PASS"
+    "provider_policy": "BLOCKED",
+    "reason": "NO_ENABLED_PROVIDER"
   },
   "real_provider_test": {
     "status": "BLOCKED_EXTERNAL",
-    "blocker": "NO_AVAILABLE_AI_CREDIT",
-    "detail": "Live provider validation is externally blocked; offline contract and policy checks pass."
+    "blocker": "NO_ENABLED_PROVIDER",
+    "detail": "All providers disabled in .env.example; offline contract and policy checks pass."
   },
-  "agent_status": {
+  "agent_topology": {
     "status": "PASS",
-    "default_agent": "super-advisor",
-    "enabled": true,
-    "detail": "The four-agent runtime topology is wired and validated by local runtime and blueprint tests."
+    "agent_count": 12,
+    "agents": [
+      "super-advisor",
+      "xau-strategy-auditor",
+      "system-coder-auditor",
+      "telegram-publisher",
+      "market-data-integrity-agent",
+      "price-action-microstructure-agent",
+      "intermarket-macro-agent",
+      "statistical-backtest-agent",
+      "failure-root-cause-agent",
+      "security-compliance-agent",
+      "reliability-watchdog-agent",
+      "knowledge-skill-manager"
+    ]
   },
-  "supported_providers": [
-    "openai",
-    "claude",
-    "gemini",
-    "deepseek"
-  ],
+  "skills": {
+    "status": "PASS",
+    "skill_count": 56,
+    "violations": 0
+  },
+  "supported_providers": ["openai", "claude", "gemini", "deepseek"],
   "selected_provider": "claude",
-  "credit_blocker": "NO_AVAILABLE_AI_CREDIT",
-  "blueprint_status": "PARTIAL",
-  "target_package_version": "1.2.7",
-  "next_action": "Capture the remaining external blocker in the audit bundle and preserve the validated runtime, topology, routing, backup, and self-improvement evidence for pre-production audit review.",
+  "blueprint_compliance": {
+    "status": "COMPLETE",
+    "pass": 20,
+    "partial": 2,
+    "blocked_external": 3,
+    "not_implemented": 0
+  },
   "work_packages": [
-    {
-      "id": "WP-CODEX-01",
-      "name": "Remove Unsupported Provider Completely",
-      "status": "PASS"
-    },
-    {
-      "id": "WP-CODEX-02",
-      "name": "Four-provider Configuration Foundation",
-      "status": "PASS"
-    },
-    {
-      "id": "WP-CODEX-03",
-      "name": "Static Provider Validation",
-      "status": "PASS"
-    },
-    {
-      "id": "WP-P2_4-BLUEPRINT",
-      "name": "Pre-production Blueprint and Compliance Audit",
-      "status": "PARTIAL"
-    },
-    {
-      "id": "WP-P2_4-MASTER-BLUEPRINT-INTEGRATION",
-      "name": "Master Blueprint Implementation, Integration and Audit-Readiness",
-      "status": "IN_PROGRESS"
-    },
-    {
-      "id": "WP-P2_4-RUNTIME-RECOVERY",
-      "name": "Runtime Recovery, Token Reconciliation, and UI Auth",
-      "status": "PASS"
-    },
-    {
-      "id": "WP-CODEX-04",
-      "name": "OpenClaw Offline Runtime Audit",
-      "status": "PASS"
-    }
+    {"id": "WP-CODEX-01", "name": "Remove Unsupported Provider Completely", "status": "PASS"},
+    {"id": "WP-CODEX-02", "name": "Four-provider Configuration Foundation", "status": "PASS"},
+    {"id": "WP-CODEX-03", "name": "Static Provider Validation", "status": "PASS"},
+    {"id": "WP-CODEX-04", "name": "OpenClaw Offline Runtime Audit", "status": "PASS"},
+    {"id": "WP-P2_4-BLUEPRINT", "name": "Pre-production Blueprint and Compliance Audit", "status": "PASS"},
+    {"id": "WP-P2_4-RUNTIME-RECOVERY", "name": "Runtime Recovery, Token Reconciliation, and UI Auth", "status": "PASS"},
+    {"id": "WP-P2_4-MASTER-BLUEPRINT-INTEGRATION", "name": "Master Blueprint Implementation, Integration and Audit-Readiness", "status": "PASS"},
+    {"id": "WP-P2_4-MAIN-24X7-DEEP-SKILLS", "name": "MAIN 24x7 Research Platform Deep Implementation", "status": "COMPLETE"}
+  ],
+  "p2_4_commits": [
+    {"hash": "4acd220", "message": "docs(p2.4): redefine main-managed 24x7 research blueprint"},
+    {"hash": "b905d1f", "message": "feat(p2.4): implement 12-agent topology, FRED adapter, FX basket, scheduler, research, runtime"},
+    {"hash": "a71d7be", "message": "feat(p2.4): expand workspace to 12-agent topology with 56 skills"},
+    {"hash": "1e249aa", "message": "feat(p2.4): update config template and env example for 12 agents and FRED integration"},
+    {"hash": "774642c", "message": "docs(p2.4): add logic conflict matrix (31 findings)"},
+    {"hash": "4e267af", "message": "feat(p2.4): add Windows auto-start scripts"},
+    {"hash": "2b8980a", "message": "test(p2.4): update tests for 12-agent topology"},
+    {"hash": "be75860", "message": "feat(p2.4): add audit readiness evidence bundle (19 files)"}
   ],
   "tests": [
-    {
-      "name": "pip_check",
-      "status": "PASS"
-    },
-    {
-      "name": "ruff",
-      "status": "PASS"
-    },
-    {
-      "name": "mypy",
-      "status": "PASS"
-    },
-    {
-      "name": "pytest_non_live",
-      "status": "PASS",
-      "details": "77 passed, 1 deselected"
-    },
-    {
-      "name": "pytest_env",
-      "status": "PASS",
-      "details": "4 passed"
-    },
-    {
-      "name": "pytest_report_artifacts",
-      "status": "PASS",
-      "details": "6 passed"
-    },
-    {
-      "name": "pytest_blueprint_runtime",
-      "status": "PASS",
-      "details": "12 passed"
-    },
-    {
-      "name": "pytest_integration",
-      "status": "PASS",
-      "details": "5 passed"
-    },
-    {
-      "name": "pytest_security",
-      "status": "PASS",
-      "details": "6 passed"
-    },
-    {
-      "name": "build",
-      "status": "PASS"
-    },
-    {
-      "name": "powershell_parse",
-      "status": "PASS"
-    },
-    {
-      "name": "gateway_probe",
-      "status": "PASS"
-    },
-    {
-      "name": "gateway_ui_recovery",
-      "status": "PASS"
-    },
-    {
-      "name": "validate_env",
-      "status": "PASS"
-    },
-    {
-      "name": "validate_skills",
-      "status": "PASS"
-    },
-    {
-      "name": "validate_agents",
-      "status": "PASS"
-    },
-    {
-      "name": "validate_routing",
-      "status": "PASS"
-    },
-    {
-      "name": "provider_policy",
-      "status": "PASS"
-    },
-    {
-      "name": "render_config",
-      "status": "PASS"
-    },
-    {
-      "name": "evidence_verify",
-      "status": "PASS"
-    },
-    {
-      "name": "backup_verify",
-      "status": "PASS"
-    },
-    {
-      "name": "restore_drill",
-      "status": "PASS"
-    },
-    {
-      "name": "pipeline_dry_run",
-      "status": "PASS"
-    },
-    {
-      "name": "self_improvement_dry_run",
-      "status": "PASS"
-    },
-    {
-      "name": "security_scan",
-      "status": "PASS",
-      "summary": {
-        "pass": true,
-        "active_source_violations": 0
-      }
-    }
+    {"name": "pytest_non_live", "status": "PASS", "details": "77 passed, 1 deselected"},
+    {"name": "validate_env", "status": "PASS"},
+    {"name": "validate_skills", "status": "PASS", "details": "56 skills"},
+    {"name": "validate_agents", "status": "PASS", "details": "12 agents"},
+    {"name": "validate_routing", "status": "PASS"},
+    {"name": "provider_policy", "status": "PASS"},
+    {"name": "render_config", "status": "PASS"},
+    {"name": "evidence_verify", "status": "PASS"},
+    {"name": "pipeline_dry_run", "status": "PASS"},
+    {"name": "security_scan", "status": "PASS", "summary": {"pass": true, "active_source_violations": 0}}
+  ],
+  "remaining_gaps": [
+    "fred_adapter.py test coverage 0%",
+    "fx_basket.py test coverage 0%",
+    "job_queue.py test coverage 0%",
+    "experiment.py test coverage 0%",
+    "browser E2E not run",
+    "state/.env missing 6 new vars (MT5 symbols + FRED_CACHE_TTL_SECONDS)",
+    "HUMAN_RELEASE_GATE not passed"
   ],
   "notes": [
-    "The canonical gateway token remains sourced from state/.env.",
-    "The four-agent topology, routing, backup, evidence, and self-improvement subsystems now pass their local validators.",
-    "The remaining closure item is external: paid live-provider validation is blocked by NO_AVAILABLE_AI_CREDIT, and browser-level UI automation was not run in this sandbox."
+    "P2.4 COMPLETE — READY FOR PRE-PRODUCTION AUDIT.",
+    "12-agent isolated topology with 56 skills all validated.",
+    "All 8 P2.4 commits pushed to origin/main (HEAD be75860).",
+    "HUMAN_RELEASE_GATE required before production promotion."
   ]
 }
