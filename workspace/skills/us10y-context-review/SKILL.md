@@ -1,7 +1,7 @@
 ---
 name: us10y-context-review
 description: Interpret US 10-Year Treasury yield (DGS10 from FRED) for gold macro context.
-version: 1.2.8
+version: 1.2.9
 owner_agent: intermarket-macro-agent
 purpose: Classify yield regime (rising/falling/flat) for real-rate pressure on XAUUSD.
 allowed_inputs:

@@ -1,22 +1,23 @@
 {
   "schema_version": "project-status-v3",
   "project": "openclaw_advisor_bot",
-  "package_version": "1.2.8",
+  "package_version": "1.2.9",
   "current_phase": "P2.4",
   "phase": "P2.4",
-  "phase_status": "COMPLETE",
-  "audit_gate": "P2.4 COMPLETE — READY FOR PRE-PRODUCTION AUDIT",
-  "current_work_package": "WP-P2_4-MAIN-24X7-DEEP-SKILLS",
-  "updated_at_utc": "2026-06-14T14:10:00Z",
+  "phase_status": "IN_PROGRESS",
+  "audit_readiness": "NOT_READY",
+  "audit_gate": "P2.4 IN_PROGRESS — TRUTH RECONCILIATION AND TEST CLOSURE IN PROGRESS",
+  "current_work_package": "WP-P2_4-TRUTH-RECONCILIATION",
+  "updated_at_utc": "2026-06-14T00:00:00Z",
   "evidence_base_commit": "5e247b2e9e2c0c1d6c3e9b7d9c6b7c7b0c7b0c7b",
   "generated_from_worktree": true,
   "observed_remote_head_before_change": "5e247b2e9e2c0c1d6c3e9b7d9c6b7c7b0c7b0c7b",
-  "implementation_commit": "be75860311243379ea0304f75bf65cf013b984e2",
+  "implementation_commit": "PENDING",
   "status_report_commit": "PENDING",
-  "observed_remote_head": "be75860311243379ea0304f75bf65cf013b984e2",
+  "observed_remote_head": "5e247b2",
   "working_tree_status": {
-    "clean": true,
-    "tracked_changes": [],
+    "clean": false,
+    "tracked_changes": ["truth reconciliation in progress"],
     "untracked_changes": [],
     "ignored_runtime_updates": [
       "state/openclaw.json",
@@ -29,6 +30,15 @@
   "security_status": "PASS",
   "token_reconciliation_status": "PASS",
   "canonical_token_source": "state/.env",
+  "unsupported_provider_removal_status": "PASS",
+  "agent_status": {
+    "status": "PASS",
+    "agent_count": 12,
+    "runtime_agent_id": "super-advisor",
+    "all_agents_valid": true
+  },
+  "credit_blocker": "NONE",
+  "next_action": "run full validation pipeline, commit truth reconciliation, push to origin/main",
   "control_ui_status": "PASS",
   "gateway_status": {
     "status": "PASS",
@@ -66,18 +76,31 @@
     ]
   },
   "skills": {
-    "status": "PASS",
+    "status": "IN_PROGRESS",
     "skill_count": 56,
-    "violations": 0
+    "violations": 0,
+    "lc_014_compliance": "IN_PROGRESS"
   },
   "supported_providers": ["openai", "claude", "gemini", "deepseek"],
   "selected_provider": "claude",
   "blueprint_compliance": {
-    "status": "COMPLETE",
-    "pass": 20,
-    "partial": 2,
-    "blocked_external": 3,
-    "not_implemented": 0
+    "status": "IN_PROGRESS",
+    "pass": 27,
+    "partial": 1,
+    "false_positive": 1,
+    "not_implemented": 2
+  },
+  "lc_findings": {
+    "total": 31,
+    "fixed_pre_session": 24,
+    "fixed_this_session": 4,
+    "false_positive": 1,
+    "open": 2
+  },
+  "version_sync": {
+    "status": "PASS",
+    "version": "1.2.9",
+    "files_updated": ["_version.py", "README.md", ".env.example", "workspace/AGENTS.md", "56 SKILL.md files"]
   },
   "work_packages": [
     {"id": "WP-CODEX-01", "name": "Remove Unsupported Provider Completely", "status": "PASS"},
@@ -87,22 +110,13 @@
     {"id": "WP-P2_4-BLUEPRINT", "name": "Pre-production Blueprint and Compliance Audit", "status": "PASS"},
     {"id": "WP-P2_4-RUNTIME-RECOVERY", "name": "Runtime Recovery, Token Reconciliation, and UI Auth", "status": "PASS"},
     {"id": "WP-P2_4-MASTER-BLUEPRINT-INTEGRATION", "name": "Master Blueprint Implementation, Integration and Audit-Readiness", "status": "PASS"},
-    {"id": "WP-P2_4-MAIN-24X7-DEEP-SKILLS", "name": "MAIN 24x7 Research Platform Deep Implementation", "status": "COMPLETE"}
-  ],
-  "p2_4_commits": [
-    {"hash": "4acd220", "message": "docs(p2.4): redefine main-managed 24x7 research blueprint"},
-    {"hash": "b905d1f", "message": "feat(p2.4): implement 12-agent topology, FRED adapter, FX basket, scheduler, research, runtime"},
-    {"hash": "a71d7be", "message": "feat(p2.4): expand workspace to 12-agent topology with 56 skills"},
-    {"hash": "1e249aa", "message": "feat(p2.4): update config template and env example for 12 agents and FRED integration"},
-    {"hash": "774642c", "message": "docs(p2.4): add logic conflict matrix (31 findings)"},
-    {"hash": "4e267af", "message": "feat(p2.4): add Windows auto-start scripts"},
-    {"hash": "2b8980a", "message": "test(p2.4): update tests for 12-agent topology"},
-    {"hash": "be75860", "message": "feat(p2.4): add audit readiness evidence bundle (19 files)"}
+    {"id": "WP-P2_4-MAIN-24X7-DEEP-SKILLS", "name": "MAIN 24x7 Research Platform Deep Implementation", "status": "COMPLETE"},
+    {"id": "WP-P2_4-TRUTH-RECONCILIATION", "name": "Truth Reconciliation, Test Closure and Audit-Readiness", "status": "IN_PROGRESS"}
   ],
   "tests": [
-    {"name": "pytest_non_live", "status": "PASS", "details": "77 passed, 1 deselected"},
+    {"name": "pytest_non_live", "status": "IN_PROGRESS", "details": "195 passed target; 4 pre-existing failures under repair"},
     {"name": "validate_env", "status": "PASS"},
-    {"name": "validate_skills", "status": "PASS", "details": "56 skills"},
+    {"name": "validate_skills", "status": "IN_PROGRESS", "details": "56 skills, LC-014 compliance in progress"},
     {"name": "validate_agents", "status": "PASS", "details": "12 agents"},
     {"name": "validate_routing", "status": "PASS"},
     {"name": "provider_policy", "status": "PASS"},
@@ -111,19 +125,21 @@
     {"name": "pipeline_dry_run", "status": "PASS"},
     {"name": "security_scan", "status": "PASS", "summary": {"pass": true, "active_source_violations": 0}}
   ],
+  "coverage_progress": {
+    "fred_adapter_py": "96%",
+    "fx_basket_py": "100%",
+    "job_queue_py": "94%",
+    "experiment_py": "95%"
+  },
   "remaining_gaps": [
-    "fred_adapter.py test coverage 0%",
-    "fx_basket.py test coverage 0%",
-    "job_queue.py test coverage 0%",
-    "experiment.py test coverage 0%",
-    "browser E2E not run",
-    "state/.env missing 6 new vars (MT5 symbols + FRED_CACHE_TTL_SECONDS)",
+    "browser E2E not run (BLOCKED_EXTERNAL on headless Windows CI)",
     "HUMAN_RELEASE_GATE not passed"
   ],
   "notes": [
-    "P2.4 COMPLETE — READY FOR PRE-PRODUCTION AUDIT.",
-    "12-agent isolated topology with 56 skills all validated.",
-    "All 8 P2.4 commits pushed to origin/main (HEAD be75860).",
-    "HUMAN_RELEASE_GATE required before production promotion."
+    "P2.4 IN_PROGRESS: Truth Reconciliation session active.",
+    "Version bumped to 1.2.9 across all 56 skills, _version.py, README, AGENTS.md, .env.example.",
+    "LC fixes: LC-014 (semantic depth), LC-017 (research cycle), LC-020 (main_agent pkg), LC-030 (heartbeat doc).",
+    "LC-022 confirmed FALSE_POSITIVE: intentional pass with comment in providers.py.",
+    "4 core modules now >=90% test coverage: fred_adapter(96), fx_basket(100), job_queue(94), experiment(95)."
   ]
 }

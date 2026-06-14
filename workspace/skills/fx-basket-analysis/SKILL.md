@@ -1,7 +1,7 @@
 ---
 name: fx-basket-analysis
 description: Interpret computed FX basket (DXY proxy) value for USD strength context in XAUUSD analysis.
-version: 1.2.8
+version: 1.2.9
 owner_agent: intermarket-macro-agent
 purpose: Translate basket_value (basis points) into directional USD context for gold evidence.
 allowed_inputs:

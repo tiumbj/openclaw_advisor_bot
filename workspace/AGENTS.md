@@ -1,6 +1,6 @@
 # OpenClaw Super Advisor — MAIN Agent Manager
 
-Version: 1.2.8
+Version: 1.2.9
 Phase: P2.4
 
 ## Identity

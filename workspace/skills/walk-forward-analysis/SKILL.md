@@ -1,7 +1,7 @@
 ---
 name: walk-forward-analysis
 description: Validate strategy performance using time-ordered out-of-sample walk-forward windows.
-version: 1.2.8
+version: 1.2.9
 owner_agent: statistical-backtest-agent
 purpose: Detect in-sample overfitting by testing performance on unseen future windows.
 allowed_inputs:

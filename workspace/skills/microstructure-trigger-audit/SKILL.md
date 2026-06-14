@@ -1,7 +1,7 @@
 ---
 name: microstructure-trigger-audit
 description: Audit price-action trigger conditions (order blocks, FVG, BOS) before alert publication.
-version: 1.2.8
+version: 1.2.9
 owner_agent: price-action-microstructure-agent
 purpose: Validate that trigger criteria are met by Python-computed evidence, not agent assumption.
 allowed_inputs:

@@ -371,6 +371,18 @@ def validate_skills(
                     folder_name, str(skill_path), "missing_contract", "tests must not be empty"
                 )
             )
+        # LC-014: Semantic depth validation — body must contain required operational sections
+        body_lower = skill.body.lower()
+        for required_section in ("## procedure", "## decision tree", "## failure mode"):
+            if required_section not in body_lower:
+                issues.append(
+                    SkillIssue(
+                        folder_name,
+                        str(skill_path),
+                        "shallow_skill",
+                        f"body must contain a '{required_section}' section",
+                    )
+                )
 
     if rendered_config is not None:
         config_report = validate_rendered_config(rendered_config, paths)

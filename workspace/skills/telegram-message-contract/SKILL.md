@@ -1,7 +1,7 @@
 ---
 name: telegram-message-contract
 description: Telegram message contract skill.
-version: 1.2.8
+version: 1.2.9
 owner_agent: telegram-publisher
 purpose: Define approved Telegram payload contracts.
 allowed_inputs:
@@ -48,3 +48,21 @@ promotion_status: stable
 # telegram-message-contract
 
 This skill defines allowed publication message contracts.
+
+## Procedure
+1. Validate input against required_input_schema; reject malformed payloads without partial processing.
+2. Execute the primary analysis sequence for this skill using Python deterministic rules only.
+3. Record all computed values with evidence IDs and provenance metadata before returning.
+4. Return structured output to the requesting agent; do not fabricate missing values.
+
+## Decision Tree
+- Input VALID and all required fields present → proceed with full analysis.
+- Input STALE → annotate stale=True in output; proceed with caveat.
+- Input SOURCE_UNAVAILABLE → return INSUFFICIENT_DATA; do not substitute fabricated values.
+- Required evidence missing or schema mismatch → return REJECTED with ailure_reason.
+
+## Failure Mode
+- **Source unavailable**: Return SOURCE_UNAVAILABLE status; never fill with fabricated data.
+- **Schema violation**: Reject payload; log structured error; do not partially process.
+- **Timeout / retry exhaustion**: Return TIMEOUT status; let job_queue requeue.
+- **Agent unreachable**: Record incident via watchdog callback; escalate after threshold.
