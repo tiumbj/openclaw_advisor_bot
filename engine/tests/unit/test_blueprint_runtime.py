@@ -25,22 +25,30 @@ def test_required_agents_exist(sample_project: Path) -> None:
     paths = build_paths(sample_project)
     rendered = render_config(paths, env_path=paths.canonical_env_example_path)
     report = validate_agent_topology(rendered, paths)
-    assert report.valid
+    assert report.valid, f"topology issues: {report.issues} route_issues: {report.route_issues}"
     assert [agent.agent_id for agent in report.agents] == [
         "super-advisor",
         "xau-strategy-auditor",
         "system-coder-auditor",
         "telegram-publisher",
+        "market-data-integrity-agent",
+        "price-action-microstructure-agent",
+        "intermarket-macro-agent",
+        "statistical-backtest-agent",
+        "failure-root-cause-agent",
+        "security-compliance-agent",
+        "reliability-watchdog-agent",
+        "knowledge-skill-manager",
     ]
 
 
 def test_agent_workspaces_are_isolated(sample_project: Path) -> None:
     paths = build_paths(sample_project)
     agents = build_agent_topology(paths)
-    assert len({agent.workspace for agent in agents}) == 4
-    assert len({agent.agent_dir for agent in agents}) == 4
-    assert len({agent.session_store for agent in agents}) == 4
-    assert len({agent.memory_dir for agent in agents}) == 4
+    assert len({agent.workspace for agent in agents}) == 12
+    assert len({agent.agent_dir for agent in agents}) == 12
+    assert len({agent.session_store for agent in agents}) == 12
+    assert len({agent.memory_dir for agent in agents}) == 12
 
 
 def test_realtime_route_happy_path(sample_project: Path) -> None:
