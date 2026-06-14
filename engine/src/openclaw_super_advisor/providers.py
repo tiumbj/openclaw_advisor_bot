@@ -321,9 +321,7 @@ def build_provider_policy_report(
         selected_openclaw_provider_id = None
 
     provider_credentials = {
-        provider: "present"
-        if _provider_credentials(raw_values, provider)
-        else "blank"
+        provider: "present" if _provider_credentials(raw_values, provider) else "blank"
         for provider in SUPPORTED_PROVIDERS
     }
     provider_models = {

@@ -37,9 +37,7 @@ def test_provider_name_and_model_reference_helpers() -> None:
     assert _parse_int(" ") is None
     assert _split_csv(None) == ()
     assert _split_csv(" OpenAI, gemini , , claude ") == ("openai", "gemini", "claude")
-    assert _provider_credentials({"GOOGLE_API_KEY": "secret"}, "gemini") == (
-        "GOOGLE_API_KEY",
-    )
+    assert _provider_credentials({"GOOGLE_API_KEY": "secret"}, "gemini") == ("GOOGLE_API_KEY",)
     assert _legacy_provider_refs(
         {
             "AI_PRIMARY_PROVIDER": "legacy",
@@ -210,12 +208,12 @@ def test_provider_policy_rejects_unknown_provider_and_unsupported_api_keys(
     sample_project: Path,
 ) -> None:
     env_path = sample_project / "state" / "provider-unknown.env"
-    env_text = (sample_project / ".env.example").read_text(encoding="utf-8").replace(
-        "AI_PROVIDER=", "AI_PROVIDER=unknown"
+    env_text = (
+        (sample_project / ".env.example")
+        .read_text(encoding="utf-8")
+        .replace("AI_PROVIDER=", "AI_PROVIDER=unknown")
     )
-    env_path.write_text(
-        env_text + "\nUNSUPPORTED_PROVIDER_API_KEY=secret\n", encoding="utf-8"
-    )
+    env_path.write_text(env_text + "\nUNSUPPORTED_PROVIDER_API_KEY=secret\n", encoding="utf-8")
     report = build_provider_policy_report(build_paths(sample_project), env_path=env_path)
     assert report.status == "FAIL"
     assert any(issue.code == "unsupported_provider" for issue in report.issues)

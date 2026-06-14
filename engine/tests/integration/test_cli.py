@@ -116,6 +116,16 @@ def test_cli_validation_commands(sample_project: Path) -> None:
     health = _run(["health", "--project-root", root, "--json"])
     env = _run(["validate-env", "--project-root", root, "--env-file", env_file, "--json"])
     skills = _run(["validate-skills", "--project-root", root, "--env-file", env_example, "--json"])
+    agents = _run(["validate-agents", "--project-root", root, "--env-file", env_example, "--json"])
+    routing = _run(
+        ["validate-routing", "--project-root", root, "--env-file", env_example, "--json"]
+    )
+    pipeline = _run(
+        ["pipeline-dry-run", "--project-root", root, "--env-file", env_example, "--json"]
+    )
+    evidence = _run(
+        ["evidence-verify", "--project-root", root, "--env-file", env_example, "--json"]
+    )
     security = _run(["security-scan", "--project-root", root, "--json"])
     rendered = _run(
         ["render-config", "--project-root", root, "--env-file", env_example, "--validate", "--json"]
@@ -125,8 +135,13 @@ def test_cli_validation_commands(sample_project: Path) -> None:
     )
 
     assert health["runtime_agent_id"] == "super-advisor"
+    assert len(health["runtime_agent_ids"]) == 4
     assert env["valid"] is True
     assert skills["valid"] is True
+    assert agents["valid"] is True
+    assert routing["valid"] is True
+    assert pipeline["overall_pass"] is True
+    assert evidence["valid"] is True
     assert security["summary"]["pass"] is True
     assert rendered["validation"]["valid"] is True
     assert provider_policy["phase"] == PHASE
@@ -216,6 +231,9 @@ def test_cli_help_and_no_trade_commands() -> None:
     assert "market-backfill" in help_text
     assert "market-storage-check" in help_text
     assert "provider-policy" in help_text
+    assert "validate-agents" in help_text
+    assert "validate-routing" in help_text
+    assert "pipeline-dry-run" in help_text
     assert "buy" not in help_text.lower()
     assert "sell" not in help_text.lower()
     assert "trade" not in help_text.lower()

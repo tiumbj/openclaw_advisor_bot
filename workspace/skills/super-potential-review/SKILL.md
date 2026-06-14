@@ -1,17 +1,50 @@
 ---
 name: super-potential-review
-description: Review Python-produced candidates without creating thresholds or changing scores.
-version: 1.2.6
+description: Super potential review skill.
+version: 1.2.7
+owner_agent: super-advisor
+purpose: Review approved evidence for super potential candidates.
+allowed_inputs:
+  - evidence packet
+required_input_schema: object
+output_schema: object
+allowed_tools:
+  - read
+  - session_status
+denied_tools:
+  - group:runtime
+  - group:web
+  - group:ui
+  - group:automation
+  - group:messaging
+  - group:plugins
+  - group:memory
+  - group:sessions
+  - write
+  - edit
+  - apply_patch
+  - exec
+  - process
+  - code_execution
+  - browser
+  - canvas
+  - gateway
+  - message
+  - subagents
+safety_constraints:
+  - advisor-only
+  - no secret access
+  - no execution
+failure_behavior: return structured audit failure
+audit_fields:
+  - evidence_id
+  - correlation_id
+  - provenance
+tests:
+  - unit
+  - integration
+promotion_status: stable
 ---
-
 # super-potential-review
 
-Version: 1.2.6
-
-Purpose: review a Python-produced candidate tagged for later SUPER_POTENTIAL handling.
-
-Rules:
-- Do not create a candidate.
-- Do not raise or lower any score.
-- Do not define thresholds during bootstrap.
-- Accept only structured input that already passed evidence audit.
+This skill evaluates evidence without fabricating numeric data.

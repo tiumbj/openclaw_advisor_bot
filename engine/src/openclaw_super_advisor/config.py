@@ -6,7 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
 
-from .constants import CANONICAL_RUNTIME_AGENT_ID, SKILL_NAMES
+from .agent_topology import build_agent_topology, validate_routing
+from .constants import RUNTIME_AGENT_IDS, SKILL_NAMES
 from .env import load_settings
 from .paths import ProjectPaths
 
@@ -60,6 +61,22 @@ def render_config(
         if isinstance(value, Path):
             normalized = (paths.root_dir / value).resolve() if not value.is_absolute() else value
             render_values[name] = str(normalized)
+    render_values["OPENCLAW_WORKSPACE_AGENTS_DIR"] = str(paths.workspace_dir / "agents")
+    render_values["OPENCLAW_STATE_AGENTS_DIR"] = str(paths.state_dir / "agents")
+    for agent_id in RUNTIME_AGENT_IDS:
+        prefix = agent_id.upper().replace("-", "_")
+        render_values[f"OPENCLAW_{prefix}_WORKSPACE_DIR"] = str(
+            paths.workspace_dir / "agents" / agent_id
+        )
+        render_values[f"OPENCLAW_{prefix}_AGENT_DIR"] = str(
+            paths.state_dir / "agents" / agent_id / "agent"
+        )
+        render_values[f"OPENCLAW_{prefix}_SESSION_STORE"] = str(
+            paths.state_dir / "agents" / agent_id / "sessions"
+        )
+        render_values[f"OPENCLAW_{prefix}_MEMORY_DIR"] = str(
+            paths.state_dir / "agents" / agent_id / "memory"
+        )
     template_text = paths.config_template_path.read_text(encoding="utf-8")
     rendered = PLACEHOLDER_IN_STRING.sub(
         lambda match: _replace_string_placeholder(match, render_values), template_text
@@ -140,26 +157,104 @@ def validate_rendered_config(
     agents = _as_object(config.get("agents"), "agents")
     defaults = _as_object(agents.get("defaults"), "agents.defaults")
     _require_equal(
-        issues, defaults.get("workspace"), str(paths.workspace_dir), "agents.defaults.workspace"
+        issues,
+        defaults.get("workspace"),
+        str(paths.workspace_dir / "agents"),
+        "agents.defaults.workspace",
     )
     _require_equal(issues, defaults.get("skills"), list(SKILL_NAMES), "agents.defaults.skills")
 
     agent_list = _as_list(agents.get("list"), "agents.list")
-    if len(agent_list) != 1:
-        issues.append(ConfigValidationIssue("agents.list", "expected exactly one configured agent"))
+    expected_agents = build_agent_topology(paths)
+    if len(agent_list) != len(expected_agents):
+        issues.append(
+            ConfigValidationIssue(
+                "agents.list", f"expected exactly {len(expected_agents)} configured agents"
+            )
+        )
     else:
-        agent = _as_object(agent_list[0], "agents.list[0]")
-        _require_equal(issues, agent.get("id"), CANONICAL_RUNTIME_AGENT_ID, "agents.list[0].id")
-        _require_equal(
-            issues, agent.get("workspace"), str(paths.workspace_dir), "agents.list[0].workspace"
-        )
-        _require_equal(issues, agent.get("skills"), list(SKILL_NAMES), "agents.list[0].skills")
-        _validate_tools(
-            _as_object(agent.get("tools"), "agents.list[0].tools"), "agents.list[0].tools", issues
-        )
+        seen_ids: set[str] = set()
+        expected_by_id = {agent.agent_id: agent for agent in expected_agents}
+        for index, item in enumerate(agent_list):
+            agent = _as_object(item, f"agents.list[{index}]")
+            agent_id = str(agent.get("id", ""))
+            if agent_id not in expected_by_id:
+                issues.append(
+                    ConfigValidationIssue(
+                        f"agents.list[{index}].id", f"unexpected agent id {agent_id!r}"
+                    )
+                )
+                continue
+            if agent_id in seen_ids:
+                issues.append(
+                    ConfigValidationIssue(
+                        f"agents.list[{index}].id", f"duplicate agent id {agent_id!r}"
+                    )
+                )
+            seen_ids.add(agent_id)
+            expected = expected_by_id[agent_id]
+            _require_equal(
+                issues,
+                agent.get("workspace"),
+                expected.workspace,
+                f"agents.list[{index}].workspace",
+            )
+            _require_equal(
+                issues,
+                agent.get("agentDir"),
+                expected.agent_dir,
+                f"agents.list[{index}].agentDir",
+            )
+            _require_equal(
+                issues,
+                agent.get("sessionStore"),
+                expected.session_store,
+                f"agents.list[{index}].sessionStore",
+            )
+            _require_equal(
+                issues,
+                agent.get("memoryDir"),
+                expected.memory_dir,
+                f"agents.list[{index}].memoryDir",
+            )
+            _require_equal(
+                issues, agent.get("skills"), list(expected.skills), f"agents.list[{index}].skills"
+            )
+            _validate_tools(
+                _as_object(agent.get("tools"), f"agents.list[{index}].tools"),
+                f"agents.list[{index}].tools",
+                issues,
+            )
+            secret_access = _as_object(
+                agent.get("secretAccess"), f"agents.list[{index}].secretAccess"
+            )
+            expected_secret_mode = (
+                "approved_payload_only" if agent_id == "telegram-publisher" else "none"
+            )
+            _require_equal(
+                issues,
+                secret_access.get("mode"),
+                expected_secret_mode,
+                f"agents.list[{index}].secretAccess.mode",
+            )
 
     _validate_market_data(_as_object(config.get("marketData"), "marketData"), issues)
     _validate_tools(_as_object(config.get("tools"), "tools"), "tools", issues)
+    routing = config.get("routing")
+    if isinstance(routing, dict):
+        route_report = validate_routing(
+            {
+                "realtime": cast(list[list[str]], routing.get("realtime", [])),
+                "code-audit": cast(list[list[str]], routing.get("code-audit", [])),
+            }
+        )
+        if not route_report.valid:
+            for item in route_report.issues:
+                issues.append(
+                    ConfigValidationIssue(f"routing.{item.path}", f"{item.rule}: {item.message}")
+                )
+    else:
+        issues.append(ConfigValidationIssue("routing", "routing section is required"))
     return ConfigValidationReport(valid=not issues, issues=tuple(issues))
 
 

@@ -5,7 +5,7 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
-$scriptVersion = '1.2.6'
+$scriptVersion = '1.2.7'
 $warnings = [System.Collections.Generic.List[string]]::new()
 $stopped = [System.Collections.Generic.List[int]]::new()
 $forceStopped = [System.Collections.Generic.List[object]]::new()

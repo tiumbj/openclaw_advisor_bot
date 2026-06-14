@@ -263,7 +263,9 @@ def test_quality_incident_deduplicates_with_hit_count(sample_project: Path) -> N
             FROM quality_incidents
             WHERE incident_key = ?
             """,
-            ("stale_tick:XAUUSD:tick:XAUUSD:XAUUSD.:1767225000000:2600.00000000:2600.20000000:2600.10000000:1.00000000",),
+            (
+                "stale_tick:XAUUSD:tick:XAUUSD:XAUUSD.:1767225000000:2600.00000000:2600.20000000:2600.10000000:1.00000000",
+            ),
         ).fetchone()
     assert row is not None
     assert int(row["hit_count"]) == 2
@@ -614,24 +616,20 @@ def run_simulated_24h_soak(project_root: Path) -> dict[str, int | float]:
     sqlite_size = sqlite_path.stat().st_size
     with service.state_store.connect() as connection:
         heartbeat_count = int(
-            connection.execute(
-                "SELECT COUNT(*) AS count FROM collector_heartbeats"
-            ).fetchone()["count"]
+            connection.execute("SELECT COUNT(*) AS count FROM collector_heartbeats").fetchone()[
+                "count"
+            ]
         )
         latest_tick_count = int(
-            connection.execute(
-                "SELECT COUNT(*) AS count FROM latest_ticks"
-            ).fetchone()["count"]
+            connection.execute("SELECT COUNT(*) AS count FROM latest_ticks").fetchone()["count"]
         )
         latest_bar_count = int(
-            connection.execute(
-                "SELECT COUNT(*) AS count FROM latest_bars"
-            ).fetchone()["count"]
+            connection.execute("SELECT COUNT(*) AS count FROM latest_bars").fetchone()["count"]
         )
         cursor_count = int(
-            connection.execute(
-                "SELECT COUNT(*) AS count FROM collection_cursors"
-            ).fetchone()["count"]
+            connection.execute("SELECT COUNT(*) AS count FROM collection_cursors").fetchone()[
+                "count"
+            ]
         )
 
     return {

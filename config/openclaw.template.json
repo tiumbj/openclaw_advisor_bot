@@ -32,23 +32,71 @@
   "skills": [
     "advisor-safety-contract",
     "environment-health",
-    "python-engine-bridge",
     "evidence-audit",
+    "agent-orchestration-contract",
     "super-potential-review",
+    "incident-reporting",
+    "publication-policy",
+    "xauusd-market-analysis",
+    "multi-timeframe-structure-review",
+    "price-action-order-block",
+    "chart-pattern-filter-review",
+    "candlestick-microstructure",
+    "strategy-logic-audit",
+    "realtime-evidence-review",
+    "super-potential-audit",
+    "alert-quality-improvement",
+    "python-pipeline-micro-audit",
+    "code-architecture-review",
+    "logic-conflict-detection",
+    "dead-code-and-duplicate-review",
+    "test-and-regression-design",
+    "blueprint-compliance-audit",
+    "safe-patch-workflow",
+    "release-and-rollback",
+    "skill-improvement-proposal",
     "thai-telegram-publisher",
-    "incident-reporting"
+    "telegram-message-contract",
+    "telegram-delivery-safety",
+    "telegram-deduplication-throttle",
+    "telegram-retry-and-dead-letter",
+    "telegram-security-redaction"
   ],
   "agents": {
     "defaults": {
-      "workspace": "{{OPENCLAW_WORKSPACE_DIR}}",
+      "workspace": "{{OPENCLAW_WORKSPACE_AGENTS_DIR}}",
       "skills": [
         "advisor-safety-contract",
         "environment-health",
-        "python-engine-bridge",
         "evidence-audit",
+        "agent-orchestration-contract",
         "super-potential-review",
+        "incident-reporting",
+        "publication-policy",
+        "xauusd-market-analysis",
+        "multi-timeframe-structure-review",
+        "price-action-order-block",
+        "chart-pattern-filter-review",
+        "candlestick-microstructure",
+        "strategy-logic-audit",
+        "realtime-evidence-review",
+        "super-potential-audit",
+        "alert-quality-improvement",
+        "python-pipeline-micro-audit",
+        "code-architecture-review",
+        "logic-conflict-detection",
+        "dead-code-and-duplicate-review",
+        "test-and-regression-design",
+        "blueprint-compliance-audit",
+        "safe-patch-workflow",
+        "release-and-rollback",
+        "skill-improvement-proposal",
         "thai-telegram-publisher",
-        "incident-reporting"
+        "telegram-message-contract",
+        "telegram-delivery-safety",
+        "telegram-deduplication-throttle",
+        "telegram-retry-and-dead-letter",
+        "telegram-security-redaction"
       ],
       "contextInjection": "always",
       "memorySearch": {
@@ -61,17 +109,19 @@
         "id": "super-advisor",
         "default": true,
         "name": "OpenClaw Super Advisor",
-        "description": "Advisor-only validation agent for structured evidence packets and approved health reporting.",
-        "workspace": "{{OPENCLAW_WORKSPACE_DIR}}",
-        "agentDir": "state\\agents\\super-advisor\\agent",
+        "description": "Coordinator, policy gate, and evidence auditor.",
+        "workspace": "{{OPENCLAW_SUPER_ADVISOR_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_SUPER_ADVISOR_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_SUPER_ADVISOR_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_SUPER_ADVISOR_MEMORY_DIR}}",
         "skills": [
           "advisor-safety-contract",
           "environment-health",
-          "python-engine-bridge",
           "evidence-audit",
+          "agent-orchestration-contract",
           "super-potential-review",
-          "thai-telegram-publisher",
-          "incident-reporting"
+          "incident-reporting",
+          "publication-policy"
         ],
         "tools": {
           "allow": [
@@ -171,8 +221,428 @@
               ]
             }
           }
+        },
+        "secretAccess": {
+          "mode": "none"
+        },
+        "timeoutSeconds": 120,
+        "retry": {
+          "maxAttempts": 2,
+          "backoffSeconds": 2
+        }
+      },
+      {
+        "id": "xau-strategy-auditor",
+        "name": "XAU Strategy Auditor",
+        "description": "Read-only XAUUSD setup and evidence auditor.",
+        "workspace": "{{OPENCLAW_XAU_STRATEGY_AUDITOR_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_XAU_STRATEGY_AUDITOR_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_XAU_STRATEGY_AUDITOR_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_XAU_STRATEGY_AUDITOR_MEMORY_DIR}}",
+        "skills": [
+          "xauusd-market-analysis",
+          "multi-timeframe-structure-review",
+          "price-action-order-block",
+          "chart-pattern-filter-review",
+          "candlestick-microstructure",
+          "strategy-logic-audit",
+          "realtime-evidence-review",
+          "super-potential-audit",
+          "alert-quality-improvement"
+        ],
+        "tools": {
+          "allow": [
+            "read",
+            "session_status"
+          ],
+          "deny": [
+            "group:runtime",
+            "group:web",
+            "group:ui",
+            "group:automation",
+            "group:messaging",
+            "group:plugins",
+            "group:memory",
+            "group:sessions",
+            "write",
+            "edit",
+            "apply_patch",
+            "exec",
+            "process",
+            "code_execution",
+            "browser",
+            "canvas",
+            "gateway",
+            "message",
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "sessions_list",
+            "sessions_history",
+            "sessions_send",
+            "sessions_spawn",
+            "sessions_yield"
+          ],
+          "exec": {
+            "mode": "deny",
+            "applyPatch": {
+              "enabled": false,
+              "workspaceOnly": true
+            }
+          },
+          "fs": {
+            "workspaceOnly": true
+          },
+          "message": {
+            "allowCrossContextSend": false,
+            "crossContext": {
+              "allowWithinProvider": false,
+              "allowAcrossProviders": false
+            },
+            "actions": {
+              "allow": []
+            },
+            "broadcast": {
+              "enabled": false
+            }
+          },
+          "agentToAgent": {
+            "enabled": false
+          },
+          "elevated": {
+            "enabled": false
+          },
+          "sandbox": {
+            "tools": {
+              "allow": [
+                "read",
+                "session_status"
+              ],
+              "deny": [
+                "group:runtime",
+                "group:web",
+                "group:ui",
+                "group:automation",
+                "group:messaging",
+                "group:plugins",
+                "group:memory",
+                "group:sessions",
+                "write",
+                "edit",
+                "apply_patch",
+                "exec",
+                "process",
+                "code_execution",
+                "browser",
+                "canvas",
+                "gateway",
+                "message",
+                "subagents",
+                "memory_search",
+                "memory_get",
+                "sessions_list",
+                "sessions_history",
+                "sessions_send",
+                "sessions_spawn",
+                "sessions_yield"
+              ]
+            }
+          }
+        },
+        "secretAccess": {
+          "mode": "none"
+        },
+        "timeoutSeconds": 90,
+        "retry": {
+          "maxAttempts": 2,
+          "backoffSeconds": 2
+        }
+      },
+      {
+        "id": "system-coder-auditor",
+        "name": "System Coder Auditor",
+        "description": "Read-only code-audit agent with isolated worktree proposals.",
+        "workspace": "{{OPENCLAW_SYSTEM_CODER_AUDITOR_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_SYSTEM_CODER_AUDITOR_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_SYSTEM_CODER_AUDITOR_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_SYSTEM_CODER_AUDITOR_MEMORY_DIR}}",
+        "skills": [
+          "python-pipeline-micro-audit",
+          "code-architecture-review",
+          "logic-conflict-detection",
+          "dead-code-and-duplicate-review",
+          "test-and-regression-design",
+          "blueprint-compliance-audit",
+          "safe-patch-workflow",
+          "release-and-rollback",
+          "skill-improvement-proposal"
+        ],
+        "tools": {
+          "allow": [
+            "read",
+            "session_status"
+          ],
+          "deny": [
+            "group:runtime",
+            "group:web",
+            "group:ui",
+            "group:automation",
+            "group:messaging",
+            "group:plugins",
+            "group:memory",
+            "group:sessions",
+            "write",
+            "edit",
+            "apply_patch",
+            "exec",
+            "process",
+            "code_execution",
+            "browser",
+            "canvas",
+            "gateway",
+            "message",
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "sessions_list",
+            "sessions_history",
+            "sessions_send",
+            "sessions_spawn",
+            "sessions_yield"
+          ],
+          "exec": {
+            "mode": "deny",
+            "applyPatch": {
+              "enabled": false,
+              "workspaceOnly": true
+            }
+          },
+          "fs": {
+            "workspaceOnly": true
+          },
+          "message": {
+            "allowCrossContextSend": false,
+            "crossContext": {
+              "allowWithinProvider": false,
+              "allowAcrossProviders": false
+            },
+            "actions": {
+              "allow": []
+            },
+            "broadcast": {
+              "enabled": false
+            }
+          },
+          "agentToAgent": {
+            "enabled": false
+          },
+          "elevated": {
+            "enabled": false
+          },
+          "sandbox": {
+            "tools": {
+              "allow": [
+                "read",
+                "session_status"
+              ],
+              "deny": [
+                "group:runtime",
+                "group:web",
+                "group:ui",
+                "group:automation",
+                "group:messaging",
+                "group:plugins",
+                "group:memory",
+                "group:sessions",
+                "write",
+                "edit",
+                "apply_patch",
+                "exec",
+                "process",
+                "code_execution",
+                "browser",
+                "canvas",
+                "gateway",
+                "message",
+                "subagents",
+                "memory_search",
+                "memory_get",
+                "sessions_list",
+                "sessions_history",
+                "sessions_send",
+                "sessions_spawn",
+                "sessions_yield"
+              ]
+            }
+          }
+        },
+        "secretAccess": {
+          "mode": "none"
+        },
+        "timeoutSeconds": 90,
+        "retry": {
+          "maxAttempts": 2,
+          "backoffSeconds": 2
+        }
+      },
+      {
+        "id": "telegram-publisher",
+        "name": "Thai Telegram Publisher",
+        "description": "Approved Thai publication formatter and delivery safety gate.",
+        "workspace": "{{OPENCLAW_TELEGRAM_PUBLISHER_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_TELEGRAM_PUBLISHER_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_TELEGRAM_PUBLISHER_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_TELEGRAM_PUBLISHER_MEMORY_DIR}}",
+        "skills": [
+          "thai-telegram-publisher",
+          "telegram-message-contract",
+          "telegram-delivery-safety",
+          "telegram-deduplication-throttle",
+          "telegram-retry-and-dead-letter",
+          "telegram-security-redaction"
+        ],
+        "tools": {
+          "allow": [
+            "read",
+            "session_status"
+          ],
+          "deny": [
+            "group:runtime",
+            "group:web",
+            "group:ui",
+            "group:automation",
+            "group:messaging",
+            "group:plugins",
+            "group:memory",
+            "group:sessions",
+            "write",
+            "edit",
+            "apply_patch",
+            "exec",
+            "process",
+            "code_execution",
+            "browser",
+            "canvas",
+            "gateway",
+            "message",
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "sessions_list",
+            "sessions_history",
+            "sessions_send",
+            "sessions_spawn",
+            "sessions_yield"
+          ],
+          "exec": {
+            "mode": "deny",
+            "applyPatch": {
+              "enabled": false,
+              "workspaceOnly": true
+            }
+          },
+          "fs": {
+            "workspaceOnly": true
+          },
+          "message": {
+            "allowCrossContextSend": false,
+            "crossContext": {
+              "allowWithinProvider": false,
+              "allowAcrossProviders": false
+            },
+            "actions": {
+              "allow": []
+            },
+            "broadcast": {
+              "enabled": false
+            }
+          },
+          "agentToAgent": {
+            "enabled": false
+          },
+          "elevated": {
+            "enabled": false
+          },
+          "sandbox": {
+            "tools": {
+              "allow": [
+                "read",
+                "session_status"
+              ],
+              "deny": [
+                "group:runtime",
+                "group:web",
+                "group:ui",
+                "group:automation",
+                "group:messaging",
+                "group:plugins",
+                "group:memory",
+                "group:sessions",
+                "write",
+                "edit",
+                "apply_patch",
+                "exec",
+                "process",
+                "code_execution",
+                "browser",
+                "canvas",
+                "gateway",
+                "message",
+                "subagents",
+                "memory_search",
+                "memory_get",
+                "sessions_list",
+                "sessions_history",
+                "sessions_send",
+                "sessions_spawn",
+                "sessions_yield"
+              ]
+            }
+          }
+        },
+        "secretAccess": {
+          "mode": "approved_payload_only"
+        },
+        "timeoutSeconds": 60,
+        "retry": {
+          "maxAttempts": 3,
+          "backoffSeconds": 2
         }
       }
+    ]
+  },
+  "routing": {
+    "realtime": [
+      [
+        "evidence-archive",
+        "super-advisor"
+      ],
+      [
+        "super-advisor",
+        "xau-strategy-auditor"
+      ],
+      [
+        "xau-strategy-auditor",
+        "super-advisor"
+      ],
+      [
+        "super-advisor",
+        "telegram-publisher"
+      ],
+      [
+        "telegram-publisher",
+        "outcome-ledger"
+      ]
+    ],
+    "code-audit": [
+      [
+        "source-bundle",
+        "system-coder-auditor"
+      ],
+      [
+        "system-coder-auditor",
+        "audit-report"
+      ]
     ]
   },
   "marketData": {

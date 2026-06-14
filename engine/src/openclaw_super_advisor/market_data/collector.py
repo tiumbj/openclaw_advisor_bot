@@ -212,9 +212,7 @@ def parse_market_data_settings(
         mt5_login=str(settings.raw_values.get("MT5_LOGIN", "")),
         mt5_password=str(settings.raw_values.get("MT5_PASSWORD", "")),
         mt5_server=str(settings.raw_values.get("MT5_SERVER", "")),
-        mt5_use_existing_session=bool(
-            settings.parsed_values.get("MT5_USE_EXISTING_SESSION", True)
-        ),
+        mt5_use_existing_session=bool(settings.parsed_values.get("MT5_USE_EXISTING_SESSION", True)),
         dry_run_default=bool(settings.parsed_values.get("DRY_RUN", True)),
     )
 
@@ -459,9 +457,7 @@ class MarketDataService:
         for tick in tick_rows:
             logical_symbol = str(tick["logical_symbol"])
             related_bars = [
-                row
-                for row in bar_rows
-                if str(row.get("logical_symbol")) == logical_symbol
+                row for row in bar_rows if str(row.get("logical_symbol")) == logical_symbol
             ]
             tick_record = [
                 TickRecord(
@@ -669,9 +665,7 @@ class MarketDataService:
             bar_start = (
                 observed_now
                 - timedelta(
-                    seconds=MT5_TIMEFRAME_MAP[timeframe]
-                    * 60
-                    * self.settings.bar_lookback_count
+                    seconds=MT5_TIMEFRAME_MAP[timeframe] * 60 * self.settings.bar_lookback_count
                 )
                 if bar_cursor is None
                 else bar_cursor.cursor_utc

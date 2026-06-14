@@ -1,22 +1,23 @@
 {
   "schema_version": "project-status-v3",
   "project": "openclaw_advisor_bot",
-  "package_version": "1.2.6",
+  "package_version": "1.2.7",
   "current_phase": "P2.4",
   "phase": "P2.4",
   "phase_status": "IN_PROGRESS",
-  "current_work_package": "WP-P2_4-RUNTIME-RECOVERY",
-  "updated_at_utc": "2026-06-14T09:24:42Z",
-  "evidence_base_commit": "479579eb779cd782ecdd9052f4a7605a7e8261dc",
+  "current_work_package": "WP-P2_4-MASTER-BLUEPRINT-INTEGRATION",
+  "updated_at_utc": "2026-06-14T12:49:35Z",
+  "evidence_base_commit": "1bd0c1c1b44fdc16c4ba985033bdde498981fe16",
   "generated_from_worktree": true,
-  "observed_remote_head_before_change": "479579eb779cd782ecdd9052f4a7605a7e8261dc",
+  "observed_remote_head_before_change": "1bd0c1c1b44fdc16c4ba985033bdde498981fe16",
   "implementation_commit": "PENDING",
   "status_report_commit": "PENDING",
-  "observed_remote_head": "479579eb779cd782ecdd9052f4a7605a7e8261dc",
+  "observed_remote_head": "1bd0c1c1b44fdc16c4ba985033bdde498981fe16",
   "working_tree_status": {
     "clean": false,
     "tracked_changes": [
       ".env.example",
+      ".gitignore",
       "README.md",
       "config/openclaw.template.json",
       "docs/IMPLEMENTATION_LEDGER.md",
@@ -31,20 +32,80 @@
       "docs/PROJECT_STATUS.md",
       "docs/PROJECT_STATUS.json",
       "engine/src/openclaw_super_advisor/_version.py",
+      "engine/src/openclaw_super_advisor/agent_topology.py",
+      "engine/src/openclaw_super_advisor/cli.py",
       "engine/src/openclaw_super_advisor/config.py",
+      "engine/src/openclaw_super_advisor/constants.py",
+      "engine/src/openclaw_super_advisor/env.py",
+      "engine/src/openclaw_super_advisor/events.py",
+      "engine/src/openclaw_super_advisor/health.py",
+      "engine/src/openclaw_super_advisor/market_data/collector.py",
+      "engine/src/openclaw_super_advisor/market_data/quality.py",
+      "engine/src/openclaw_super_advisor/providers.py",
+      "engine/src/openclaw_super_advisor/skills.py",
+      "engine/src/openclaw_super_advisor/persistence/__init__.py",
+      "engine/src/openclaw_super_advisor/persistence/archive.py",
+      "engine/src/openclaw_super_advisor/persistence/backup.py",
+      "engine/src/openclaw_super_advisor/persistence/ledger.py",
+      "engine/src/openclaw_super_advisor/persistence/memory.py",
+      "engine/src/openclaw_super_advisor/persistence/models.py",
+      "engine/src/openclaw_super_advisor/persistence/restore.py",
+      "engine/src/openclaw_super_advisor/persistence/skills.py",
       "engine/tests/conftest.py",
+      "engine/tests/integration/test_cli.py",
+      "engine/tests/unit/test_blueprint_runtime.py",
+      "engine/tests/unit/test_config_and_skills.py",
       "engine/tests/unit/test_env.py",
       "engine/tests/unit/test_health.py",
+      "engine/tests/unit/test_market_data.py",
+      "engine/tests/unit/test_market_data_reliability.py",
+      "engine/tests/unit/test_providers.py",
       "engine/tests/unit/test_report_artifacts.py",
+      "engine/tests/unit/test_skill_failures.py",
       "scripts/Start-OpenClawUI.ps1",
       "scripts/Stop-OpenClawGateway.ps1",
-      "scripts/Test-OpenClawUI.ps1"
+      "scripts/Test-OpenClawUI.ps1",
+      "workspace/skills/advisor-safety-contract/SKILL.md",
+      "workspace/skills/agent-orchestration-contract/SKILL.md",
+      "workspace/skills/alert-quality-improvement/SKILL.md",
+      "workspace/skills/blueprint-compliance-audit/SKILL.md",
+      "workspace/skills/candlestick-microstructure/SKILL.md",
+      "workspace/skills/chart-pattern-filter-review/SKILL.md",
+      "workspace/skills/code-architecture-review/SKILL.md",
+      "workspace/skills/dead-code-and-duplicate-review/SKILL.md",
+      "workspace/skills/environment-health/SKILL.md",
+      "workspace/skills/evidence-audit/SKILL.md",
+      "workspace/skills/incident-reporting/SKILL.md",
+      "workspace/skills/logic-conflict-detection/SKILL.md",
+      "workspace/skills/multi-timeframe-structure-review/SKILL.md",
+      "workspace/skills/price-action-order-block/SKILL.md",
+      "workspace/skills/publication-policy/SKILL.md",
+      "workspace/skills/python-pipeline-micro-audit/SKILL.md",
+      "workspace/skills/realtime-evidence-review/SKILL.md",
+      "workspace/skills/release-and-rollback/SKILL.md",
+      "workspace/skills/safe-patch-workflow/SKILL.md",
+      "workspace/skills/skill-improvement-proposal/SKILL.md",
+      "workspace/skills/strategy-logic-audit/SKILL.md",
+      "workspace/skills/super-potential-audit/SKILL.md",
+      "workspace/skills/super-potential-review/SKILL.md",
+      "workspace/skills/telegram-deduplication-throttle/SKILL.md",
+      "workspace/skills/telegram-delivery-safety/SKILL.md",
+      "workspace/skills/telegram-message-contract/SKILL.md",
+      "workspace/skills/telegram-retry-and-dead-letter/SKILL.md",
+      "workspace/skills/telegram-security-redaction/SKILL.md",
+      "workspace/skills/test-and-regression-design/SKILL.md",
+      "workspace/skills/thai-telegram-publisher/SKILL.md",
+      "workspace/skills/xauusd-market-analysis/SKILL.md"
     ],
-    "untracked_changes": [],
+    "untracked_changes": [
+      "workspace/agents/",
+      "workspace/skills/python-engine-bridge/"
+    ],
     "ignored_runtime_updates": [
       "state/openclaw.json",
       "state/.env",
-      "workspace/.openclaw/"
+      "workspace/.openclaw/",
+      "data/backups/backup-20260614-124129/"
     ]
   },
   "ci_status": "NOT RUN",
@@ -67,15 +128,15 @@
     "provider_policy": "PASS"
   },
   "real_provider_test": {
-    "status": "PASS",
-    "blocker": null,
-    "detail": "Controlled live gateway turn on super-advisor completed without side effects."
+    "status": "BLOCKED_EXTERNAL",
+    "blocker": "NO_AVAILABLE_AI_CREDIT",
+    "detail": "Live provider validation is externally blocked; offline contract and policy checks pass."
   },
   "agent_status": {
-    "status": "PARTIAL",
+    "status": "PASS",
     "default_agent": "super-advisor",
     "enabled": true,
-    "detail": "The runtime turn passed, but the requested multi-agent topology is still not wired."
+    "detail": "The four-agent runtime topology is wired and validated by local runtime and blueprint tests."
   },
   "supported_providers": [
     "openai",
@@ -84,10 +145,10 @@
     "deepseek"
   ],
   "selected_provider": "claude",
-  "credit_blocker": null,
-  "blueprint_status": "IN_PROGRESS",
-  "target_package_version": "1.2.6",
-  "next_action": "Audit the remaining blueprint-only subsystems: agent routing, isolated agent topology, backup/restore, and learning evidence storage.",
+  "credit_blocker": "NO_AVAILABLE_AI_CREDIT",
+  "blueprint_status": "PARTIAL",
+  "target_package_version": "1.2.7",
+  "next_action": "Capture the remaining external blocker in the audit bundle and preserve the validated runtime, topology, routing, backup, and self-improvement evidence for pre-production audit review.",
   "work_packages": [
     {
       "id": "WP-CODEX-01",
@@ -110,6 +171,11 @@
       "status": "PARTIAL"
     },
     {
+      "id": "WP-P2_4-MASTER-BLUEPRINT-INTEGRATION",
+      "name": "Master Blueprint Implementation, Integration and Audit-Readiness",
+      "status": "IN_PROGRESS"
+    },
+    {
       "id": "WP-P2_4-RUNTIME-RECOVERY",
       "name": "Runtime Recovery, Token Reconciliation, and UI Auth",
       "status": "PASS"
@@ -126,21 +192,49 @@
       "status": "PASS"
     },
     {
+      "name": "ruff",
+      "status": "PASS"
+    },
+    {
       "name": "mypy",
       "status": "PASS"
     },
     {
       "name": "pytest_non_live",
       "status": "PASS",
-      "details": "65 passed, 1 deselected"
+      "details": "77 passed, 1 deselected"
     },
     {
-      "name": "pytest_non_live_coverage",
+      "name": "pytest_env",
       "status": "PASS",
-      "details": "65 passed, 1 deselected"
+      "details": "4 passed"
     },
     {
-      "name": "report_artifacts",
+      "name": "pytest_report_artifacts",
+      "status": "PASS",
+      "details": "6 passed"
+    },
+    {
+      "name": "pytest_blueprint_runtime",
+      "status": "PASS",
+      "details": "12 passed"
+    },
+    {
+      "name": "pytest_integration",
+      "status": "PASS",
+      "details": "5 passed"
+    },
+    {
+      "name": "pytest_security",
+      "status": "PASS",
+      "details": "6 passed"
+    },
+    {
+      "name": "build",
+      "status": "PASS"
+    },
+    {
+      "name": "powershell_parse",
       "status": "PASS"
     },
     {
@@ -152,7 +246,23 @@
       "status": "PASS"
     },
     {
+      "name": "validate_env",
+      "status": "PASS"
+    },
+    {
       "name": "validate_skills",
+      "status": "PASS"
+    },
+    {
+      "name": "validate_agents",
+      "status": "PASS"
+    },
+    {
+      "name": "validate_routing",
+      "status": "PASS"
+    },
+    {
+      "name": "provider_policy",
       "status": "PASS"
     },
     {
@@ -160,7 +270,23 @@
       "status": "PASS"
     },
     {
-      "name": "provider_policy",
+      "name": "evidence_verify",
+      "status": "PASS"
+    },
+    {
+      "name": "backup_verify",
+      "status": "PASS"
+    },
+    {
+      "name": "restore_drill",
+      "status": "PASS"
+    },
+    {
+      "name": "pipeline_dry_run",
+      "status": "PASS"
+    },
+    {
+      "name": "self_improvement_dry_run",
       "status": "PASS"
     },
     {
@@ -173,8 +299,8 @@
     }
   ],
   "notes": [
-    "The canonical gateway token was reconciled from state/.env into the process, user, machine, gateway service, and rendered config paths.",
-    "The Control UI is enabled and authenticated successfully on loopback.",
-    "The remaining gap is structural: the requested isolated agents, routing topology, backup, and learning subsystems are still not implemented."
+    "The canonical gateway token remains sourced from state/.env.",
+    "The four-agent topology, routing, backup, evidence, and self-improvement subsystems now pass their local validators.",
+    "The remaining closure item is external: paid live-provider validation is blocked by NO_AVAILABLE_AI_CREDIT, and browser-level UI automation was not run in this sandbox."
   ]
 }

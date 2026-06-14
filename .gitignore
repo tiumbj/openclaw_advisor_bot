@@ -14,6 +14,11 @@ htmlcov/
 state/*
 !state/.gitkeep
 data/runtime/
+data/backups/
+data/evidence/
+data/skill-candidates/
+data/ledger/
+data/releases/
 logs/
 archive/
 _tmp/

@@ -247,9 +247,7 @@ def test_mt5_readonly_adapter_round_trip(monkeypatch: pytest.MonkeyPatch) -> Non
         ) -> object:
             return [symbol, timeframe, date_from, date_to]
 
-        def copy_ticks_from(
-            self, symbol: str, date_from: object, count: int, flags: int
-        ) -> object:
+        def copy_ticks_from(self, symbol: str, date_from: object, count: int, flags: int) -> object:
             return [symbol, date_from, count, flags]
 
         def copy_ticks_range(

@@ -47,11 +47,7 @@ def normalize_tick_batch(
         record.market_time_msc
         for record in records
         if len(
-            {
-                item.sequence_id
-                for item in records
-                if item.market_time_msc == record.market_time_msc
-            }
+            {item.sequence_id for item in records if item.market_time_msc == record.market_time_msc}
         )
         > 1
     }

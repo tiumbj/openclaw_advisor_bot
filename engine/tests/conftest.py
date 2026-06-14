@@ -1,12 +1,10 @@
 from __future__ import annotations
 
+import shutil
 import textwrap
 from pathlib import Path
 
 import pytest
-
-from openclaw_super_advisor._version import __version__
-from openclaw_super_advisor.constants import SKILL_NAMES
 
 
 def _write(path: Path, content: str) -> None:
@@ -87,238 +85,31 @@ def _env_text(root: Path) -> str:
     """
 
 
-def _template_text() -> str:
-    return """
-    {
-      "env": {
-        "shellEnv": {
-          "enabled": false
-        }
-      },
-      "gateway": {
-        "mode": "local",
-        "bind": "loopback",
-        "port": {{OPENCLAW_GATEWAY_PORT}},
-        "auth": {
-          "mode": "token",
-          "token": {
-            "source": "env",
-            "provider": "default",
-            "id": "OPENCLAW_GATEWAY_TOKEN"
-          }
-        },
-        "controlUi": {
-          "enabled": true
-        }
-      },
-      "hooks": {
-        "enabled": false,
-        "path": "{{OPENCLAW_HOOKS_PATH}}",
-        "allowedAgentIds": [
-          "super-advisor"
-        ]
-      },
-      "skills": [
-        "advisor-safety-contract",
-        "environment-health",
-        "python-engine-bridge",
-        "evidence-audit",
-        "super-potential-review",
-        "thai-telegram-publisher",
-        "incident-reporting"
-      ],
-      "agents": {
-        "defaults": {
-          "workspace": "{{OPENCLAW_WORKSPACE_DIR}}",
-          "skills": [
-            "advisor-safety-contract",
-            "environment-health",
-            "python-engine-bridge",
-            "evidence-audit",
-            "super-potential-review",
-            "thai-telegram-publisher",
-            "incident-reporting"
-          ]
-        },
-        "list": [
-          {
-            "id": "super-advisor",
-            "workspace": "{{OPENCLAW_WORKSPACE_DIR}}",
-            "skills": [
-              "advisor-safety-contract",
-              "environment-health",
-              "python-engine-bridge",
-              "evidence-audit",
-              "super-potential-review",
-              "thai-telegram-publisher",
-              "incident-reporting"
-            ],
-            "tools": {
-              "allow": [
-                "read",
-                "session_status"
-              ],
-              "deny": [
-                "group:runtime",
-                "group:web",
-                "group:ui",
-                "group:automation",
-                "group:messaging",
-                "group:plugins",
-                "group:memory",
-                "group:sessions",
-                "write",
-                "edit",
-                "apply_patch",
-                "exec",
-                "process",
-                "code_execution",
-                "browser",
-                "canvas",
-                "gateway",
-                "message",
-                "subagents"
-              ],
-              "exec": {
-                "mode": "deny"
-              },
-              "message": {
-                "allowCrossContextSend": false,
-                "actions": {
-                  "allow": []
-                }
-              },
-              "agentToAgent": {
-                "enabled": false
-              },
-              "elevated": {
-                "enabled": false
-              },
-              "sandbox": {
-                "tools": {
-                  "allow": [
-                    "read",
-                    "session_status"
-                  ]
-                }
-              }
-            }
-          }
-        ]
-      },
-      "marketData": {
-        "backend": {
-          "kind": "mt5",
-          "mode": "readonly"
-        },
-        "symbols": [
-          {
-            "canonical": "XAUUSD",
-            "aliases": ["XAUUSD", "GOLD", "XAUUSD."]
-          },
-          {
-            "canonical": "DXY",
-            "aliases": ["DXY", "USDX"]
-          }
-        ],
-        "timeframes": ["M1", "M5", "M15", "H1", "H4", "D1"],
-        "storage": {
-          "baseDir": "{{ADVISOR_DATA_DIR}}",
-          "sqlitePath": "market-data\\\\market-data.db",
-          "parquetDir": "market-data\\\\parquet"
-        },
-        "collection": {
-          "pollSeconds": 30,
-          "tickLookbackSeconds": 120,
-          "barLookbackCount": 500,
-          "freshnessThresholdSeconds": 180,
-          "retryMaxAttempts": 3,
-          "retryBackoffSeconds": 2
-        }
-      },
-      "tools": {
-        "allow": [
-          "read",
-          "session_status"
-        ],
-        "deny": [
-          "group:runtime",
-          "group:web",
-          "group:ui",
-          "group:automation",
-          "group:messaging",
-          "group:plugins",
-          "group:memory",
-          "group:sessions",
-          "write",
-          "edit",
-          "apply_patch",
-          "exec",
-          "process",
-          "code_execution",
-          "browser",
-          "canvas",
-          "gateway",
-          "message",
-          "subagents"
-        ],
-        "exec": {
-          "mode": "deny"
-        },
-        "message": {
-          "allowCrossContextSend": false,
-          "actions": {
-            "allow": []
-          }
-        },
-        "agentToAgent": {
-          "enabled": false
-        },
-        "elevated": {
-          "enabled": false
-        },
-        "sandbox": {
-          "tools": {
-            "allow": [
-              "read",
-              "session_status"
-            ]
-          }
-        }
-      }
-    }
-    """
+def _copy_repo_file(repo_root: Path, relative_path: str, destination: Path) -> None:
+    source = repo_root / relative_path
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, destination)
 
 
 @pytest.fixture
 def sample_project(tmp_path: Path) -> Path:
+    repo_root = Path(__file__).resolve().parents[2]
     root = tmp_path / "project"
     (root / "config").mkdir(parents=True)
     (root / "state").mkdir()
-    (root / "workspace" / "skills").mkdir(parents=True)
+    (root / "workspace").mkdir()
     (root / "engine" / "src").mkdir(parents=True)
     (root / "docs").mkdir()
     (root / "data").mkdir()
     (root / "logs").mkdir()
+    _copy_repo_file(repo_root, ".env.example", root / ".env.example")
     _write(root / ".env.example", _env_text(root))
     _write(root / "state" / ".env", _env_text(root))
-    _write(root / "config" / "openclaw.template.json", _template_text())
-    _write(root / "config" / "settings.schema.json", '{"type":"object"}')
-    for name in SKILL_NAMES:
-        _write(
-            root / "workspace" / "skills" / name / "SKILL.md",
-            f"""
-            ---
-            name: {name}
-            description: Safe validation-only skill.
-            version: {__version__}
-            ---
-
-            # {name}
-
-            Version: {__version__}
-
-            Never execute trades, never alter evidence scores, and never reveal secrets.
-            """,
-        )
+    _copy_repo_file(
+        repo_root, "config/openclaw.template.json", root / "config" / "openclaw.template.json"
+    )
+    _copy_repo_file(
+        repo_root, "config/settings.schema.json", root / "config" / "settings.schema.json"
+    )
+    shutil.copytree(repo_root / "workspace" / "skills", root / "workspace" / "skills")
     return root

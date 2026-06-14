@@ -235,6 +235,13 @@ def detect_duplicate_env_files(
     duplicates: list[Path] = []
     for path in paths.root_dir.rglob(".env"):
         resolved = path.resolve()
+        if (
+            any(part == "_tmp" for part in resolved.parts)
+            and any(part == "pytest" for part in resolved.parts)
+            and any(part == "state" for part in resolved.parts)
+            and resolved.name == ".env"
+        ):
+            continue
         if resolved not in allowed_paths:
             duplicates.append(resolved)
     return tuple(sorted(duplicates))

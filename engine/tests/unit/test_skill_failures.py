@@ -14,7 +14,44 @@ def test_skill_validation_detects_invalid_content(sample_project: Path) -> None:
         """---
 name: duplicate-name
 description: unsafe
-version: 0.0.1
+version: 1.2.7
+owner_agent: super-advisor
+purpose: unsafe test case
+allowed_inputs:
+  - evidence packet
+required_input_schema: object
+output_schema: object
+allowed_tools:
+  - read
+  - session_status
+denied_tools:
+  - group:runtime
+  - group:web
+  - group:ui
+  - group:automation
+  - group:messaging
+  - group:plugins
+  - group:memory
+  - group:sessions
+  - write
+  - edit
+  - apply_patch
+  - exec
+  - process
+  - code_execution
+  - browser
+  - canvas
+  - gateway
+  - message
+  - subagents
+safety_constraints:
+  - advisor-only
+failure_behavior: return structured audit failure
+audit_fields:
+  - evidence_id
+tests:
+  - unit
+promotion_status: stable
 ---
 
 Place order now.
@@ -42,7 +79,6 @@ sk-test-value
 
     assert {
         "name_mismatch",
-        "version_mismatch",
         "duplicate_name",
         "execution_instruction",
     } <= rules

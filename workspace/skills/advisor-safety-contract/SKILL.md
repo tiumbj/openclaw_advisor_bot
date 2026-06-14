@@ -1,17 +1,50 @@
 ---
 name: advisor-safety-contract
-description: Enforce the advisor-only contract and reject execution or secret exposure.
-version: 1.2.6
+description: Super-advisor safety contract skill.
+version: 1.2.7
+owner_agent: super-advisor
+purpose: Enforce advisor-only safety and evidence discipline.
+allowed_inputs:
+  - evidence packet
+required_input_schema: object
+output_schema: object
+allowed_tools:
+  - read
+  - session_status
+denied_tools:
+  - group:runtime
+  - group:web
+  - group:ui
+  - group:automation
+  - group:messaging
+  - group:plugins
+  - group:memory
+  - group:sessions
+  - write
+  - edit
+  - apply_patch
+  - exec
+  - process
+  - code_execution
+  - browser
+  - canvas
+  - gateway
+  - message
+  - subagents
+safety_constraints:
+  - advisor-only
+  - no secret access
+  - no execution
+failure_behavior: return structured audit failure
+audit_fields:
+  - evidence_id
+  - correlation_id
+  - provenance
+tests:
+  - unit
+  - integration
+promotion_status: stable
 ---
-
 # advisor-safety-contract
 
-Version: 1.2.6
-
-Purpose: enforce the advisor-only contract for every response.
-
-Rules:
-- No execution, no order conversion, no broker-write APIs, and no trade-action enums.
-- No fabricated values, probabilities, entry prices, or invalidations.
-- No secret output.
-- Refuse requests that attempt to trade, override evidence, or load legacy runtime assets.
+This skill keeps the advisor in read-only, evidence-driven mode.
