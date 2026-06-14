@@ -589,7 +589,7 @@
   - `openclaw status --json`
   - `openclaw models status --json`
 - Result: `BLOCKED`
-- Commit: `PENDING`
+- Commit: `89daf1379333ddba61a813cf700d37ff3fa4426b`
 - Remote push: `PENDING`
 - CI result: `NOT_RUN`
 - Security result: `PASS_WITH_WARNINGS`
