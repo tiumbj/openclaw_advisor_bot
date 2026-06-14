@@ -1,0 +1,143 @@
+============================= test session starts =============================
+collecting ... collected 77 items
+
+tests\integration\test_cli.py::test_cli_validation_commands PASSED       [  1%]
+tests\integration\test_cli.py::test_cli_market_data_commands PASSED      [  2%]
+tests\integration\test_cli.py::test_cli_help_and_no_trade_commands PASSED [  3%]
+tests\integration\test_cli.py::test_parse_datetime_rejects_naive_timestamp PASSED [  5%]
+tests\integration\test_cli.py::test_market_backfill_rejects_naive_timestamps PASSED [  6%]
+tests\security\test_market_data_security.py::test_mt5_backend_stays_read_only PASSED [  7%]
+tests\security\test_scanning.py::test_security_scan_detects_required_vectors PASSED [  9%]
+tests\security\test_scanning.py::test_security_scan_passes_clean_project PASSED [ 10%]
+tests\security\test_scanning_branches.py::test_scanning_covers_constant_and_import_branches PASSED [ 11%]
+tests\security\test_scanning_branches.py::test_scanning_helper_functions_cover_remaining_branches PASSED [ 12%]
+tests\security\test_scanning_helpers.py::test_scanning_helpers_and_git_modes PASSED [ 14%]
+tests\unit\test_blueprint_runtime.py::test_required_agents_exist PASSED  [ 15%]
+tests\unit\test_blueprint_runtime.py::test_agent_workspaces_are_isolated PASSED [ 16%]
+tests\unit\test_blueprint_runtime.py::test_realtime_route_happy_path PASSED [ 18%]
+tests\unit\test_blueprint_runtime.py::test_circular_route_rejected PASSED [ 19%]
+tests\unit\test_blueprint_runtime.py::test_event_schema_round_trip PASSED [ 20%]
+tests\unit\test_blueprint_runtime.py::test_evidence_archive_is_append_only PASSED [ 22%]
+tests\unit\test_blueprint_runtime.py::test_ledger_is_append_only PASSED  [ 23%]
+tests\unit\test_blueprint_runtime.py::test_memory_is_agent_isolated PASSED [ 24%]
+tests\unit\test_blueprint_runtime.py::test_skill_candidate_state_machine PASSED [ 25%]
+tests\unit\test_blueprint_runtime.py::test_backup_excludes_secrets PASSED [ 27%]
+tests\unit\test_blueprint_runtime.py::test_telegram_uses_approved_evidence_only PASSED [ 28%]
+tests\unit\test_blueprint_runtime.py::test_self_improvement_defaults_to_dry_run PASSED [ 29%]
+tests\unit\test_config_and_skills.py::test_rendered_config_is_read_only PASSED [ 31%]
+tests\unit\test_config_and_skills.py::test_skill_validation_checks_frontmatter_and_runtime PASSED [ 32%]
+tests\unit\test_env.py::test_audit_environment_uses_portable_paths PASSED [ 33%]
+tests\unit\test_env.py::test_detects_duplicate_env_file PASSED           [ 35%]
+tests\unit\test_env.py::test_load_settings_redacts_secrets PASSED        [ 36%]
+tests\unit\test_env.py::test_canonical_env_template_includes_control_ui PASSED [ 37%]
+tests\unit\test_env_config_helpers.py::test_env_private_helpers_and_error_paths PASSED [ 38%]
+tests\unit\test_env_config_helpers.py::test_env_cross_field_validation_and_strict_settings PASSED [ 40%]
+tests\unit\test_env_config_helpers.py::test_config_helpers_and_validation_errors PASSED [ 41%]
+tests\unit\test_env_config_helpers.py::test_app_settings_parsed_values PASSED [ 42%]
+tests\unit\test_env_config_helpers.py::test_env_reports_missing_and_invalid_exact_values PASSED [ 44%]
+tests\unit\test_health.py::test_health_report_summary PASSED             [ 45%]
+tests\unit\test_market_data.py::test_market_data_settings_parse_portable_paths PASSED [ 46%]
+tests\unit\test_market_data.py::test_optional_mt5_import_and_allowlist PASSED [ 48%]
+tests\unit\test_market_data.py::test_mt5_readonly_adapter_round_trip PASSED [ 49%]
+tests\unit\test_market_data.py::test_mt5_readonly_adapter_rejects_missing_credentials_and_init_failures PASSED [ 50%]
+tests\unit\test_market_data.py::test_bounded_retry_reconnects_once PASSED [ 51%]
+tests\unit\test_market_data.py::test_bounded_retry_failure_paths PASSED  [ 53%]
+tests\unit\test_market_data.py::test_symbol_resolution_exact_alias_ambiguous_and_unknown PASSED [ 54%]
+tests\unit\test_market_data.py::test_utc_normalization_and_market_contracts PASSED [ 55%]
+tests\unit\test_market_data.py::test_normalization_helpers_cover_mapping_and_validation_branches PASSED [ 57%]
+tests\unit\test_market_data.py::test_quality_controls_for_ticks_and_bars PASSED [ 58%]
+tests\unit\test_market_data.py::test_fake_backend_runtime_helpers_and_timeframes PASSED [ 59%]
+tests\unit\test_market_data.py::test_service_collect_snapshot_storage_and_clean_shutdown PASSED [ 61%]
+tests\unit\test_market_data.py::test_market_data_service_error_and_runtime_branches PASSED [ 62%]
+tests\unit\test_market_data.py::test_cursor_does_not_advance_on_write_failure PASSED [ 63%]
+tests\unit\test_market_data.py::test_backfill_chunking_and_resume PASSED [ 64%]
+tests\unit\test_market_data_reliability.py::test_symbols_get_none_retries_and_recovers PASSED [ 66%]
+tests\unit\test_market_data_reliability.py::test_tick_none_result_retries_and_recovers PASSED [ 67%]
+tests\unit\test_market_data_reliability.py::test_bar_none_result_retries_and_recovers PASSED [ 68%]
+tests\unit\test_market_data_reliability.py::test_tick_time_collision_is_reported PASSED [ 70%]
+tests\unit\test_market_data_reliability.py::test_partial_tick_payload_does_not_advance_cursor PASSED [ 71%]
+tests\unit\test_market_data_reliability.py::test_quality_incident_deduplicates_with_hit_count PASSED [ 72%]
+tests\unit\test_market_data_reliability.py::test_atomic_write_cleans_temp_on_replace_failure PASSED [ 74%]
+tests\unit\test_market_data_reliability.py::test_parquet_validation_failure_leaves_no_visible_file PASSED [ 75%]
+tests\unit\test_market_data_reliability.py::test_sqlite_transaction_rolls_back_on_error PASSED [ 76%]
+tests\unit\test_market_data_reliability.py::test_simulated_24h_soak_runtime_has_bounded_state PASSED [ 77%]
+tests\unit\test_misc_runtime.py::test_bridge_logging_and_main PASSED     [ 79%]
+tests\unit\test_providers.py::test_provider_name_and_model_reference_helpers PASSED [ 80%]
+tests\unit\test_providers.py::test_provider_policy_blocks_when_nothing_is_enabled PASSED [ 81%]
+tests\unit\test_providers.py::test_provider_policy_passes_with_one_enabled_provider PASSED [ 83%]
+tests\unit\test_providers.py::test_provider_policy_accepts_google_api_key_alias PASSED [ 84%]
+tests\unit\test_providers.py::test_provider_policy_blocks_multiple_enabled_without_primary PASSED [ 85%]
+tests\unit\test_providers.py::test_provider_policy_rejects_disabled_primary_and_legacy_refs PASSED [ 87%]
+tests\unit\test_providers.py::test_provider_policy_reports_invalid_fallback_order PASSED [ 88%]
+tests\unit\test_providers.py::test_provider_policy_reports_missing_fields_invalid_model_and_timeout PASSED [ 89%]
+tests\unit\test_providers.py::test_provider_policy_rejects_unknown_provider_and_unsupported_api_keys PASSED [ 90%]
+tests\unit\test_report_artifacts.py::test_markdown_reports_have_real_line_breaks PASSED [ 92%]
+tests\unit\test_report_artifacts.py::test_json_reports_parse_and_are_pretty_printed PASSED [ 93%]
+tests\unit\test_report_artifacts.py::test_implementation_ledger_is_append_only PASSED [ 94%]
+tests\unit\test_report_artifacts.py::test_status_file_contains_required_fields PASSED [ 96%]
+tests\unit\test_report_artifacts.py::test_project_status_avoids_self_referential_commit_hash PASSED [ 97%]
+tests\unit\test_report_artifacts.py::test_reports_do_not_contain_secrets PASSED [ 98%]
+tests\unit\test_skill_failures.py::test_skill_validation_detects_invalid_content PASSED [100%]
+
+============================== warnings summary ===============================
+..\..\..\Users\Teera\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\cacheprovider.py:475
+  C:\Users\Teera\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\cacheprovider.py:475: PytestCacheWarning: could not create cache path C:\Data\OpenClawSuperAdvisor\.pytest_cache\v\cache\nodeids: [WinError 5] Access is denied: 'C:\\Data\\OpenClawSuperAdvisor\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.12.10-final-0 _______________
+
+Name                                                        Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------------------------------------------------
+src\openclaw_super_advisor\__init__.py                          2      0      0      0   100%
+src\openclaw_super_advisor\__main__.py                          4      0      2      1    83%   5->exit
+src\openclaw_super_advisor\_version.py                          2      0      0      0   100%
+src\openclaw_super_advisor\agent_topology.py                  141     31     56     20    71%   194-238, 267, 287, 291, 294, 298, 307-314, 317-324, 326, 336, 344, 352, 361-368, 371, 380, 389->409, 392, 401, 424, 442, 458, 475-479
+src\openclaw_super_advisor\bridge.py                            6      0      0      0   100%
+src\openclaw_super_advisor\cli.py                             433     72    112     21    79%   44, 48, 57->55, 62, 66->64, 78, 80, 97-99, 296, 298, 300, 316-317, 321-322, 459-469, 472-475, 478-484, 487-501, 504-534, 552->569, 554->568, 562, 586-587, 653
+src\openclaw_super_advisor\config.py                          182     12     52     10    90%   121, 182-187, 189, 252-257, 271, 277, 285, 298, 309
+src\openclaw_super_advisor\constants.py                        38      0      0      0   100%
+src\openclaw_super_advisor\env.py                             168      1     64      3    98%   257, 308->307, 316->315
+src\openclaw_super_advisor\events.py                           70     11     28     11    76%   105, 107, 116, 118-119, 122, 124, 126, 133-137, 146->150, 149
+src\openclaw_super_advisor\health.py                           36      0      0      0   100%
+src\openclaw_super_advisor\logging_setup.py                    19      0      0      0   100%
+src\openclaw_super_advisor\market_data\__init__.py              4      0      0      0   100%
+src\openclaw_super_advisor\market_data\backend.py              36      0      0      0   100%
+src\openclaw_super_advisor\market_data\collector.py           338     12     78     11    94%   95, 101, 107, 113, 158, 174, 223, 410->426, 632->631, 634-640, 842-843
+src\openclaw_super_advisor\market_data\connection.py           27      0      8      0   100%
+src\openclaw_super_advisor\market_data\cursors.py              23      0      0      0   100%
+src\openclaw_super_advisor\market_data\fake_backend.py        110      7     22      5    91%   51, 57-63, 81, 86, 104->106
+src\openclaw_super_advisor\market_data\fred_adapter.py        157    157     30      0     0%   8-310
+src\openclaw_super_advisor\market_data\fx_basket.py            62     62     12      0     0%   9-142
+src\openclaw_super_advisor\market_data\mt5_readonly.py         84      1     14      0    99%   14
+src\openclaw_super_advisor\market_data\normalization.py        95      4     34      3    95%   38-39, 40->42, 156, 160
+src\openclaw_super_advisor\market_data\quality.py             104      1     52      3    97%   149->151, 152->142, 235
+src\openclaw_super_advisor\market_data\schemas.py              76      2      2      1    96%   9, 98
+src\openclaw_super_advisor\market_data\snapshots.py            10      0      0      0   100%
+src\openclaw_super_advisor\market_data\symbols.py              30      0     12      0   100%
+src\openclaw_super_advisor\market_data\timeframes.py           23      0      2      0   100%
+src\openclaw_super_advisor\market_models.py                     7      0      0      0   100%
+src\openclaw_super_advisor\paths.py                            33      1      4      1    95%   34
+src\openclaw_super_advisor\persistence\__init__.py            327     75     74     19    73%   55, 65, 67, 75, 106-107, 171, 175, 186, 190, 223-224, 271->270, 354, 372-377, 411, 413, 429, 431, 433, 435, 480-481, 483, 490-491, 500-518, 555-581, 584-586, 591, 606-613, 616-620, 623
+src\openclaw_super_advisor\providers.py                       183      3     70      6    96%   185, 228-235, 275->285, 285->294, 294->306, 302->306
+src\openclaw_super_advisor\research\__init__.py                 1      1      0      0     0%   2
+src\openclaw_super_advisor\research\experiment.py             102    102     18      0     0%   7-280
+src\openclaw_super_advisor\runtime\__init__.py                  2      0      0      0   100%
+src\openclaw_super_advisor\runtime\heartbeat.py                75     26      2      0    64%   65, 94, 98, 112-130, 147, 178-182, 186-218
+src\openclaw_super_advisor\runtime\market_data_runtime.py       4      0      0      0   100%
+src\openclaw_super_advisor\runtime\shutdown.py                 53     53      4      0     0%   16-110
+src\openclaw_super_advisor\runtime\watchdog.py                 79     79     10      0     0%   9-142
+src\openclaw_super_advisor\scanning.py                        296      5    178     15    96%   98, 127->129, 140->139, 180->191, 199->210, 212->153, 259->270, 278->289, 295->249, 340->332, 354, 405->377, 425, 484-485, 514->513
+src\openclaw_super_advisor\scheduler\__init__.py                1      1      0      0     0%   2
+src\openclaw_super_advisor\scheduler\job_queue.py             148    148     16      0     0%   9-377
+src\openclaw_super_advisor\schemas.py                          15      0      0      0   100%
+src\openclaw_super_advisor\skills.py                          184     26     82     22    82%   77, 80, 86-87, 90, 97, 101, 115, 123, 175, 186, 189, 192, 208-216, 219-221, 246, 255, 269, 278, 305, 360, 369, 375->410, 412
+src\openclaw_super_advisor\storage\__init__.py                  4      0      0      0   100%
+src\openclaw_super_advisor\storage\atomic.py                   14      0      2      1    94%   15->17
+src\openclaw_super_advisor\storage\parquet_store.py            52      1     14      3    94%   89->91, 123->125, 145
+src\openclaw_super_advisor\storage\sqlite_state.py             99      0     14      2    98%   355->358, 411->418
+-------------------------------------------------------------------------------------------------------
+TOTAL                                                        3959    894   1068    158    76%
+Coverage JSON written to file docs/P2_COVERAGE.json
+======================= 77 passed, 1 warning in 21.35s ========================

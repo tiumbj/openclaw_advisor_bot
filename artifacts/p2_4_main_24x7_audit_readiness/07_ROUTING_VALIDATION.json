@@ -1,0 +1,36 @@
+{
+  "version": "1.2.8",
+  "phase": "P2.4",
+  "valid": true,
+  "allowed_routes": [
+    [
+      "evidence-archive",
+      "super-advisor"
+    ],
+    [
+      "super-advisor",
+      "xau-strategy-auditor"
+    ],
+    [
+      "xau-strategy-auditor",
+      "super-advisor"
+    ],
+    [
+      "super-advisor",
+      "telegram-publisher"
+    ],
+    [
+      "telegram-publisher",
+      "outcome-ledger"
+    ],
+    [
+      "source-bundle",
+      "system-coder-auditor"
+    ],
+    [
+      "system-coder-auditor",
+      "audit-report"
+    ]
+  ],
+  "issues": []
+}

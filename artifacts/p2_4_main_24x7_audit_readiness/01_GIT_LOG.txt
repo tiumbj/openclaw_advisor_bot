@@ -1,0 +1,213 @@
+2b8980a11ffa2b2c229a4cae3b8ebb42dbe37e0d 2026-06-14 21:02:11 +0700 tiumbj test(p2.4): update tests for 12-agent topology, v1.2.8, and new env vars
+4e267af5abd56a67e83cf758c8036763d68f972b 2026-06-14 21:02:02 +0700 tiumbj feat(p2.4): add Windows auto-start scripts for single-instance deployment
+774642c22112e3df9cee2d8d2edfbe920cca48b9 2026-06-14 21:01:45 +0700 tiumbj docs(p2.4): add logic conflict matrix (31 findings: 9 CRITICAL 11 HIGH 8 MEDIUM 3 LOW)
+1e249aa191ac0824f71fba9c26e47aa4bf4374c8 2026-06-14 20:57:56 +0700 tiumbj feat(p2.4): update config template and env example for 12 agents and FRED integration
+a71d7be5cbf239d3f437bad8c473b32355b2b657 2026-06-14 20:57:43 +0700 tiumbj feat(p2.4): expand workspace to 12-agent topology with 56 skills
+b905d1f6c1611224b6623737cd7012a1ed1d23b6 2026-06-14 20:57:32 +0700 tiumbj feat(p2.4): implement 12-agent topology, FRED adapter, FX basket, scheduler, research, runtime
+4acd22066ec68c904d8cd54dbe33f0be10dad919 2026-06-14 20:26:12 +0700 tiumbj docs(p2.4): redefine main-managed 24x7 research blueprint
+5e247b2846d33b7a164478ac0061cec5a4a949d3 2026-06-14 19:53:47 +0700 tiumbj feat(p2.4): implement master blueprint integration and audit readiness
+1bd0c1c1b44fdc16c4ba985033bdde498981fe16 2026-06-14 16:44:07 +0700 tiumbj fix(p2.4): reconcile runtime token and control ui auth
+479579eb779cd782ecdd9052f4a7605a7e8261dc 2026-06-14 15:40:37 +0700 tiumbj chore(p2.4): add temp root placeholder for tests
+4fca9b864003c0fcb6b587524c8fe6484bed17db 2026-06-14 15:34:48 +0700 tiumbj feat(p2.4): fix openclaw ui scripts and status metadata
+e65b9c88438b8950fa81ffc0a002d6a7751ba1b5 2026-06-14 10:04:07 +0700 tiumbj docs(status): record report metadata for 1.2.4 bump
+9595ed445ce3fef66024ea70c473571d034d5f9d 2026-06-14 10:03:08 +0700 tiumbj docs(status): align package version to 1.2.4
+be9951adbba163b0e85f989dcea5233d93a7a3b4 2026-06-14 09:54:48 +0700 tiumbj docs(p2.4): draft preproduction blueprint and audit reports
+1a2850e9f1eb924a94d68649a2aba029ab77b935 2026-06-14 09:16:30 +0700 tiumbj test(provider): raise provider coverage above threshold
+3219cd57532cea862d82429654bd997d1a307252 2026-06-14 08:54:04 +0700 tiumbj docs(status): record P2.2 offline foundation checkpoint
+89daf1379333ddba61a813cf700d37ff3fa4426b 2026-06-14 08:52:53 +0700 tiumbj feat(provider): remove groq and add four-provider policy foundation
+65a5cae2088129e549a0f782bec4dcaabc57c35a 2026-06-13 22:07:12 +0700 tiumbj docs(status): close P2.1 phase
+c9b6723cb60a0281ec1b7b19a9b69c5f705026c6 2026-06-13 22:04:32 +0700 tiumbj chore: close P2.1 audit and evidence
+8f8bcd38e45008fdc157d166e4d65ad2e4977782 2026-06-13 21:47:44 +0700 tiumbj docs(status): record WP-06 completion
+commit 2b8980a11ffa2b2c229a4cae3b8ebb42dbe37e0d
+Author: tiumbj <tiumbj@users.noreply.github.com>
+Date:   Sun Jun 14 21:02:11 2026 +0700
+
+    test(p2.4): update tests for 12-agent topology, v1.2.8, and new env vars
+    
+    - conftest.py: add 5 MT5 symbol vars + 8 FRED vars to _env_text()
+    - test_health.py: assert version == 1.2.8
+    - test_blueprint_runtime.py: update agent list to 12 agents, counts from 4->12
+    - test_config_and_skills.py: assert agents list len == 12
+    - test_cli.py: assert runtime_agent_ids len == 12
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ engine/tests/conftest.py                    | 15 ++++++++++++++-
+ engine/tests/integration/test_cli.py        |  2 +-
+ engine/tests/unit/test_blueprint_runtime.py | 18 +++++++++++++-----
+ engine/tests/unit/test_config_and_skills.py |  2 +-
+ engine/tests/unit/test_health.py            |  2 +-
+ 5 files changed, 30 insertions(+), 9 deletions(-)
+
+commit 4e267af5abd56a67e83cf758c8036763d68f972b
+Author: tiumbj <tiumbj@users.noreply.github.com>
+Date:   Sun Jun 14 21:02:02 2026 +0700
+
+    feat(p2.4): add Windows auto-start scripts for single-instance deployment
+    
+    - Register-StartupTask.ps1: idempotent Task Scheduler registration at Logon
+      with -MultipleInstances IgnoreNew; supports -Unregister flag
+    - Start-AdvisorStack.ps1: single-instance mutex guard (Global\OpenClawSuperAdvisor),
+      env file + venv validation, starts Gateway then Python engine with --resume
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ scripts/startup/Register-StartupTask.ps1 |  84 +++++++++++++++++++++++++
+ scripts/startup/Start-AdvisorStack.ps1   | 103 +++++++++++++++++++++++++++++++
+ 2 files changed, 187 insertions(+)
+
+commit 774642c22112e3df9cee2d8d2edfbe920cca48b9
+Author: tiumbj <tiumbj@users.noreply.github.com>
+Date:   Sun Jun 14 21:01:45 2026 +0700
+
+    docs(p2.4): add logic conflict matrix (31 findings: 9 CRITICAL 11 HIGH 8 MEDIUM 3 LOW)
+    
+    Root-cause and conflict matrix for P2.4 pre-production audit readiness.
+    Covers agent topology gaps, evidence pipeline, scheduler, skill validator,
+    FRED adapter, heartbeat, shutdown, and watchdog integration.
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ docs/P2_4_LOGIC_CONFLICT_MATRIX.json | 294 +++++++++++++++++++++++++
+ docs/P2_4_LOGIC_CONFLICT_MATRIX.md   | 404 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 698 insertions(+)
+
+commit 1e249aa191ac0824f71fba9c26e47aa4bf4374c8
+Author: tiumbj <tiumbj@users.noreply.github.com>
+Date:   Sun Jun 14 20:57:56 2026 +0700
+
+    feat(p2.4): update config template and env example for 12 agents and FRED integration
+    
+    - openclaw.template.json: add 8 new agent entries with isolated workspace/session/memory dirs
+    - openclaw.template.json: expand skills catalog from 31 to 56 entries (25 new skills added)
+    - openclaw.template.json: add 5 missing MT5 symbols (GBPUSD, NZDUSD, USDJPY, USDCHF, USDCAD)
+    - .env.example: add 8 FRED env vars (FRED_ENABLED, FRED_API_KEY, FRED_BASE_URL, etc.)
+    - .env.example: add 5 missing MT5 symbol vars + external heartbeat vars
+    - .env.example: bump version comment to 1.2.8
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ .env.example                  |  30 ++++-
+ config/openclaw.template.json | 299 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 319 insertions(+), 10 deletions(-)
+
+commit a71d7be5cbf239d3f437bad8c473b32355b2b657
+Author: tiumbj <tiumbj@users.noreply.github.com>
+Date:   Sun Jun 14 20:57:43 2026 +0700
+
+    feat(p2.4): expand workspace to 12-agent topology with 56 skills
+    
+    - Rewrite AGENTS.md to v1.2.8/P2.4 with full MAIN identity and 11 specialist agents
+    - Add workspace dirs for 8 new specialist agents (market-data-integrity through knowledge-skill-manager)
+    - Add 25 new SKILL.md files for 8 new agents (3 skills each, except intermarket-macro has 4)
+    - Bump version field in all 31 existing skill files from 1.2.7 to 1.2.8
+    - Skills cover: data quality, price-action microstructure, intermarket macro, statistical
+      backtest, failure root-cause, security compliance, reliability watchdog, knowledge lifecycle
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ workspace/AGENTS.md                                | 104 +++++++++++++++++++--
+ workspace/agents/failure-root-cause-agent/.gitkeep |   0
+ workspace/agents/intermarket-macro-agent/.gitkeep  |   0
+ workspace/agents/knowledge-skill-manager/.gitkeep  |   0
+ .../agents/market-data-integrity-agent/.gitkeep    |   0
+ .../price-action-microstructure-agent/.gitkeep     |   0
+ .../agents/reliability-watchdog-agent/.gitkeep     |   0
+ .../agents/security-compliance-agent/.gitkeep      |   0
+ .../agents/statistical-backtest-agent/.gitkeep     |   0
+ workspace/skills/advisor-only-enforcement/SKILL.md |  72 ++++++++++++++
+ workspace/skills/advisor-safety-contract/SKILL.md  |   2 +-
+ .../skills/agent-orchestration-contract/SKILL.md   |   2 +-
+ workspace/skills/alert-failure-analysis/SKILL.md   |  71 ++++++++++++++
+ .../skills/alert-quality-improvement/SKILL.md      |   2 +-
+ .../skills/blueprint-compliance-audit/SKILL.md     |   2 +-
+ .../skills/candlestick-microstructure/SKILL.md     |   2 +-
+ .../skills/candlestick-structure-analysis/SKILL.md |  72 ++++++++++++++
+ .../skills/chart-pattern-filter-review/SKILL.md    |   2 +-
+ workspace/skills/code-architecture-review/SKILL.md |   2 +-
+ .../skills/component-restart-protocol/SKILL.md     |  73 +++++++++++++++
+ .../skills/corrective-hypothesis-design/SKILL.md   |  72 ++++++++++++++
+ workspace/skills/data-provenance-contract/SKILL.md |  68 ++++++++++++++
+ .../skills/dead-code-and-duplicate-review/SKILL.md |   2 +-
+ workspace/skills/environment-health/SKILL.md       |   2 +-
+ workspace/skills/evidence-audit/SKILL.md           |   2 +-
+ .../skills/experiment-outcome-recording/SKILL.md   |  72 ++++++++++++++
+ workspace/skills/fx-basket-analysis/SKILL.md       |  74 +++++++++++++++
+ .../skills/incident-escalation-contract/SKILL.md   |  76 +++++++++++++++
+ workspace/skills/incident-reporting/SKILL.md       |   2 +-
+ .../skills/intermarket-correlation-audit/SKILL.md  |  73 +++++++++++++++
+ workspace/skills/logic-conflict-detection/SKILL.md |   2 +-
+ workspace/skills/m1-m5-pattern-review/SKILL.md     |  72 ++++++++++++++
+ .../skills/market-data-coverage-audit/SKILL.md     |  70 ++++++++++++++
+ .../skills/microstructure-trigger-audit/SKILL.md   |  69 ++++++++++++++
+ .../multi-timeframe-structure-review/SKILL.md      |   2 +-
+ workspace/skills/overfitting-detection/SKILL.md    |  71 ++++++++++++++
+ workspace/skills/price-action-order-block/SKILL.md |   2 +-
+ workspace/skills/privilege-boundary-audit/SKILL.md |  71 ++++++++++++++
+ workspace/skills/process-health-monitor/SKILL.md   |  72 ++++++++++++++
+ workspace/skills/publication-policy/SKILL.md       |   2 +-
+ .../skills/python-pipeline-micro-audit/SKILL.md    |   2 +-
+ workspace/skills/realtime-evidence-review/SKILL.md |   2 +-
+ workspace/skills/regime-classification/SKILL.md    |  72 ++++++++++++++
+ workspace/skills/release-and-rollback/SKILL.md     |   2 +-
+ .../skills/research-knowledge-lifecycle/SKILL.md   |  72 ++++++++++++++
+ workspace/skills/root-cause-tree-builder/SKILL.md  |  71 ++++++++++++++
+ workspace/skills/safe-patch-workflow/SKILL.md      |   2 +-
+ workspace/skills/sample-adequacy-review/SKILL.md   |  71 ++++++++++++++
+ workspace/skills/secret-exposure-scan/SKILL.md     |  73 +++++++++++++++
+ .../skills/skill-candidate-lifecycle/SKILL.md      |  72 ++++++++++++++
+ .../skills/skill-improvement-proposal/SKILL.md     |   2 +-
+ workspace/skills/stale-data-detection/SKILL.md     |  69 ++++++++++++++
+ workspace/skills/strategy-logic-audit/SKILL.md     |   2 +-
+ workspace/skills/super-potential-audit/SKILL.md    |   2 +-
+ workspace/skills/super-potential-review/SKILL.md   |   2 +-
+ .../telegram-deduplication-throttle/SKILL.md       |   2 +-
+ workspace/skills/telegram-delivery-safety/SKILL.md |   2 +-
+ .../skills/telegram-message-contract/SKILL.md      |   2 +-
+ .../skills/telegram-retry-and-dead-letter/SKILL.md |   2 +-
+ .../skills/telegram-security-redaction/SKILL.md    |   2 +-
+ .../skills/test-and-regression-design/SKILL.md     |   2 +-
+ workspace/skills/thai-telegram-publisher/SKILL.md  |   2 +-
+ workspace/skills/us10y-context-review/SKILL.md     |  74 +++++++++++++++
+ workspace/skills/walk-forward-analysis/SKILL.md    |  72 ++++++++++++++
+ workspace/skills/xauusd-market-analysis/SKILL.md   |   2 +-
+ 65 files changed, 1920 insertions(+), 40 deletions(-)
+
+commit b905d1f6c1611224b6623737cd7012a1ed1d23b6
+Author: tiumbj <tiumbj@users.noreply.github.com>
+Date:   Sun Jun 14 20:57:32 2026 +0700
+
+    feat(p2.4): implement 12-agent topology, FRED adapter, FX basket, scheduler, research, runtime
+    
+    - Bump version 1.2.7 → 1.2.8
+    - Expand RUNTIME_AGENT_IDS from 4 to 12 specialist agents with full isolation contracts
+    - Add FRED adapter (DGS10 + DTWEXBGS, TTL cache, circuit breaker, non-blocking)
+    - Add FX basket DXY proxy (7-pair normalized returns, direction reversal)
+    - Add PersistentJobQueue (SQLite WAL, idempotency, DLQ, circuit breaker)
+    - Add ExperimentStore (16-state lifecycle, self-approval guard, hash integrity)
+    - Extend HeartbeatEmitter with HMAC-SHA256 signed external heartbeat
+    - Add graceful shutdown handler (SIGTERM/SIGINT/SIGBREAK, idempotent, ordered callbacks)
+    - Add Watchdog (ComponentProbe, incident callback dispatch, consecutive-failure tracking)
+    - Extend TelegramPublisher with 14 system event types, dedup window, Thai formatting
+    - Fix LC-011: rename schema_placeholder → evidence_packet_schema in bridge summary
+    - Fix LC-012: remove dead route_issues pass block; wire actual route validation
+    - Add 8 FRED env vars + 5 missing MT5 symbol env vars to env.py
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ engine/src/openclaw_super_advisor/_version.py      |   2 +-
+ .../src/openclaw_super_advisor/agent_topology.py   | 100 +++++-
+ engine/src/openclaw_super_advisor/bridge.py        |   2 +-
+ engine/src/openclaw_super_advisor/constants.py     | 369 +++++++++++---------
+ engine/src/openclaw_super_advisor/env.py           |  15 +-
+ .../market_data/fred_adapter.py                    | 310 +++++++++++++++++
+ .../market_data/fx_basket.py                       | 160 +++++++++
+ .../openclaw_super_advisor/persistence/__init__.py |  70 +++-
+ .../openclaw_super_advisor/research/__init__.py    |   2 +
+ .../openclaw_super_advisor/research/experiment.py  | 283 +++++++++++++++
+ .../openclaw_super_advisor/runtime/heartbeat.py    | 199 ++++++++++-
+ .../src/openclaw_super_advisor/runtime/shutdown.py | 119 +++++++
+ .../src/openclaw_super_advisor/runtime/watchdog.py | 152 ++++++++
+ .../openclaw_super_advisor/scheduler/__init__.py   |   2 +
+ .../openclaw_super_advisor/scheduler/job_queue.py  | 381 +++++++++++++++++++++
+ 15 files changed, 1996 insertions(+), 170 deletions(-)

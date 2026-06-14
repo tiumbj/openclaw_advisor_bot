@@ -1,0 +1,1884 @@
+{
+  "version": "1.2.8",
+  "phase": "P2.4",
+  "config": {
+    "env": {
+      "shellEnv": {
+        "enabled": false
+      }
+    },
+    "gateway": {
+      "mode": "local",
+      "bind": "loopback",
+      "port": 18789,
+      "auth": {
+        "mode": "token",
+        "token": {
+          "source": "env",
+          "provider": "default",
+          "id": "OPENCLAW_GATEWAY_TOKEN"
+        }
+      },
+      "controlUi": {
+        "enabled": true
+      }
+    },
+    "hooks": {
+      "enabled": false,
+      "path": "/hooks",
+      "allowRequestSessionKey": false,
+      "allowedAgentIds": [
+        "super-advisor"
+      ],
+      "maxBodyBytes": 65536
+    },
+    "skills": [
+      "advisor-safety-contract",
+      "environment-health",
+      "evidence-audit",
+      "agent-orchestration-contract",
+      "super-potential-review",
+      "incident-reporting",
+      "publication-policy",
+      "xauusd-market-analysis",
+      "multi-timeframe-structure-review",
+      "price-action-order-block",
+      "chart-pattern-filter-review",
+      "candlestick-microstructure",
+      "strategy-logic-audit",
+      "realtime-evidence-review",
+      "super-potential-audit",
+      "alert-quality-improvement",
+      "python-pipeline-micro-audit",
+      "code-architecture-review",
+      "logic-conflict-detection",
+      "dead-code-and-duplicate-review",
+      "test-and-regression-design",
+      "blueprint-compliance-audit",
+      "safe-patch-workflow",
+      "release-and-rollback",
+      "skill-improvement-proposal",
+      "thai-telegram-publisher",
+      "telegram-message-contract",
+      "telegram-delivery-safety",
+      "telegram-deduplication-throttle",
+      "telegram-retry-and-dead-letter",
+      "telegram-security-redaction",
+      "market-data-coverage-audit",
+      "data-provenance-contract",
+      "stale-data-detection",
+      "candlestick-structure-analysis",
+      "microstructure-trigger-audit",
+      "m1-m5-pattern-review",
+      "fx-basket-analysis",
+      "us10y-context-review",
+      "intermarket-correlation-audit",
+      "regime-classification",
+      "sample-adequacy-review",
+      "walk-forward-analysis",
+      "overfitting-detection",
+      "alert-failure-analysis",
+      "root-cause-tree-builder",
+      "corrective-hypothesis-design",
+      "advisor-only-enforcement",
+      "privilege-boundary-audit",
+      "secret-exposure-scan",
+      "process-health-monitor",
+      "component-restart-protocol",
+      "incident-escalation-contract",
+      "research-knowledge-lifecycle",
+      "skill-candidate-lifecycle",
+      "experiment-outcome-recording"
+    ],
+    "agents": {
+      "defaults": {
+        "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents",
+        "skills": [
+          "advisor-safety-contract",
+          "environment-health",
+          "evidence-audit",
+          "agent-orchestration-contract",
+          "super-potential-review",
+          "incident-reporting",
+          "publication-policy",
+          "xauusd-market-analysis",
+          "multi-timeframe-structure-review",
+          "price-action-order-block",
+          "chart-pattern-filter-review",
+          "candlestick-microstructure",
+          "strategy-logic-audit",
+          "realtime-evidence-review",
+          "super-potential-audit",
+          "alert-quality-improvement",
+          "python-pipeline-micro-audit",
+          "code-architecture-review",
+          "logic-conflict-detection",
+          "dead-code-and-duplicate-review",
+          "test-and-regression-design",
+          "blueprint-compliance-audit",
+          "safe-patch-workflow",
+          "release-and-rollback",
+          "skill-improvement-proposal",
+          "thai-telegram-publisher",
+          "telegram-message-contract",
+          "telegram-delivery-safety",
+          "telegram-deduplication-throttle",
+          "telegram-retry-and-dead-letter",
+          "telegram-security-redaction",
+          "market-data-coverage-audit",
+          "data-provenance-contract",
+          "stale-data-detection",
+          "candlestick-structure-analysis",
+          "microstructure-trigger-audit",
+          "m1-m5-pattern-review",
+          "fx-basket-analysis",
+          "us10y-context-review",
+          "intermarket-correlation-audit",
+          "regime-classification",
+          "sample-adequacy-review",
+          "walk-forward-analysis",
+          "overfitting-detection",
+          "alert-failure-analysis",
+          "root-cause-tree-builder",
+          "corrective-hypothesis-design",
+          "advisor-only-enforcement",
+          "privilege-boundary-audit",
+          "secret-exposure-scan",
+          "process-health-monitor",
+          "component-restart-protocol",
+          "incident-escalation-contract",
+          "research-knowledge-lifecycle",
+          "skill-candidate-lifecycle",
+          "experiment-outcome-recording"
+        ],
+        "contextInjection": "always",
+        "memorySearch": {
+          "enabled": false,
+          "sources": []
+        }
+      },
+      "list": [
+        {
+          "id": "super-advisor",
+          "default": true,
+          "name": "OpenClaw Super Advisor",
+          "description": "Coordinator, policy gate, and evidence auditor.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\super-advisor",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\super-advisor\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\super-advisor\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\super-advisor\\memory",
+          "skills": [
+            "advisor-safety-contract",
+            "environment-health",
+            "evidence-audit",
+            "agent-orchestration-contract",
+            "super-potential-review",
+            "incident-reporting",
+            "publication-policy"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "none"
+          },
+          "timeoutSeconds": 120,
+          "retry": {
+            "maxAttempts": 2,
+            "backoffSeconds": 2
+          }
+        },
+        {
+          "id": "xau-strategy-auditor",
+          "name": "XAU Strategy Auditor",
+          "description": "Read-only XAUUSD setup and evidence auditor.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\xau-strategy-auditor",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\xau-strategy-auditor\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\xau-strategy-auditor\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\xau-strategy-auditor\\memory",
+          "skills": [
+            "xauusd-market-analysis",
+            "multi-timeframe-structure-review",
+            "price-action-order-block",
+            "chart-pattern-filter-review",
+            "candlestick-microstructure",
+            "strategy-logic-audit",
+            "realtime-evidence-review",
+            "super-potential-audit",
+            "alert-quality-improvement"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "none"
+          },
+          "timeoutSeconds": 90,
+          "retry": {
+            "maxAttempts": 2,
+            "backoffSeconds": 2
+          }
+        },
+        {
+          "id": "system-coder-auditor",
+          "name": "System Coder Auditor",
+          "description": "Read-only code-audit agent with isolated worktree proposals.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\system-coder-auditor",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\system-coder-auditor\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\system-coder-auditor\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\system-coder-auditor\\memory",
+          "skills": [
+            "python-pipeline-micro-audit",
+            "code-architecture-review",
+            "logic-conflict-detection",
+            "dead-code-and-duplicate-review",
+            "test-and-regression-design",
+            "blueprint-compliance-audit",
+            "safe-patch-workflow",
+            "release-and-rollback",
+            "skill-improvement-proposal"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "none"
+          },
+          "timeoutSeconds": 90,
+          "retry": {
+            "maxAttempts": 2,
+            "backoffSeconds": 2
+          }
+        },
+        {
+          "id": "telegram-publisher",
+          "name": "Thai Telegram Publisher",
+          "description": "Approved Thai publication formatter and delivery safety gate.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\telegram-publisher",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\telegram-publisher\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\telegram-publisher\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\telegram-publisher\\memory",
+          "skills": [
+            "thai-telegram-publisher",
+            "telegram-message-contract",
+            "telegram-delivery-safety",
+            "telegram-deduplication-throttle",
+            "telegram-retry-and-dead-letter",
+            "telegram-security-redaction"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "approved_payload_only"
+          },
+          "timeoutSeconds": 60,
+          "retry": {
+            "maxAttempts": 3,
+            "backoffSeconds": 2
+          }
+        },
+        {
+          "id": "market-data-integrity-agent",
+          "name": "Market Data Integrity Agent",
+          "description": "MT5/FRED data quality audit: missing bars, timezone, provenance.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\market-data-integrity-agent",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\market-data-integrity-agent\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\market-data-integrity-agent\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\market-data-integrity-agent\\memory",
+          "skills": [
+            "market-data-coverage-audit",
+            "data-provenance-contract",
+            "stale-data-detection"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "none"
+          },
+          "timeoutSeconds": 120,
+          "retry": {
+            "maxAttempts": 3,
+            "backoffSeconds": 2
+          }
+        },
+        {
+          "id": "price-action-microstructure-agent",
+          "name": "Price Action Microstructure Agent",
+          "description": "Candlestick structure, wick/body, rejection, and M1/M5 trigger analysis.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\price-action-microstructure-agent",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\price-action-microstructure-agent\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\price-action-microstructure-agent\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\price-action-microstructure-agent\\memory",
+          "skills": [
+            "candlestick-structure-analysis",
+            "microstructure-trigger-audit",
+            "m1-m5-pattern-review"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "none"
+          },
+          "timeoutSeconds": 90,
+          "retry": {
+            "maxAttempts": 2,
+            "backoffSeconds": 2
+          }
+        },
+        {
+          "id": "intermarket-macro-agent",
+          "name": "Intermarket Macro Agent",
+          "description": "USD basket, US10Y, FX correlation, lead/lag, regime classification.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\intermarket-macro-agent",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\intermarket-macro-agent\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\intermarket-macro-agent\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\intermarket-macro-agent\\memory",
+          "skills": [
+            "fx-basket-analysis",
+            "us10y-context-review",
+            "intermarket-correlation-audit",
+            "regime-classification"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "none"
+          },
+          "timeoutSeconds": 120,
+          "retry": {
+            "maxAttempts": 2,
+            "backoffSeconds": 2
+          }
+        },
+        {
+          "id": "statistical-backtest-agent",
+          "name": "Statistical Backtest Agent",
+          "description": "Sample adequacy, walk-forward, stability, overfitting and leakage detection.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\statistical-backtest-agent",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\statistical-backtest-agent\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\statistical-backtest-agent\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\statistical-backtest-agent\\memory",
+          "skills": [
+            "sample-adequacy-review",
+            "walk-forward-analysis",
+            "overfitting-detection"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "none"
+          },
+          "timeoutSeconds": 300,
+          "retry": {
+            "maxAttempts": 2,
+            "backoffSeconds": 2
+          }
+        },
+        {
+          "id": "failure-root-cause-agent",
+          "name": "Failure Root Cause Agent",
+          "description": "Alert failure analysis, logic conflict audit, root-cause tree, corrective hypothesis.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\failure-root-cause-agent",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\failure-root-cause-agent\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\failure-root-cause-agent\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\failure-root-cause-agent\\memory",
+          "skills": [
+            "alert-failure-analysis",
+            "root-cause-tree-builder",
+            "corrective-hypothesis-design"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "none"
+          },
+          "timeoutSeconds": 120,
+          "retry": {
+            "maxAttempts": 2,
+            "backoffSeconds": 2
+          }
+        },
+        {
+          "id": "security-compliance-agent",
+          "name": "Security Compliance Agent",
+          "description": "Advisor-only enforcement, secret exposure scan, agent privilege audit.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\security-compliance-agent",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\security-compliance-agent\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\security-compliance-agent\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\security-compliance-agent\\memory",
+          "skills": [
+            "advisor-only-enforcement",
+            "privilege-boundary-audit",
+            "secret-exposure-scan"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "none"
+          },
+          "timeoutSeconds": 60,
+          "retry": {
+            "maxAttempts": 2,
+            "backoffSeconds": 2
+          }
+        },
+        {
+          "id": "reliability-watchdog-agent",
+          "name": "Reliability Watchdog Agent",
+          "description": "Process health, heartbeat monitoring, restart protocol, incident escalation.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\reliability-watchdog-agent",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\reliability-watchdog-agent\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\reliability-watchdog-agent\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\reliability-watchdog-agent\\memory",
+          "skills": [
+            "process-health-monitor",
+            "component-restart-protocol",
+            "incident-escalation-contract"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "none"
+          },
+          "timeoutSeconds": 30,
+          "retry": {
+            "maxAttempts": 5,
+            "backoffSeconds": 2
+          }
+        },
+        {
+          "id": "knowledge-skill-manager",
+          "name": "Knowledge and Skill Manager",
+          "description": "Research knowledge lifecycle, experiment records, skill candidate management.",
+          "workspace": "C:\\Data\\OpenClawSuperAdvisor\\workspace\\agents\\knowledge-skill-manager",
+          "agentDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\knowledge-skill-manager\\agent",
+          "sessionStore": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\knowledge-skill-manager\\sessions",
+          "memoryDir": "C:\\Data\\OpenClawSuperAdvisor\\state\\agents\\knowledge-skill-manager\\memory",
+          "skills": [
+            "research-knowledge-lifecycle",
+            "skill-candidate-lifecycle",
+            "experiment-outcome-recording"
+          ],
+          "tools": {
+            "allow": [
+              "read",
+              "session_status"
+            ],
+            "deny": [
+              "group:runtime",
+              "group:web",
+              "group:ui",
+              "group:automation",
+              "group:messaging",
+              "group:plugins",
+              "group:memory",
+              "group:sessions",
+              "write",
+              "edit",
+              "apply_patch",
+              "exec",
+              "process",
+              "code_execution",
+              "browser",
+              "canvas",
+              "gateway",
+              "message",
+              "subagents",
+              "memory_search",
+              "memory_get",
+              "sessions_list",
+              "sessions_history",
+              "sessions_send",
+              "sessions_spawn",
+              "sessions_yield"
+            ],
+            "exec": {
+              "mode": "deny",
+              "applyPatch": {
+                "enabled": false,
+                "workspaceOnly": true
+              }
+            },
+            "fs": {
+              "workspaceOnly": true
+            },
+            "message": {
+              "allowCrossContextSend": false,
+              "crossContext": {
+                "allowWithinProvider": false,
+                "allowAcrossProviders": false
+              },
+              "actions": {
+                "allow": []
+              },
+              "broadcast": {
+                "enabled": false
+              }
+            },
+            "agentToAgent": {
+              "enabled": false
+            },
+            "elevated": {
+              "enabled": false
+            },
+            "sandbox": {
+              "tools": {
+                "allow": [
+                  "read",
+                  "session_status"
+                ],
+                "deny": [
+                  "group:runtime",
+                  "group:web",
+                  "group:ui",
+                  "group:automation",
+                  "group:messaging",
+                  "group:plugins",
+                  "group:memory",
+                  "group:sessions",
+                  "write",
+                  "edit",
+                  "apply_patch",
+                  "exec",
+                  "process",
+                  "code_execution",
+                  "browser",
+                  "canvas",
+                  "gateway",
+                  "message",
+                  "subagents",
+                  "memory_search",
+                  "memory_get",
+                  "sessions_list",
+                  "sessions_history",
+                  "sessions_send",
+                  "sessions_spawn",
+                  "sessions_yield"
+                ]
+              }
+            }
+          },
+          "secretAccess": {
+            "mode": "none"
+          },
+          "timeoutSeconds": 120,
+          "retry": {
+            "maxAttempts": 2,
+            "backoffSeconds": 2
+          }
+        }
+      ]
+    },
+    "routing": {
+      "realtime": [
+        [
+          "evidence-archive",
+          "super-advisor"
+        ],
+        [
+          "super-advisor",
+          "xau-strategy-auditor"
+        ],
+        [
+          "xau-strategy-auditor",
+          "super-advisor"
+        ],
+        [
+          "super-advisor",
+          "telegram-publisher"
+        ],
+        [
+          "telegram-publisher",
+          "outcome-ledger"
+        ]
+      ],
+      "code-audit": [
+        [
+          "source-bundle",
+          "system-coder-auditor"
+        ],
+        [
+          "system-coder-auditor",
+          "audit-report"
+        ]
+      ]
+    },
+    "marketData": {
+      "backend": {
+        "kind": "mt5",
+        "mode": "readonly"
+      },
+      "symbols": [
+        {
+          "canonical": "XAUUSD",
+          "aliases": [
+            "XAUUSD",
+            "GOLD",
+            "XAUUSD."
+          ]
+        },
+        {
+          "canonical": "EURUSD",
+          "aliases": [
+            "EURUSD",
+            "EURUSD."
+          ]
+        },
+        {
+          "canonical": "GBPUSD",
+          "aliases": [
+            "GBPUSD",
+            "GBPUSD."
+          ]
+        },
+        {
+          "canonical": "AUDUSD",
+          "aliases": [
+            "AUDUSD",
+            "AUDUSD."
+          ]
+        },
+        {
+          "canonical": "NZDUSD",
+          "aliases": [
+            "NZDUSD",
+            "NZDUSD."
+          ]
+        },
+        {
+          "canonical": "USDJPY",
+          "aliases": [
+            "USDJPY",
+            "USDJPY."
+          ]
+        },
+        {
+          "canonical": "USDCHF",
+          "aliases": [
+            "USDCHF",
+            "USDCHF."
+          ]
+        },
+        {
+          "canonical": "USDCAD",
+          "aliases": [
+            "USDCAD",
+            "USDCAD."
+          ]
+        },
+        {
+          "canonical": "DXY",
+          "aliases": [
+            "DXY",
+            "USDX"
+          ]
+        },
+        {
+          "canonical": "US10Y",
+          "aliases": [
+            "US10Y",
+            "UST10Y",
+            "US10YR"
+          ]
+        }
+      ],
+      "timeframes": [
+        "M1",
+        "M5",
+        "M15",
+        "H1",
+        "H4",
+        "D1"
+      ],
+      "storage": {
+        "baseDir": "C:\\Data\\OpenClawSuperAdvisor\\data",
+        "sqlitePath": "market-data\\\\market-data.db",
+        "parquetDir": "market-data\\\\parquet"
+      },
+      "collection": {
+        "pollSeconds": 30,
+        "tickLookbackSeconds": 120,
+        "barLookbackCount": 500,
+        "freshnessThresholdSeconds": 180,
+        "retryMaxAttempts": 3,
+        "retryBackoffSeconds": 2
+      }
+    },
+    "tools": {
+      "allow": [
+        "read",
+        "session_status"
+      ],
+      "deny": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "exec": {
+        "mode": "deny",
+        "applyPatch": {
+          "enabled": false,
+          "workspaceOnly": true
+        }
+      },
+      "fs": {
+        "workspaceOnly": true
+      },
+      "message": {
+        "allowCrossContextSend": false,
+        "crossContext": {
+          "allowWithinProvider": false,
+          "allowAcrossProviders": false
+        },
+        "actions": {
+          "allow": []
+        },
+        "broadcast": {
+          "enabled": false
+        }
+      },
+      "agentToAgent": {
+        "enabled": false
+      },
+      "elevated": {
+        "enabled": false
+      },
+      "sandbox": {
+        "tools": {
+          "allow": [
+            "read",
+            "session_status"
+          ],
+          "deny": [
+            "group:runtime",
+            "group:web",
+            "group:ui",
+            "group:automation",
+            "group:messaging",
+            "group:plugins",
+            "group:memory",
+            "group:sessions",
+            "write",
+            "edit",
+            "apply_patch",
+            "exec",
+            "process",
+            "code_execution",
+            "browser",
+            "canvas",
+            "gateway",
+            "message",
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "sessions_list",
+            "sessions_history",
+            "sessions_send",
+            "sessions_spawn",
+            "sessions_yield"
+          ]
+        }
+      },
+      "subagents": {
+        "tools": {
+          "allow": [],
+          "deny": [
+            "group:openclaw",
+            "group:plugins"
+          ]
+        }
+      }
+    }
+  },
+  "validation": {
+    "valid": true,
+    "issues": []
+  }
+}

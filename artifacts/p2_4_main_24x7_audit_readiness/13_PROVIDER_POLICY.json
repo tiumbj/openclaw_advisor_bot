@@ -1,0 +1,52 @@
+{
+  "version": "1.2.8",
+  "phase": "P2.4",
+  "policy": {
+    "status": "BLOCKED",
+    "reason": "NO_ENABLED_PROVIDER",
+    "selected_provider": null,
+    "selected_openclaw_provider_id": null,
+    "enabled_providers": [],
+    "supported_providers": [
+      "openai",
+      "claude",
+      "gemini",
+      "deepseek"
+    ],
+    "openclaw_provider_ids": {
+      "openai": "openai",
+      "claude": "anthropic",
+      "gemini": "google",
+      "deepseek": "deepseek"
+    },
+    "fallback_enabled": false,
+    "fallback_order": [
+      "openai",
+      "claude",
+      "gemini",
+      "deepseek"
+    ],
+    "provider_credentials": {
+      "openai": "blank",
+      "claude": "blank",
+      "gemini": "blank",
+      "deepseek": "blank"
+    },
+    "provider_models": {
+      "openai": null,
+      "claude": null,
+      "gemini": null,
+      "deepseek": null
+    },
+    "provider_timeouts_seconds": {
+      "openai": null,
+      "claude": null,
+      "gemini": null,
+      "deepseek": null
+    },
+    "legacy_provider_refs": [],
+    "issues": [],
+    "real_provider_test": "BLOCKED",
+    "real_provider_blocker": "NO_AVAILABLE_AI_CREDIT"
+  }
+}

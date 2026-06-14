@@ -1,0 +1,6 @@
+2b8980a11ffa2b2c229a4cae3b8ebb42dbe37e0d 2026-06-14 21:02:11 +0700 test(p2.4): update tests for 12-agent topology, v1.2.8, and new env vars
+4e267af5abd56a67e83cf758c8036763d68f972b 2026-06-14 21:02:02 +0700 feat(p2.4): add Windows auto-start scripts for single-instance deployment
+774642c22112e3df9cee2d8d2edfbe920cca48b9 2026-06-14 21:01:45 +0700 docs(p2.4): add logic conflict matrix (31 findings: 9 CRITICAL 11 HIGH 8 MEDIUM 3 LOW)
+1e249aa191ac0824f71fba9c26e47aa4bf4374c8 2026-06-14 20:57:56 +0700 feat(p2.4): update config template and env example for 12 agents and FRED integration
+a71d7be5cbf239d3f437bad8c473b32355b2b657 2026-06-14 20:57:43 +0700 feat(p2.4): expand workspace to 12-agent topology with 56 skills
+b905d1f6c1611224b6623737cd7012a1ed1d23b6 2026-06-14 20:57:32 +0700 feat(p2.4): implement 12-agent topology, FRED adapter, FX basket, scheduler, research, runtime

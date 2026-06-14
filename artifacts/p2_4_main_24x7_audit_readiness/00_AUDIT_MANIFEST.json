@@ -1,0 +1,33 @@
+{
+  "version": "1.2.8",
+  "phase": "P2.4",
+  "work_package": "WP-P2_4-MAIN-24X7-DEEP-SKILLS",
+  "generated": "2026-06-14T21:02:11+07:00",
+  "head_commit": "2b8980a11ffa2b2c229a4cae3b8ebb42dbe37e0d",
+  "origin_main": "2b8980a11ffa2b2c229a4cae3b8ebb42dbe37e0d",
+  "audit_gate": "P2.4 COMPLETE — READY FOR PRE-PRODUCTION AUDIT",
+  "production_gate": "BLOCKED — HUMAN_RELEASE_GATE not passed",
+  "test_summary": {"passed": 77, "failed": 0, "warnings": 1, "deselected": 1},
+  "coverage_pct": 76,
+  "files": [
+    {"file": "00_AUDIT_MANIFEST.json", "description": "This manifest"},
+    {"file": "01_GIT_LOG.txt", "description": "Git log — full P2.4 commit chain"},
+    {"file": "02_GIT_STATUS.txt", "description": "Git status — clean, HEAD == origin/main"},
+    {"file": "03_TEST_RESULTS.txt", "description": "Full pytest output — 77 passed"},
+    {"file": "04_COVERAGE.json", "description": "Coverage report JSON"},
+    {"file": "05_AGENT_TOPOLOGY.json", "description": "validate-agents CLI output"},
+    {"file": "06_SKILL_VALIDATION.json", "description": "validate-skills CLI output"},
+    {"file": "07_ROUTING_VALIDATION.json", "description": "validate-routing CLI output"},
+    {"file": "08_ENV_AUDIT.json", "description": "validate-env CLI output"},
+    {"file": "09_SECURITY_SCAN.json", "description": "security-scan CLI output"},
+    {"file": "10_PIPELINE_DRY_RUN.json", "description": "pipeline-dry-run CLI output"},
+    {"file": "11_EVIDENCE_VERIFY.json", "description": "evidence-verify CLI output"},
+    {"file": "12_CONFIG_RENDER.json", "description": "render-config --validate CLI output"},
+    {"file": "13_PROVIDER_POLICY.json", "description": "provider-policy CLI output"},
+    {"file": "14_HEALTH_REPORT.json", "description": "health CLI output"},
+    {"file": "15_BLUEPRINT_COMPLIANCE_MATRIX.md", "description": "Updated compliance matrix (30 items: 20 PASS)"},
+    {"file": "16_BLUEPRINT_COMPLIANCE_MATRIX.json", "description": "Machine-readable compliance matrix"},
+    {"file": "17_P2_4_STATUS_REPORT.md", "description": "Thai-language P2.4 status report"},
+    {"file": "18_COMMIT_CHAIN.txt", "description": "P2.4 commit chain (6 commits)"}
+  ]
+}

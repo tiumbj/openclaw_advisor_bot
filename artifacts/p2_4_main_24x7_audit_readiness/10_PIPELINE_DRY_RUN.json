@@ -1,0 +1,20 @@
+{
+  "version": "1.2.8",
+  "phase": "P2.4",
+  "scenario": "super_potential",
+  "event_valid": true,
+  "route_valid": true,
+  "delivery": {
+    "created_at_utc": "2026-06-14T14:07:33.941897Z",
+    "mode": "dry_run",
+    "message": "OpenClaw P2.4 Dry Run\n\u0e2b\u0e25\u0e31\u0e01\u0e10\u0e32\u0e19: 86cd62ad-fc6d-4667-bd6c-febfb504a1c0\nScenario: super_potential",
+    "payload": {
+      "title": "OpenClaw P2.4 Dry Run",
+      "body": "Scenario: super_potential",
+      "evidence_id": "86cd62ad-fc6d-4667-bd6c-febfb504a1c0"
+    },
+    "delivery_status": "SKIPPED"
+  },
+  "overall_pass": true,
+  "issues": []
+}
