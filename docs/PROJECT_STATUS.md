@@ -5,10 +5,10 @@
 - Current phase: `P2.4`
 - Current work package: `WP-P2_4-BLUEPRINT`
 - Phase status: `BLOCKED`
-- Last update UTC: `2026-06-14T08:10:59Z`
-- Implementation commit: `e65b9c88438b8950fa81ffc0a002d6a7751ba1b5`
-- Status report commit: `e65b9c88438b8950fa81ffc0a002d6a7751ba1b5`
-- Observed remote HEAD: `e65b9c88438b8950fa81ffc0a002d6a7751ba1b5`
+- Last update UTC: `2026-06-14T08:37:14Z`
+- Implementation commit: `4fca9b864003c0fcb6b587524c8fe6484bed17db`
+- Status report commit: `4fca9b864003c0fcb6b587524c8fe6484bed17db`
+- Observed remote HEAD: `4fca9b864003c0fcb6b587524c8fe6484bed17db`
 - Working tree status: `DIRTY`
 - CI status: `NOT RUN`
 - Security status: `PASS_WITH_WARNINGS`
