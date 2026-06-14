@@ -1,7 +1,7 @@
 ---
 name: telegram-message-contract
 description: Telegram message contract skill.
-version: 1.2.7
+version: 1.2.8
 owner_agent: telegram-publisher
 purpose: Define approved Telegram payload contracts.
 allowed_inputs:

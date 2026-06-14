@@ -1,7 +1,7 @@
 ---
 name: publication-policy
 description: Publication policy skill.
-version: 1.2.7
+version: 1.2.8
 owner_agent: super-advisor
 purpose: Gate approved publication payloads.
 allowed_inputs:

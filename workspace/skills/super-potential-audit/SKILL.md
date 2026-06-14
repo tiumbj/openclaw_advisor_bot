@@ -1,7 +1,7 @@
 ---
 name: super-potential-audit
 description: Super potential audit skill.
-version: 1.2.7
+version: 1.2.8
 owner_agent: xau-strategy-auditor
 purpose: Audit super potential evidence for XAUUSD.
 allowed_inputs:

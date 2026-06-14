@@ -1,7 +1,7 @@
 ---
 name: incident-reporting
 description: Incident reporting skill.
-version: 1.2.7
+version: 1.2.8
 owner_agent: super-advisor
 purpose: Report incidents with redacted, actionable detail.
 allowed_inputs:

@@ -1,7 +1,7 @@
 ---
 name: telegram-retry-and-dead-letter
 description: Telegram retry and dead letter skill.
-version: 1.2.7
+version: 1.2.8
 owner_agent: telegram-publisher
 purpose: Define retry policy and dead-letter handling.
 allowed_inputs:

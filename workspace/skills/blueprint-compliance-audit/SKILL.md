@@ -1,7 +1,7 @@
 ---
 name: blueprint-compliance-audit
 description: Blueprint compliance audit skill.
-version: 1.2.7
+version: 1.2.8
 owner_agent: system-coder-auditor
 purpose: Audit blueprint compliance and closure gaps.
 allowed_inputs:

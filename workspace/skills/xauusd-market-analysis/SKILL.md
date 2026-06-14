@@ -1,7 +1,7 @@
 ---
 name: xauusd-market-analysis
 description: XAUUSD market analysis skill.
-version: 1.2.7
+version: 1.2.8
 owner_agent: xau-strategy-auditor
 purpose: Audit XAUUSD structure and setup quality.
 allowed_inputs:
