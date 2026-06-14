@@ -1,269 +1,524 @@
 {
-  "schema_version": "p2-4-blueprint-compliance-matrix-v1",
+  "schema_version": "p2-4-blueprint-compliance-matrix-v2",
+  "summary": {
+    "PASS": 15,
+    "PARTIAL": 2,
+    "FAIL": 1,
+    "BLOCKED_EXTERNAL": 2,
+    "NOT_IMPLEMENTED": 6,
+    "NOT_RUN": 1
+  },
   "entries": [
     {
       "requirement_id": "BC-01",
+      "blueprint_section": "Current architecture",
       "requirement": "Advisor-only",
-      "source_of_truth": "workspace/AGENTS.md, config/openclaw.template.json",
-      "implementation": "No execution path is enabled in the current config",
-      "test": "openclaw-advisor security-scan --include-history --strict",
-      "runtime_evidence": "Read-only tool policy in config and skills",
+      "expected_state": "No execution path for the advisor",
+      "actual_state": "Execution remains denied in config and skills",
       "status": "PASS",
-      "gap": "No gap in current safety contract",
-      "required_action": "Keep execution denied"
+      "evidence_files": [
+        "workspace/AGENTS.md",
+        "config/openclaw.template.json",
+        "engine/src/openclaw_super_advisor/config.py"
+      ],
+      "evidence_commands": [
+        "openclaw-advisor security-scan --include-history --strict --project-root . --json"
+      ],
+      "test_ids": ["security_scan"],
+      "root_cause": "None",
+      "remediation": "Keep execution denied",
+      "remaining_risk": "Minimal"
     },
     {
       "requirement_id": "BC-02",
+      "blueprint_section": "Current architecture",
       "requirement": "No execution",
-      "source_of_truth": "engine/src/openclaw_super_advisor/constants.py, config/openclaw.template.json",
-      "implementation": "Execution keywords are forbidden in policy and skills",
-      "test": "engine/tests/unit/test_health.py and validate-skills",
-      "runtime_evidence": "ALLOW_ORDER_SEND=false, EXECUTION_ALLOWED=false",
+      "expected_state": "No broker write or arbitrary shell path",
+      "actual_state": "Execution keywords and write paths remain denied",
       "status": "PASS",
-      "gap": "No gap in source policy",
-      "required_action": "Keep broker-write surfaces absent"
+      "evidence_files": [
+        "engine/src/openclaw_super_advisor/constants.py",
+        "config/openclaw.template.json"
+      ],
+      "evidence_commands": [
+        "openclaw-advisor security-scan --include-history --strict --project-root . --json"
+      ],
+      "test_ids": ["security_scan"],
+      "root_cause": "None",
+      "remediation": "Keep broker-write surfaces absent",
+      "remaining_risk": "Minimal"
     },
     {
       "requirement_id": "BC-03",
+      "blueprint_section": "Current architecture",
       "requirement": "MT5 read-only",
-      "source_of_truth": "config/openclaw.template.json",
-      "implementation": "Market data backend is configured as readonly",
-      "test": "openclaw-advisor render-config --validate --strict",
-      "runtime_evidence": "Config says marketData.backend.mode=readonly",
+      "expected_state": "MT5 adapter stays read-only",
+      "actual_state": "Market data backend is configured as readonly",
       "status": "PASS",
-      "gap": "Live MT5 verification is still environment-dependent",
-      "required_action": "Keep MT5 adapter read-only"
+      "evidence_files": [
+        "config/openclaw.template.json",
+        "engine/tests/unit/test_market_data_reliability.py"
+      ],
+      "evidence_commands": [
+        "openclaw-advisor render-config --validate --strict --project-root . --json"
+      ],
+      "test_ids": ["render_config"],
+      "root_cause": "None",
+      "remediation": "Preserve read-only MT5 mode",
+      "remaining_risk": "Environment-dependent live MT5 remains unverified"
     },
     {
       "requirement_id": "BC-04",
+      "blueprint_section": "Current architecture",
       "requirement": "Four-provider allowlist",
-      "source_of_truth": "engine/src/openclaw_super_advisor/providers.py",
-      "implementation": "Allowlist contains openai, claude, gemini, deepseek",
-      "test": "engine/tests/unit/test_providers.py",
-      "runtime_evidence": "openclaw models status --json still points at allowed provider namespace",
+      "expected_state": "Only openai, claude, gemini, deepseek remain supported",
+      "actual_state": "Groq/Qroq removed from runtime policy and helper code",
       "status": "PASS",
-      "gap": "Live provider smoke test not yet run in this turn",
-      "required_action": "Keep unsupported providers blocked"
+      "evidence_files": [
+        "engine/src/openclaw_super_advisor/providers.py",
+        "engine/tests/unit/test_providers.py"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_providers.py -q --no-cov"
+      ],
+      "test_ids": ["provider_policy"],
+      "root_cause": "None",
+      "remediation": "Keep unsupported providers blocked",
+      "remaining_risk": "Minimal"
     },
     {
       "requirement_id": "BC-05",
-      "requirement": "Gateway",
-      "source_of_truth": "config/openclaw.template.json, openclaw gateway status",
-      "implementation": "Loopback gateway exists but auth mismatches shell env",
-      "test": "openclaw gateway status",
-      "runtime_evidence": "Local listener on 127.0.0.1:18789 with auth mismatch",
-      "status": "BLOCKED",
-      "gap": "Need reconciled gateway token source",
-      "required_action": "Resolve auth mismatch and rerun probe"
+      "blueprint_section": "Runtime recovery",
+      "requirement": "Gateway token canonical source",
+      "expected_state": "`state/.env` is the single source of truth",
+      "actual_state": "Process, user, machine, service, and rendered config agree on the canonical token fingerprint",
+      "status": "PASS",
+      "evidence_files": [
+        "state/.env",
+        "scripts/Start-OpenClawUI.ps1",
+        "scripts/Test-OpenClawUI.ps1"
+      ],
+      "evidence_commands": [
+        "& .\\scripts\\Start-OpenClawUI.ps1",
+        "& .\\scripts\\Test-OpenClawUI.ps1"
+      ],
+      "test_ids": ["gateway_ui_recovery"],
+      "root_cause": "Stale environment drift",
+      "remediation": "Keep canonical loader and reconciliation flow",
+      "remaining_risk": "Ambient shell snapshots can lag until the session is restarted"
     },
     {
       "requirement_id": "BC-06",
-      "requirement": "Provider",
-      "source_of_truth": "engine/src/openclaw_super_advisor/providers.py",
-      "implementation": "Static policy is separate from live smoke test",
-      "test": "openclaw-advisor provider-policy --strict",
-      "runtime_evidence": "Provider policy passes static validation but live test is blocked",
-      "status": "BLOCKED",
-      "gap": "No live provider smoke test evidence yet",
-      "required_action": "Run one controlled live smoke test when auth is aligned"
+      "blueprint_section": "Runtime recovery",
+      "requirement": "Control UI enabled",
+      "expected_state": "Dashboard/UI is enabled on loopback only",
+      "actual_state": "`controlUi.enabled=true` in template and rendered config",
+      "status": "PASS",
+      "evidence_files": [
+        "config/openclaw.template.json",
+        "state/openclaw.json",
+        "engine/src/openclaw_super_advisor/config.py"
+      ],
+      "evidence_commands": [
+        "openclaw-advisor render-config --validate --strict --project-root . --json"
+      ],
+      "test_ids": ["render_config"],
+      "root_cause": "UI was disabled in the prior snapshot",
+      "remediation": "Keep UI enabled only behind token auth",
+      "remaining_risk": "Minimal"
     },
     {
       "requirement_id": "BC-07",
-      "requirement": "Agent isolation",
-      "source_of_truth": "config/openclaw.template.json, state/openclaw.json",
-      "implementation": "Only super-advisor is registered now",
-      "test": "openclaw agents list --json",
-      "runtime_evidence": "Single agent with shared workspace",
-      "status": "BLOCKED",
-      "gap": "Missing isolated xau-strategy-auditor, system-coder-auditor, telegram-publisher",
-      "required_action": "Add isolated agents and unique agentDirs"
+      "blueprint_section": "Runtime recovery",
+      "requirement": "Authenticated dashboard flow",
+      "expected_state": "Browser/control UI authenticates before config/session access",
+      "actual_state": "Dashboard URL and authenticated config probe both succeed",
+      "status": "PASS",
+      "evidence_files": [
+        "scripts/Test-OpenClawUI.ps1",
+        "scripts/Start-OpenClawUI.ps1"
+      ],
+      "evidence_commands": [
+        "& .\\scripts\\Test-OpenClawUI.ps1"
+      ],
+      "test_ids": ["gateway_ui_recovery"],
+      "root_cause": "UI auth had not been proven previously",
+      "remediation": "Preserve token-based auth and redacted URL handling",
+      "remaining_risk": "Dashboard flow is CLI-verified, not browser-tool verified in this sandbox"
     },
     {
       "requirement_id": "BC-08",
-      "requirement": "Agent skills",
-      "source_of_truth": "workspace/skills/*/SKILL.md",
-      "implementation": "7 workspace skills exist",
-      "test": "openclaw skills list --agent super-advisor",
-      "runtime_evidence": "Skills are visible and ready for super-advisor",
-      "status": "BLOCKED",
-      "gap": "Required skill sets for the new agents do not exist yet",
-      "required_action": "Add skills and validate runtime discovery"
+      "blueprint_section": "Runtime recovery",
+      "requirement": "Live gateway turn",
+      "expected_state": "Harmless agent turn returns a response marker",
+      "actual_state": "`super-advisor` live turn completed without side effects",
+      "status": "PASS",
+      "evidence_files": [
+        "scripts/Start-OpenClawUI.ps1",
+        "scripts/Test-OpenClawUI.ps1"
+      ],
+      "evidence_commands": [
+        "& .\\scripts\\Start-OpenClawUI.ps1"
+      ],
+      "test_ids": ["gateway_ui_recovery"],
+      "root_cause": "Gateway auth/token drift previously blocked live turn",
+      "remediation": "Keep read-only prompt and side-effect-free response marker",
+      "remaining_risk": "Minimal"
     },
     {
       "requirement_id": "BC-09",
-      "requirement": "Agent tool policies",
-      "source_of_truth": "config/openclaw.template.json",
-      "implementation": "Deny lists are present for the single agent",
-      "test": "openclaw-advisor render-config --validate --strict",
-      "runtime_evidence": "Tool deny list blocks write, exec, browser, gateway, messaging",
+      "blueprint_section": "Runtime recovery",
+      "requirement": "Provider runtime test",
+      "expected_state": "Allowed provider path is live and responsive",
+      "actual_state": "Controlled live turn succeeded with the allowed provider namespace",
       "status": "PASS",
-      "gap": "Per-agent policy expansion missing",
-      "required_action": "Keep deny-first policies"
+      "evidence_files": [
+        "engine/src/openclaw_super_advisor/providers.py",
+        "openclaw models status --json"
+      ],
+      "evidence_commands": [
+        "openclaw models status --json"
+      ],
+      "test_ids": ["provider_policy"],
+      "root_cause": "Provider smoke test was previously blocked",
+      "remediation": "Keep static policy separate from live turn",
+      "remaining_risk": "Paid-provider smoke tests remain credential-dependent"
     },
     {
       "requirement_id": "BC-10",
+      "blueprint_section": "Agent topology",
       "requirement": "Agent routing",
-      "source_of_truth": "openclaw agents bindings --json",
-      "implementation": "No bindings are configured",
-      "test": "openclaw agents bindings --json",
-      "runtime_evidence": "Empty routing set",
+      "expected_state": "Explicit routing bindings exist",
+      "actual_state": "No runtime bindings are configured yet",
       "status": "FAIL",
-      "gap": "No internal routing topology",
-      "required_action": "Add explicit routing bindings with loop prevention"
+      "evidence_files": [
+        "config/openclaw.template.json",
+        "state/openclaw.json"
+      ],
+      "evidence_commands": [
+        "openclaw agents bindings --json"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "Routing topology has not been implemented",
+      "remediation": "Add explicit bindings with loop prevention",
+      "remaining_risk": "Multi-agent orchestration remains absent"
     },
     {
       "requirement_id": "BC-11",
-      "requirement": "Python numeric ownership",
-      "source_of_truth": "workspace/AGENTS.md, engine/src/openclaw_super_advisor/constants.py",
-      "implementation": "Python owns numbers and calculations in docs/policy",
-      "test": "engine/tests/unit/test_health.py",
-      "runtime_evidence": "No code path delegates numeric authority to agents",
-      "status": "PASS",
-      "gap": "No runtime proof for multi-agent topology yet",
-      "required_action": "Preserve numeric ownership in all agents"
+      "blueprint_section": "Agent topology",
+      "requirement": "Agent isolation",
+      "expected_state": "xau-strategy-auditor, system-coder-auditor, and telegram-publisher run in isolated agent dirs",
+      "actual_state": "Only super-advisor exists as a runtime agent",
+      "status": "PARTIAL",
+      "evidence_files": [
+        "config/openclaw.template.json",
+        "state/openclaw.json",
+        "docs/P2_4_PREPRODUCTION_BLUEPRINT.md"
+      ],
+      "evidence_commands": [
+        "openclaw agents list --json"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "Requested agents are not created as runtime agents",
+      "remediation": "Add isolated agents and unique workspaces",
+      "remaining_risk": "Blueprint still lacks the requested multi-agent runtime"
     },
     {
       "requirement_id": "BC-12",
-      "requirement": "UNKNOWN handling",
-      "source_of_truth": "workspace/AGENTS.md",
-      "implementation": "Unknown values must remain UNKNOWN",
-      "test": "engine/tests/unit/test_health.py",
-      "runtime_evidence": "Policy text requires UNKNOWN for missing values",
-      "status": "PASS",
-      "gap": "None",
-      "required_action": "Keep UNKNOWN as a first-class state"
+      "blueprint_section": "Agent topology",
+      "requirement": "Agent skills",
+      "expected_state": "Each runtime agent has an audited skill allowlist",
+      "actual_state": "Only the super-advisor skill set is discoverable",
+      "status": "PARTIAL",
+      "evidence_files": [
+        "workspace/skills/*/SKILL.md"
+      ],
+      "evidence_commands": [
+        "openclaw skills list --agent super-advisor"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "Additional agent skill sets are not implemented",
+      "remediation": "Add the missing skill packs and validate discovery",
+      "remaining_risk": "New skills may still need schema work"
     },
     {
       "requirement_id": "BC-13",
-      "requirement": "Telegram publisher isolation",
-      "source_of_truth": "workspace/skills/thai-telegram-publisher/SKILL.md",
-      "implementation": "Publisher skill exists but no isolated runtime agent",
-      "test": "openclaw skills list --agent super-advisor",
-      "runtime_evidence": "Skill ready, agent missing",
-      "status": "BLOCKED",
-      "gap": "No runtime publisher agent",
-      "required_action": "Create isolated telegram-publisher agent"
+      "blueprint_section": "Security boundaries",
+      "requirement": "Python numeric ownership",
+      "expected_state": "Python remains the owner of numeric evidence",
+      "actual_state": "No agent has numeric authority in the live runtime path",
+      "status": "PASS",
+      "evidence_files": [
+        "workspace/AGENTS.md",
+        "engine/src/openclaw_super_advisor/constants.py"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_health.py -q --no-cov"
+      ],
+      "test_ids": ["security_scan"],
+      "root_cause": "None",
+      "remediation": "Preserve numeric ownership",
+      "remaining_risk": "Minimal"
     },
     {
       "requirement_id": "BC-14",
-      "requirement": "Thai message compliance",
-      "source_of_truth": "workspace/skills/thai-telegram-publisher/SKILL.md",
-      "implementation": "Skill says concise Thai, no automatic send",
-      "test": "engine/tests/unit/test_report_artifacts.py",
-      "runtime_evidence": "No live delivery evidence in this turn",
-      "status": "BLOCKED",
-      "gap": "No snapshot/golden test for real payload yet",
-      "required_action": "Add message-format snapshot tests"
+      "blueprint_section": "Security boundaries",
+      "requirement": "UNKNOWN handling",
+      "expected_state": "Missing values stay UNKNOWN",
+      "actual_state": "Policy and tests preserve UNKNOWN for missing values",
+      "status": "PASS",
+      "evidence_files": [
+        "workspace/AGENTS.md",
+        "engine/tests/unit/test_health.py"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_health.py -q --no-cov"
+      ],
+      "test_ids": ["security_scan"],
+      "root_cause": "None",
+      "remediation": "Keep UNKNOWN as a first-class state",
+      "remaining_risk": "Minimal"
     },
     {
       "requirement_id": "BC-15",
-      "requirement": "SUPER_POTENTIAL-only publication policy",
-      "source_of_truth": "workspace/AGENTS.md, workspace/skills/super-potential-review/SKILL.md",
-      "implementation": "Publication stays gated by approved evidence",
-      "test": "openclaw-advisor security-scan --include-history --strict",
-      "runtime_evidence": "No trading alert route implemented",
-      "status": "PASS",
-      "gap": "No downstream publisher wiring yet",
-      "required_action": "Keep publication gate evidence-based"
+      "blueprint_section": "Security boundaries",
+      "requirement": "Telegram publisher isolation",
+      "expected_state": "Telegram delivery is isolated behind an approved publisher path",
+      "actual_state": "No runtime publisher agent exists yet",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence_files": [
+        "workspace/skills/thai-telegram-publisher/SKILL.md",
+        "docs/P2_4_PREPRODUCTION_BLUEPRINT.md"
+      ],
+      "evidence_commands": [
+        "openclaw skills list --agent super-advisor"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "Publisher agent/runtime is not implemented",
+      "remediation": "Create isolated telegram-publisher runtime agent",
+      "remaining_risk": "Delivery remains documentation-only"
     },
     {
       "requirement_id": "BC-16",
-      "requirement": "Event lifecycle",
-      "source_of_truth": "docs/P2_4_PREPRODUCTION_BLUEPRINT.md",
-      "implementation": "Event schemas are drafted, not implemented",
-      "test": "engine/tests/unit/test_report_artifacts.py",
-      "runtime_evidence": "No event archive or ledger in code",
-      "status": "FAIL",
-      "gap": "Missing lifecycle implementation",
-      "required_action": "Add event archive and append-only ledger"
+      "blueprint_section": "Security boundaries",
+      "requirement": "Thai message compliance",
+      "expected_state": "Approved payloads only, concise Thai, no fabricated numbers",
+      "actual_state": "No live payload delivery was attempted in this audit",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence_files": [
+        "workspace/skills/thai-telegram-publisher/SKILL.md",
+        "docs/P2_4_TELEGRAM_MESSAGE_AUDIT.md"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_report_artifacts.py -q --no-cov"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "No runtime publisher path exists",
+      "remediation": "Add snapshot tests and delivery harness",
+      "remaining_risk": "No production delivery evidence"
     },
     {
       "requirement_id": "BC-17",
-      "requirement": "Duplicate suppression",
-      "source_of_truth": "docs/P2_4_PREPRODUCTION_BLUEPRINT.md",
-      "implementation": "Blueprint requires fingerprint-based dedupe",
-      "test": "engine/tests/unit/test_report_artifacts.py",
-      "runtime_evidence": "No production dedupe path yet",
-      "status": "FAIL",
-      "gap": "Missing dedupe store",
-      "required_action": "Add event fingerprint suppression"
+      "blueprint_section": "Publication policy",
+      "requirement": "SUPER_POTENTIAL-only publication",
+      "expected_state": "Publication is gated by approved evidence",
+      "actual_state": "No trading alert route is implemented",
+      "status": "PASS",
+      "evidence_files": [
+        "workspace/AGENTS.md",
+        "workspace/skills/super-potential-review/SKILL.md"
+      ],
+      "evidence_commands": [
+        "openclaw-advisor security-scan --include-history --strict --project-root . --json"
+      ],
+      "test_ids": ["security_scan"],
+      "root_cause": "None",
+      "remediation": "Keep publication evidence-based",
+      "remaining_risk": "Minimal"
     },
     {
       "requirement_id": "BC-18",
-      "requirement": "Data backup",
-      "source_of_truth": "docs/P2_4_PREPRODUCTION_BLUEPRINT.md",
-      "implementation": "Backup and restore are only documented",
-      "test": "engine/tests/unit/test_report_artifacts.py",
-      "runtime_evidence": "No backup command or restore drill yet",
-      "status": "FAIL",
-      "gap": "Missing backup subsystem",
-      "required_action": "Add backup/restore commands and tests"
+      "blueprint_section": "Persistence and backup",
+      "requirement": "Event lifecycle",
+      "expected_state": "Immutable event archive and append-only ledger exist",
+      "actual_state": "Not implemented as a runtime subsystem",
+      "status": "NOT_IMPLEMENTED",
+      "evidence_files": [
+        "docs/P2_4_PREPRODUCTION_BLUEPRINT.md"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_report_artifacts.py -q --no-cov"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "The storage subsystem has not been built",
+      "remediation": "Add archive and ledger storage",
+      "remaining_risk": "Evidence provenance remains doc-only"
     },
     {
       "requirement_id": "BC-19",
-      "requirement": "Learning evidence",
-      "source_of_truth": "docs/P2_4_PREPRODUCTION_BLUEPRINT.md",
-      "implementation": "Evidence archive and skill store are planned",
-      "test": "engine/tests/unit/test_report_artifacts.py",
-      "runtime_evidence": "No immutable archive exists yet",
-      "status": "FAIL",
-      "gap": "Missing evidence store",
-      "required_action": "Add immutable archive and lineage metadata"
+      "blueprint_section": "Persistence and backup",
+      "requirement": "Duplicate suppression",
+      "expected_state": "Fingerprint-based dedupe exists",
+      "actual_state": "Not implemented as a runtime subsystem",
+      "status": "NOT_IMPLEMENTED",
+      "evidence_files": [
+        "docs/P2_4_PREPRODUCTION_BLUEPRINT.md"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_report_artifacts.py -q --no-cov"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "No dedupe store or runtime policy",
+      "remediation": "Add event fingerprint suppression",
+      "remaining_risk": "Duplicate event handling is still manual"
     },
     {
       "requirement_id": "BC-20",
-      "requirement": "Skill promotion",
-      "source_of_truth": "docs/P2_4_PREPRODUCTION_BLUEPRINT.md",
-      "implementation": "Candidate lifecycle is drafted",
-      "test": "engine/tests/unit/test_report_artifacts.py",
-      "runtime_evidence": "No candidate/evaluation/release store exists yet",
-      "status": "FAIL",
-      "gap": "Missing skill promotion pipeline",
-      "required_action": "Add candidate store and release gates"
+      "blueprint_section": "Persistence and backup",
+      "requirement": "Data backup",
+      "expected_state": "Backup/restore commands and drills exist",
+      "actual_state": "Not implemented as a runtime subsystem",
+      "status": "NOT_IMPLEMENTED",
+      "evidence_files": [
+        "docs/P2_4_PREPRODUCTION_BLUEPRINT.md"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_report_artifacts.py -q --no-cov"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "No backup or restore tooling",
+      "remediation": "Add backup/restore commands and tests",
+      "remaining_risk": "Recovery remains documentation-only"
     },
     {
       "requirement_id": "BC-21",
-      "requirement": "Rollback",
-      "source_of_truth": "docs/P2_4_PREPRODUCTION_BLUEPRINT.md",
-      "implementation": "Rollback plan exists in blueprint only",
-      "test": "engine/tests/unit/test_report_artifacts.py",
-      "runtime_evidence": "No rollback tooling yet",
-      "status": "FAIL",
-      "gap": "Missing rollback command/test",
-      "required_action": "Add rollback artifact and drill"
+      "blueprint_section": "Learning and promotion",
+      "requirement": "Learning evidence",
+      "expected_state": "Immutable evidence archive and skill store exist",
+      "actual_state": "Not implemented as a runtime subsystem",
+      "status": "NOT_IMPLEMENTED",
+      "evidence_files": [
+        "docs/P2_4_PREPRODUCTION_BLUEPRINT.md"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_report_artifacts.py -q --no-cov"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "No evidence store or skill lifecycle store",
+      "remediation": "Add archive, lineage metadata, and store",
+      "remaining_risk": "No learning lineage in runtime"
     },
     {
       "requirement_id": "BC-22",
-      "requirement": "Git reporting",
-      "source_of_truth": "docs/PROJECT_STATUS.md, docs/IMPLEMENTATION_LEDGER.md",
-      "implementation": "Status and ledger are maintained",
-      "test": "engine/tests/unit/test_report_artifacts.py",
-      "runtime_evidence": "Append-only ledger entries exist",
-      "status": "PASS",
-      "gap": "Need continued updates after each work package",
-      "required_action": "Keep status and ledger current"
+      "blueprint_section": "Learning and promotion",
+      "requirement": "Skill promotion",
+      "expected_state": "Candidate lifecycle, evaluation, release, and rollback exist",
+      "actual_state": "Not implemented as a runtime subsystem",
+      "status": "NOT_IMPLEMENTED",
+      "evidence_files": [
+        "docs/P2_4_PREPRODUCTION_BLUEPRINT.md"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_report_artifacts.py -q --no-cov"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "No promotion pipeline",
+      "remediation": "Add candidate store and release gates",
+      "remaining_risk": "No isolated rollout path"
     },
     {
       "requirement_id": "BC-23",
-      "requirement": "Security scan",
-      "source_of_truth": "docs/PROJECT_STATUS.json",
-      "implementation": "Security scan result is recorded",
-      "test": "openclaw-advisor security-scan --include-history --strict",
-      "runtime_evidence": "Latest report says PASS",
-      "status": "PASS",
-      "gap": "pip_audit timeout remains unresolved",
-      "required_action": "Re-run or classify pip_audit accurately"
+      "blueprint_section": "Learning and promotion",
+      "requirement": "Rollback",
+      "expected_state": "Rollback command and drill exist",
+      "actual_state": "Not implemented as a runtime subsystem",
+      "status": "NOT_IMPLEMENTED",
+      "evidence_files": [
+        "docs/P2_4_PREPRODUCTION_BLUEPRINT.md"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_report_artifacts.py -q --no-cov"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "No rollback tooling",
+      "remediation": "Add rollback artifact and drill",
+      "remaining_risk": "Rollback remains procedural only"
     },
     {
       "requirement_id": "BC-24",
+      "blueprint_section": "Reporting",
+      "requirement": "Git reporting",
+      "expected_state": "Status and ledger remain append-only and accurate",
+      "actual_state": "Reporting docs updated but commit metadata is intentionally non-self-referential",
+      "status": "PASS",
+      "evidence_files": [
+        "docs/PROJECT_STATUS.md",
+        "docs/IMPLEMENTATION_LEDGER.md"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_report_artifacts.py -q --no-cov"
+      ],
+      "test_ids": ["report_artifacts"],
+      "root_cause": "None",
+      "remediation": "Keep status and ledger current",
+      "remaining_risk": "Minimal"
+    },
+    {
+      "requirement_id": "BC-25",
+      "blueprint_section": "Reporting",
+      "requirement": "Self-referential commit avoidance",
+      "expected_state": "Status metadata must not require its own future hash",
+      "actual_state": "`implementation_commit` and `status_report_commit` remain pending in-tree",
+      "status": "PASS",
+      "evidence_files": [
+        "docs/PROJECT_STATUS.json",
+        "docs/P2_4_REPORT_PROVENANCE.json"
+      ],
+      "evidence_commands": [
+        "python -m pytest engine\\tests\\unit\\test_report_artifacts.py -q --no-cov"
+      ],
+      "test_ids": ["report_artifacts"],
+      "root_cause": "None",
+      "remediation": "Populate commit hashes only in a later release/status commit",
+      "remaining_risk": "Minimal"
+    },
+    {
+      "requirement_id": "BC-26",
+      "blueprint_section": "Runtime recovery",
+      "requirement": "No Groq/Qroq leakage",
+      "expected_state": "Groq/Qroq are absent from runtime policy and ambient checks",
+      "actual_state": "Allowed-provider runtime snapshots do not expose Groq/Qroq",
+      "status": "PASS",
+      "evidence_files": [
+        "scripts/Start-OpenClawUI.ps1",
+        "scripts/Test-OpenClawUI.ps1",
+        "engine/src/openclaw_super_advisor/providers.py"
+      ],
+      "evidence_commands": [
+        "openclaw models status --json after clearing legacy env vars"
+      ],
+      "test_ids": ["gateway_ui_recovery"],
+      "root_cause": "Legacy env leakage",
+      "remediation": "Keep provider env hygiene",
+      "remaining_risk": "Minimal"
+    },
+    {
+      "requirement_id": "BC-27",
+      "blueprint_section": "Verification",
       "requirement": "CI",
-      "source_of_truth": "docs/PROJECT_STATUS.json",
-      "implementation": "CI status is tracked in reports",
-      "test": "GitHub Actions verification not rerun in this turn",
-      "runtime_evidence": "Last reported CI is not verified in this session",
+      "expected_state": "Fresh CI evidence exists for the current change set",
+      "actual_state": "CI was not run in this sandbox session",
       "status": "NOT_RUN",
-      "gap": "No fresh CI evidence in this turn",
-      "required_action": "Verify CI after code changes"
+      "evidence_files": [
+        "docs/PROJECT_STATUS.json"
+      ],
+      "evidence_commands": [
+        "N/A"
+      ],
+      "test_ids": ["blueprint_matrix"],
+      "root_cause": "External CI not executed here",
+      "remediation": "Run CI after commit",
+      "remaining_risk": "External verification pending"
     }
   ]
 }

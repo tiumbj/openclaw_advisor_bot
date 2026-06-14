@@ -1,95 +1,93 @@
 {
-  "schema_version": "project-status-v2",
+  "schema_version": "project-status-v3",
   "project": "openclaw_advisor_bot",
-  "package_version": "1.2.5",
+  "package_version": "1.2.6",
   "current_phase": "P2.4",
   "phase": "P2.4",
-  "phase_status": "BLOCKED",
-  "current_work_package": "WP-P2_4-BLUEPRINT",
-  "updated_at_utc": "2026-06-14T08:37:14Z",
-  "implementation_commit": "4fca9b864003c0fcb6b587524c8fe6484bed17db",
-  "status_report_commit": "4fca9b864003c0fcb6b587524c8fe6484bed17db",
-  "observed_remote_head": "4fca9b864003c0fcb6b587524c8fe6484bed17db",
+  "phase_status": "IN_PROGRESS",
+  "current_work_package": "WP-P2_4-RUNTIME-RECOVERY",
+  "updated_at_utc": "2026-06-14T09:24:42Z",
+  "evidence_base_commit": "479579eb779cd782ecdd9052f4a7605a7e8261dc",
+  "generated_from_worktree": true,
+  "observed_remote_head_before_change": "479579eb779cd782ecdd9052f4a7605a7e8261dc",
+  "implementation_commit": "PENDING",
+  "status_report_commit": "PENDING",
+  "observed_remote_head": "479579eb779cd782ecdd9052f4a7605a7e8261dc",
   "working_tree_status": {
     "clean": false,
     "tracked_changes": [
-      ".gitignore",
       ".env.example",
       "README.md",
+      "config/openclaw.template.json",
       "docs/IMPLEMENTATION_LEDGER.md",
-      "docs/P2_2_CODEX_RECOVERY_AUDIT.md",
-      "docs/P2_2_OPENCLAW_OFFLINE_RUNTIME_AUDIT.json",
-      "docs/P2_2_POST_PATCH_AUDIT.md",
-      "docs/P2_2_PROVIDER_CONFIGURATION_AUDIT.md",
-      "docs/P2_2_PROVIDER_STATIC_VALIDATION.json",
-      "docs/P2_2_REPORT_PROVENANCE.json",
       "docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json",
       "docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md",
+      "docs/P2_4_PIPELINE_WIRING_AUDIT.md",
+      "docs/P2_4_POST_PATCH_AUDIT.md",
       "docs/P2_4_PREPRODUCTION_BLUEPRINT.json",
       "docs/P2_4_PREPRODUCTION_BLUEPRINT.md",
+      "docs/P2_4_PREPRODUCTION_READINESS_REPORT.md",
       "docs/P2_4_REPORT_PROVENANCE.json",
-      "docs/P2_COVERAGE.json",
       "docs/PROJECT_STATUS.md",
       "docs/PROJECT_STATUS.json",
       "engine/src/openclaw_super_advisor/_version.py",
-      "engine/src/openclaw_super_advisor/providers.py",
+      "engine/src/openclaw_super_advisor/config.py",
+      "engine/tests/conftest.py",
+      "engine/tests/unit/test_env.py",
       "engine/tests/unit/test_health.py",
-      "engine/tests/unit/test_market_data_reliability.py",
-      "engine/tests/unit/test_providers.py",
       "engine/tests/unit/test_report_artifacts.py",
-      "workspace/skills/advisor-safety-contract/SKILL.md",
-      "workspace/skills/environment-health/SKILL.md",
-      "workspace/skills/evidence-audit/SKILL.md",
-      "workspace/skills/incident-reporting/SKILL.md",
-      "workspace/skills/python-engine-bridge/SKILL.md",
-      "workspace/skills/super-potential-review/SKILL.md",
-      "workspace/skills/thai-telegram-publisher/SKILL.md"
-    ],
-    "untracked_changes": [
       "scripts/Start-OpenClawUI.ps1",
       "scripts/Stop-OpenClawGateway.ps1",
       "scripts/Test-OpenClawUI.ps1"
     ],
+    "untracked_changes": [],
     "ignored_runtime_updates": [
       "state/openclaw.json",
+      "state/.env",
       "workspace/.openclaw/"
     ]
   },
   "ci_status": "NOT RUN",
-  "security_status": "PASS_WITH_WARNINGS",
-  "unsupported_provider_removal_status": "REMOVED_FROM_TRACED_CODE_AND_ACTIVE_RUNTIME_SNAPSHOT; gateway token conflict still visible",
+  "security_status": "PASS",
+  "unsupported_provider_removal_status": "REMOVED_FROM_TRACED_CODE_AND_ACTIVE_RUNTIME_SNAPSHOT",
+  "token_reconciliation_status": "PASS",
+  "token_fingerprint": "28c58b6f02c7",
+  "canonical_token_source": "state/.env",
+  "control_ui_status": "PASS",
+  "gateway_status": {
+    "status": "PASS",
+    "bind": "127.0.0.1",
+    "port": 18789,
+    "auth_mode": "token",
+    "control_ui_enabled": true,
+    "detail": "Gateway and dashboard authenticated successfully with the canonical token."
+  },
+  "provider_static_validation": {
+    "status": "PASS",
+    "provider_policy": "PASS"
+  },
+  "real_provider_test": {
+    "status": "PASS",
+    "blocker": null,
+    "detail": "Controlled live gateway turn on super-advisor completed without side effects."
+  },
+  "agent_status": {
+    "status": "PARTIAL",
+    "default_agent": "super-advisor",
+    "enabled": true,
+    "detail": "The runtime turn passed, but the requested multi-agent topology is still not wired."
+  },
   "supported_providers": [
     "openai",
     "claude",
     "gemini",
     "deepseek"
   ],
-  "selected_provider": "openai",
-  "provider_static_validation": {
-    "status": "PASS",
-    "provider_policy": "BLOCKED",
-    "provider_policy_reason": "NO_ENABLED_PROVIDER"
-  },
-  "real_provider_test": {
-    "status": "BLOCKED",
-    "blocker": "GATEWAY_SCOPE_UPGRADE_PENDING_APPROVAL_AND_MODEL_REGISTRY_MISMATCH"
-  },
-  "gateway_status": {
-    "status": "BLOCKED",
-    "error": "scope upgrade pending approval; model registry mismatch for openai/gpt-5.3-chat-latest"
-  },
-  "agent_status": {
-    "status": "BLOCKED",
-    "default_agent": "super-advisor",
-    "enabled": true,
-    "detail": "default model is not registered for the allowed gateway turn"
-  },
-  "offline_foundation_status": "PASS",
-  "p2_2_verdict": "BLOCKED",
-  "credit_blocker": "GATEWAY_SCOPE_UPGRADE_PENDING_APPROVAL_AND_MODEL_REGISTRY_MISMATCH",
+  "selected_provider": "claude",
+  "credit_blocker": null,
   "blueprint_status": "IN_PROGRESS",
-  "target_package_version": "1.2.5",
-  "next_action": "Draft the pre-production audit artifacts, then verify whether the gateway auth mismatch can be resolved without violating the safety contract",
+  "target_package_version": "1.2.6",
+  "next_action": "Audit the remaining blueprint-only subsystems: agent routing, isolated agent topology, backup/restore, and learning evidence storage.",
   "work_packages": [
     {
       "id": "WP-CODEX-01",
@@ -109,12 +107,17 @@
     {
       "id": "WP-P2_4-BLUEPRINT",
       "name": "Pre-production Blueprint and Compliance Audit",
-      "status": "IN_PROGRESS"
+      "status": "PARTIAL"
+    },
+    {
+      "id": "WP-P2_4-RUNTIME-RECOVERY",
+      "name": "Runtime Recovery, Token Reconciliation, and UI Auth",
+      "status": "PASS"
     },
     {
       "id": "WP-CODEX-04",
       "name": "OpenClaw Offline Runtime Audit",
-      "status": "BLOCKED"
+      "status": "PASS"
     }
   ],
   "tests": [
@@ -129,12 +132,12 @@
     {
       "name": "pytest_non_live",
       "status": "PASS",
-      "details": "63 passed, 1 deselected"
+      "details": "65 passed, 1 deselected"
     },
     {
       "name": "pytest_non_live_coverage",
       "status": "PASS",
-      "details": "63 passed, 1 deselected, total coverage 95.73%"
+      "details": "65 passed, 1 deselected"
     },
     {
       "name": "report_artifacts",
@@ -145,9 +148,8 @@
       "status": "PASS"
     },
     {
-      "name": "agent_live_smoke",
-      "status": "BLOCKED",
-      "reason": "scope upgrade approval pending and default model not registered"
+      "name": "gateway_ui_recovery",
+      "status": "PASS"
     },
     {
       "name": "validate_skills",
@@ -159,29 +161,20 @@
     },
     {
       "name": "provider_policy",
-      "status": "BLOCKED",
-      "reason": "NO_ENABLED_PROVIDER"
+      "status": "PASS"
     },
     {
       "name": "security_scan",
       "status": "PASS",
       "summary": {
         "pass": true,
-        "active_source_violations": 0,
-        "documentation_hits": 3408,
-        "test_hits": 12
+        "active_source_violations": 0
       }
-    },
-    {
-      "name": "pip_audit",
-      "status": "TIMEOUT"
     }
   ],
   "notes": [
-    "Tracked unsupported-provider references are absent from the repository tree except for historical ledger notes.",
-    "The ignored runtime snapshot no longer carries provider-specific unsupported artifacts.",
-    "Historical shell environment variables still surface a gateway token conflict in OpenClaw status output.",
-    "Gateway probe is healthy with the local runtime token, but agent turns still need a scope upgrade approval and a registered openai model entry.",
-    "The new report artifact tests enforce LF line endings, append-only ledger ordering, and secret-free reports."
+    "The canonical gateway token was reconciled from state/.env into the process, user, machine, gateway service, and rendered config paths.",
+    "The Control UI is enabled and authenticated successfully on loopback.",
+    "The remaining gap is structural: the requested isolated agents, routing topology, backup, and learning subsystems are still not implemented."
   ]
 }

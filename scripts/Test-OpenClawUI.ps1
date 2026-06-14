@@ -5,13 +5,57 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
-function Import-CanonicalEnv {
-    param([string]$EnvPath)
+$scriptVersion = '1.2.6'
+$warnings = [System.Collections.Generic.List[string]]::new()
+$failures = [System.Collections.Generic.List[string]]::new()
 
-    if (-not (Test-Path -LiteralPath $EnvPath)) {
-        return
+function Get-TokenFingerprint {
+    param([string]$Value)
+
+    if ($null -eq $Value) {
+        return [pscustomobject]@{
+            status      = 'MISSING'
+            length      = 0
+            fingerprint = $null
+        }
     }
 
+    $trimmed = $Value.Trim().Trim('"').Trim("'")
+    if ([string]::IsNullOrWhiteSpace($trimmed)) {
+        return [pscustomobject]@{
+            status      = 'MISSING'
+            length      = 0
+            fingerprint = $null
+        }
+    }
+
+    $status = if ($trimmed.Length -lt 32 -or $trimmed -match '^(?i:(changeme|replace.*|your.*|example.*|token.*here|<.*>|none|null|blank))$') {
+        'INVALID'
+    }
+    else {
+        'SET'
+    }
+
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($trimmed)
+        $hash = $sha.ComputeHash($bytes)
+    }
+    finally {
+        $sha.Dispose()
+    }
+
+    [pscustomobject]@{
+        status      = $status
+        length      = $trimmed.Length
+        fingerprint = (([BitConverter]::ToString($hash) -replace '-', '').ToLowerInvariant()).Substring(0, 12)
+    }
+}
+
+function Read-EnvFile {
+    param([string]$EnvPath)
+
+    $values = [ordered]@{}
     foreach ($line in Get-Content -LiteralPath $EnvPath) {
         $trim = $line.Trim()
         if (-not $trim -or $trim.StartsWith('#')) {
@@ -20,51 +64,264 @@ function Import-CanonicalEnv {
         if ($trim -notmatch '^(?<key>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?<value>.*)$') {
             continue
         }
+
         $key = $Matches.key.Trim()
         $value = $Matches.value.Trim()
         if ($value.StartsWith('"') -and $value.EndsWith('"') -and $value.Length -ge 2) {
             $value = $value.Substring(1, $value.Length - 2)
         }
-        Set-Item -Path "Env:$key" -Value $value
+        $values[$key] = $value
     }
 
-    Remove-Item -Path 'Env:GROQ_API_KEY' -ErrorAction SilentlyContinue
+    return $values
 }
 
-Import-CanonicalEnv -EnvPath (Join-Path $ProjectRoot 'state\.env')
+function Set-EnvironmentValue {
+    param(
+        [string]$Name,
+        [string]$Value
+    )
 
-$baseUri = 'http://127.0.0.1:18789'
-$results = [ordered]@{
-    root_status = 0
-    root_has_html = $false
-    root_has_thai = $false
+    if ([string]::IsNullOrEmpty($Value)) {
+        Remove-Item -Path "Env:$Name" -ErrorAction SilentlyContinue
+        return
+    }
+
+    Set-Item -Path "Env:$Name" -Value $Value
+}
+
+function Invoke-OpenClawText {
+    param([string[]]$Arguments)
+
+    $previousPreference = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        $output = & openclaw @Arguments 2>&1
+        return [pscustomobject]@{
+            exit_code = $LASTEXITCODE
+            text      = ($output -join "`n")
+        }
+    }
+    finally {
+        $ErrorActionPreference = $previousPreference
+    }
+}
+
+$envFile = Join-Path $ProjectRoot 'state\.env'
+if (-not (Test-Path -LiteralPath $envFile)) {
+    throw "Missing canonical env file: $envFile"
+}
+
+$envValues = Read-EnvFile -EnvPath $envFile
+foreach ($name in $envValues.Keys) {
+    Set-EnvironmentValue -Name $name -Value $envValues[$name]
+}
+Set-EnvironmentValue -Name 'GROQ_API_KEY' -Value ''
+Set-EnvironmentValue -Name 'QROQ_API_KEY' -Value ''
+
+$canonicalToken = $envValues['OPENCLAW_GATEWAY_TOKEN']
+$canonicalFingerprint = Get-TokenFingerprint $canonicalToken
+$processFingerprint = Get-TokenFingerprint $env:OPENCLAW_GATEWAY_TOKEN
+
+$renderedConfig = $null
+$serviceTokenFingerprint = $null
+try {
+    $renderedConfig = Get-Content -LiteralPath (Join-Path $ProjectRoot 'state\openclaw.json') -Raw | ConvertFrom-Json
+    $serviceTokenFingerprint = (Get-TokenFingerprint ([string]$renderedConfig.gateway.auth.token)).fingerprint
+}
+catch {
+    $warnings.Add("rendered config token could not be read: $($_.Exception.Message)")
+}
+
+$statusResult = Invoke-OpenClawText -Arguments @('status', '--json')
+$statusJson = $null
+try {
+    $statusJson = $statusResult.text | ConvertFrom-Json
+}
+catch {
+    $warnings.Add("openclaw status --json could not be parsed: $($_.Exception.Message)")
+}
+
+$gatewayStatus = Invoke-OpenClawText -Arguments @('gateway', 'status')
+$gatewayProbe = Invoke-OpenClawText -Arguments @('gateway', 'probe')
+$configResult = Invoke-OpenClawText -Arguments @('config', 'get', 'gateway')
+$configJson = $null
+try {
+    $configJson = $configResult.text | ConvertFrom-Json
+}
+catch {
+    $warnings.Add("openclaw config get gateway could not be parsed: $($_.Exception.Message)")
+}
+$configUnauthenticatedStatus = 0
+$configAuthenticatedStatus = 0
+$rootStatus = 0
+$rootHasHtml = $false
+$dashboardUrl = 'http://127.0.0.1:18789/'
+$dashboardUrlDisplay = $dashboardUrl
+$dashboardAuthToken = $null
+
+try {
+    $dashboardBootstrap = Invoke-OpenClawText -Arguments @('dashboard', '--no-open', '--yes')
+    if ($dashboardBootstrap.text -match '(https?://\S+)') {
+        $dashboardUrl = $Matches[1]
+    }
+    try {
+        $clipboardUrl = Get-Clipboard
+        if ($clipboardUrl -match '^https?://') {
+            $dashboardUrl = $clipboardUrl
+        }
+    }
+    catch {
+        $warnings.Add("dashboard clipboard token could not be read: $($_.Exception.Message)")
+    }
+    try {
+        $parsedUrl = [uri]$dashboardUrl
+        if ($parsedUrl.Fragment) {
+            $fragment = $parsedUrl.Fragment.TrimStart('#')
+            if ($fragment -match '^token=(?<token>.+)$') {
+                $dashboardAuthToken = [uri]::UnescapeDataString($Matches.token)
+            }
+            elseif ($fragment) {
+                $dashboardAuthToken = [uri]::UnescapeDataString($fragment)
+            }
+        }
+    }
+    catch {
+        $warnings.Add("dashboard token fragment could not be parsed: $($_.Exception.Message)")
+    }
+    $dashboardUrlDisplay = $dashboardUrl -replace '#.*$', '#<redacted>'
+}
+catch {
+    $warnings.Add("dashboard bootstrap failed: $($_.Exception.Message)")
+}
+
+$session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+try {
+    $rootResponse = Invoke-WebRequest -Uri 'http://127.0.0.1:18789/' -UseBasicParsing -TimeoutSec 10
+    $rootStatus = [int]$rootResponse.StatusCode
+    $rootHasHtml = $rootResponse.Content -match '<html'
+}
+catch {
+    $failures.Add("unauthenticated root request failed: $($_.Exception.Message)")
 }
 
 try {
-    $rootResponse = Invoke-WebRequest -Uri "$baseUri/" -UseBasicParsing -TimeoutSec 10
-    $results.root_status = [int]$rootResponse.StatusCode
-    $results.root_has_html = $rootResponse.Content -match '<html'
-    $results.root_has_thai = $rootResponse.Content -match 'ไทย'
-} catch {
-    $results.root_error = $_.Exception.Message
+    Invoke-WebRequest -Uri $dashboardUrl -UseBasicParsing -TimeoutSec 10 -WebSession $session | Out-Null
+    $configUnauthenticated = Invoke-WebRequest -Uri 'http://127.0.0.1:18789/control-ui-config.json' -UseBasicParsing -TimeoutSec 10
+    $configUnauthenticatedStatus = [int]$configUnauthenticated.StatusCode
+}
+catch {
+    if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+        $configUnauthenticatedStatus = [int]$_.Exception.Response.StatusCode
+    }
+    else {
+        $warnings.Add("config bootstrap failed: $($_.Exception.Message)")
+    }
 }
 
 try {
-    $configResponse = Invoke-WebRequest -Uri "$baseUri/control-ui-config.json" -UseBasicParsing -TimeoutSec 10 -MaximumRedirection 0
-    $results.config_status = [int]$configResponse.StatusCode
-} catch {
-    $results.config_error = $_.Exception.Message
+    $headers = @{}
+    if ($dashboardAuthToken) {
+        $headers['Authorization'] = "Bearer $dashboardAuthToken"
+    }
+    $configAuthenticated = Invoke-WebRequest -Uri 'http://127.0.0.1:18789/control-ui-config.json' -UseBasicParsing -TimeoutSec 10 -WebSession $session -Headers $headers
+    $configAuthenticatedStatus = [int]$configAuthenticated.StatusCode
+}
+catch {
+    if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+        $configAuthenticatedStatus = [int]$_.Exception.Response.StatusCode
+    }
+    else {
+        $warnings.Add("authenticated config request failed: $($_.Exception.Message)")
+    }
 }
 
-try {
-    $status = & openclaw gateway status
-    $results.gateway_status = ($status -join "`n")
-} catch {
-    $results.gateway_error = $_.Exception.Message
+$agentResult = Invoke-OpenClawText -Arguments @(
+    'agent',
+    '--agent', 'super-advisor',
+    '--message', 'Return exactly: P2_4_OPENCLAW_UI_E2E_OK. Do not call tools or modify the system.',
+    '--thinking', 'off',
+    '--timeout', '120',
+    '--json'
+)
+
+$agentTurnPass = $false
+$agentMarkerFound = $false
+$sessionReadPass = $false
+$websocketAuthenticated = $false
+if ($agentResult.exit_code -eq 0) {
+    $agentMarkerFound = $agentResult.text -match 'P2_4_OPENCLAW_UI_E2E_OK'
+    $sessionReadPass = $agentResult.text -match 'sessionId' -or $agentResult.text -match 'session'
+    $websocketAuthenticated = $gatewayProbe.text -match 'Connect:\s+ok' -and $gatewayProbe.text -match 'Read probe:\s+ok'
+    $agentTurnPass = $agentMarkerFound -and $sessionReadPass -and $websocketAuthenticated
+}
+else {
+    $failures.Add("agent turn failed with exit code $($agentResult.exit_code)")
+    if ($agentResult.text) {
+        $warnings.Add($agentResult.text.Trim())
+    }
 }
 
-$results | ConvertTo-Json -Depth 6
-if ($results.root_status -ne 200) {
+$tokenConsistent = $canonicalFingerprint.status -eq 'SET' -and
+    $canonicalFingerprint.fingerprint -eq $processFingerprint.fingerprint -and
+    ($null -ne $serviceTokenFingerprint) -and
+    $canonicalFingerprint.fingerprint -eq $serviceTokenFingerprint
+
+$controlUiEnabled = $false
+$gatewayAuthMode = 'unknown'
+if ($configJson) {
+    $controlUiEnabled = [bool]$configJson.controlUi.enabled
+    $gatewayAuthMode = [string]$configJson.auth.mode
+}
+if ($statusJson) {
+    if ($statusJson.gateway.error -match 'gateway token mismatch|unauthorized') {
+        $failures.Add([string]$statusJson.gateway.error)
+    }
+}
+
+$overallPass = $gatewayProbe.text -match 'Connect:\s+ok' -and
+    $gatewayProbe.text -match 'Read probe:\s+ok' -and
+    $tokenConsistent -and
+    $controlUiEnabled -and
+    ($rootStatus -eq 200) -and
+    $websocketAuthenticated -and
+    $sessionReadPass -and
+    $agentTurnPass -and
+    $agentMarkerFound -and
+    ($configUnauthenticatedStatus -in 401, 403) -and
+    ($configAuthenticatedStatus -eq 200)
+
+$summary = [ordered]@{
+    script_version                = $scriptVersion
+    timestamp_utc                 = (Get-Date).ToUniversalTime().ToString('o')
+    openclaw_version              = (Invoke-OpenClawText -Arguments @('--version')).text.Trim()
+    config_path                   = $envValues['OPENCLAW_CONFIG_PATH']
+    gateway_port                  = [int]$envValues['OPENCLAW_GATEWAY_PORT']
+    gateway_process_running       = $gatewayProbe.text -match 'Connect:\s+ok'
+    gateway_rpc_ready             = $gatewayProbe.text -match 'Read probe:\s+ok'
+    gateway_auth_mode             = $gatewayAuthMode
+    canonical_token_status        = $canonicalFingerprint.status
+    canonical_token_fingerprint   = $canonicalFingerprint.fingerprint
+    process_token_fingerprint     = $processFingerprint.fingerprint
+    service_token_fingerprint     = $serviceTokenFingerprint
+    token_consistent              = $tokenConsistent
+    control_ui_enabled            = $controlUiEnabled
+    root_status                   = $rootStatus
+    root_has_html                 = $rootHasHtml
+    websocket_authenticated       = $websocketAuthenticated
+    session_read_pass             = $sessionReadPass
+    agent_turn_pass               = $agentTurnPass
+    agent_turn_marker_found       = $agentMarkerFound
+    config_unauthenticated_status = $configUnauthenticatedStatus
+    config_authenticated_status   = $configAuthenticatedStatus
+    dashboard_url                 = $dashboardUrlDisplay
+    overall_pass                  = $overallPass
+    failures                      = $failures
+    warnings                      = $warnings
+}
+
+$summary | ConvertTo-Json -Depth 6
+if (-not $overallPass) {
     exit 1
 }
 exit 0

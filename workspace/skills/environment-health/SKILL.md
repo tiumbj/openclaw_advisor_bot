@@ -1,12 +1,12 @@
 ---
 name: environment-health
 description: Audit environment readiness using present or missing style results without revealing values.
-version: 1.2.5
+version: 1.2.6
 ---
 
 # environment-health
 
-Version: 1.2.5
+Version: 1.2.6
 
 Purpose: inspect bootstrap environment readiness without exposing secrets.
 

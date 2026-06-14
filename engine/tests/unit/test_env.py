@@ -49,3 +49,9 @@ def test_load_settings_redacts_secrets(sample_project: Path) -> None:
     assert isinstance(token, SecretValue)
     assert token.redacted().startswith("<redacted:")
     assert settings.render_context()["OPENCLAW_GATEWAY_TOKEN"] == "secret-token"
+
+
+def test_canonical_env_template_includes_control_ui(sample_project: Path) -> None:
+    template = (sample_project / "config" / "openclaw.template.json").read_text(encoding="utf-8")
+    assert '"controlUi": {' in template
+    assert '"enabled": true' in template

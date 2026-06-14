@@ -2,12 +2,13 @@
 
 ## 1. Current Architecture
 
-- Package version: `1.2.5`
+- Package version: `1.2.6`
 - Current validated phase: `P2.4`
 - Runtime agent registry contains one configured agent: `super-advisor`
 - Routing bindings are empty
 - Gateway bind target is loopback on port `18789`
-- Control UI is disabled
+- Control UI is enabled
+- Gateway auth mode is token-based and the canonical token source is `state/.env`
 - Shell env fallback is disabled in the rendered config
 - Supported providers are restricted to `openai`, `claude`, `gemini`, and `deepseek`
 - Unsupported providers are removed from the tracked provider policy and must stay unsupported
@@ -16,9 +17,7 @@
 
 ## 2. Confirmed Defects
 
-- `openclaw status --json` reports the gateway as listening but auth mismatched with the current shell environment
-- `openclaw models status --json` still reflects historical provider credentials in shell env diagnostics outside git
-- The repository now reports package version `1.2.5`
+- `openclaw status --json` now passes with the canonical token hydrated into the runtime, but the ambient shell may still cache stale process state until restarted
 - Only `super-advisor` exists; the requested `xau-strategy-auditor`, `system-coder-auditor`, and `telegram-publisher` agents do not exist as isolated runtime agents
 - No routing bindings exist, so agent-to-agent routing is not actually wired
 - No separate immutable evidence archive, outcome ledger, agent memory store, or skill candidate store exists yet
@@ -30,6 +29,8 @@
 - Keep the system advisor-only
 - Preserve read-only MT5 access
 - Keep the four-provider allowlist only
+- Keep `state/.env` as the canonical gateway-token source
+- Enable the Control UI only on loopback with token auth
 - Separate provider policy from live provider smoke testing
 - Add isolated agents with unique workspaces, agent directories, and session stores
 - Add explicit skill allowlists and tool policies per agent
@@ -156,6 +157,9 @@
 - `engine/src/openclaw_super_advisor/providers.py`
 - `engine/src/openclaw_super_advisor/skills.py`
 - `config/openclaw.template.json`
+- `scripts/Start-OpenClawUI.ps1`
+- `scripts/Stop-OpenClawGateway.ps1`
+- `scripts/Test-OpenClawUI.ps1`
 - `workspace/skills/*/SKILL.md`
 - `state/openclaw.json`
 - `state/agents/*`
@@ -164,7 +168,6 @@
 
 ## 15. Expected Risks
 
-- Gateway auth mismatch may continue to block live provider verification until the runtime token source is reconciled
 - Additional agent topology may expose new validation failures if skills or tool policies are inconsistent
 - Backup and memory foundations may need more storage layout work than the current repo contains
 - Telegram dry-run may need channel-specific credential alignment before any live smoke test

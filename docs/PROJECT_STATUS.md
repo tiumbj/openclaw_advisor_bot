@@ -1,60 +1,62 @@
 # Project Status
 
 - Project: `openclaw_advisor_bot`
-- Current package version: `1.2.5`
+- Current package version: `1.2.6`
 - Current phase: `P2.4`
-- Current work package: `WP-P2_4-BLUEPRINT`
-- Phase status: `BLOCKED`
-- Last update UTC: `2026-06-14T08:37:14Z`
-- Implementation commit: `4fca9b864003c0fcb6b587524c8fe6484bed17db`
-- Status report commit: `4fca9b864003c0fcb6b587524c8fe6484bed17db`
-- Observed remote HEAD: `4fca9b864003c0fcb6b587524c8fe6484bed17db`
+- Current work package: `WP-P2_4-RUNTIME-RECOVERY`
+- Phase status: `IN_PROGRESS`
+- Last update UTC: `2026-06-14T09:24:42Z`
+- Evidence base commit: `479579eb779cd782ecdd9052f4a7605a7e8261dc`
+- Observed remote HEAD before change: `479579eb779cd782ecdd9052f4a7605a7e8261dc`
+- Implementation commit: `PENDING`
+- Status report commit: `PENDING`
 - Working tree status: `DIRTY`
 - CI status: `NOT RUN`
-- Security status: `PASS_WITH_WARNINGS`
-- Unsupported-provider removal status: `REMOVED_FROM_TRACED_CODE_AND_ACTIVE_RUNTIME_SNAPSHOT; gateway token conflict still visible`
+- Security status: `PASS`
+- Unsupported-provider removal status: `REMOVED_FROM_TRACED_CODE_AND_ACTIVE_RUNTIME_SNAPSHOT`
+- Token reconciliation status: `PASS`
+- Control UI status: `PASS`
+- Gateway status: `PASS`
+- Authenticated UI flow status: `PASS`
+- Blueprint compliance status: `PARTIAL`
 - Supported providers: `OpenAI, Claude, Gemini, DeepSeek`
-- Selected provider: `openai`
+- Selected provider: `claude`
 - Provider static validation: `PASS`
-- Real provider test: `BLOCKED`
-- Credit blocker: `GATEWAY_SCOPE_UPGRADE_PENDING_APPROVAL_AND_MODEL_REGISTRY_MISMATCH`
-- Gateway status: `BLOCKED (probe ok; agent turn requires scope upgrade approval)`
-- Agent status: `BLOCKED (default model is not registered for the allowed gateway turn)`
-- Blueprint status: `P2_4 blueprint and compliance matrix drafted from verified repo/runtime state`
-- Next action: `Normalize the remaining P2.4 audit artifacts, then decide whether the gateway auth mismatch can be resolved safely`
+- Live provider/agent turn: `PASS`
+- Remaining blueprint gaps: `multi-agent topology, routing, backup, evidence archive, and skill promotion are not implemented yet`
+- Next action: `Keep the runtime recovery state canonical, then continue the remaining P2.4 blueprint gap audit without reintroducing unsupported providers`
 
-## Recovery Matrix
+## Runtime Recovery Matrix
 
 | Work Item | Current Status | Evidence | Remaining Work |
-| --------- | -------------- | -------- | -------------- |
-| Unsupported-provider removal from tracked code and policy | PASS | `engine/src/openclaw_super_advisor/providers.py`, `.env.example`, `engine/src/openclaw_super_advisor/env.py`, `engine/src/openclaw_super_advisor/cli.py` | Keep unsupported providers out of active config and runtime snapshots |
-| Four-provider allowlist foundation | PASS | `engine/src/openclaw_super_advisor/providers.py`, `.env.example`, `engine/tests/unit/test_providers.py` | Keep the allowlist as the only supported provider set |
-| Static provider validation | PASS | `engine/tests/unit/test_providers.py`, `engine/tests/integration/test_cli.py`, `docs/P2_2_PROVIDER_STATIC_VALIDATION.json` | Re-run after any provider-policy change |
-| Offline OpenClaw audit | BLOCKED | `docs/P2_2_OPENCLAW_OFFLINE_RUNTIME_AUDIT.json`, `openclaw status --json` | Resolve the gateway auth mismatch and rerun a controlled live provider smoke test |
-| P2.4 blueprint draft | IN_PROGRESS | `docs/P2_4_PREPRODUCTION_BLUEPRINT.md`, `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md` | Fill the remaining wiring, learning, backup, and self-improvement gaps |
-| P2.4 readiness summaries | IN_PROGRESS | `docs/P2_4_PREPRODUCTION_READINESS_REPORT.md`, `docs/P2_4_PIPELINE_WIRING_AUDIT.md`, `docs/P2_4_TELEGRAM_MESSAGE_AUDIT.md` | Capture the current gap state without claiming runtime readiness |
+| --- | --- | --- | --- |
+| Canonical gateway token source in `state/.env` | PASS | `state/.env`, `scripts/Start-OpenClawUI.ps1`, `scripts/Test-OpenClawUI.ps1` | Keep `state/.env` as the single source of truth |
+| User and machine token reconciliation | PASS | PowerShell environment fingerprints captured during recovery | Prevent stale shell sessions from reintroducing drift |
+| Gateway service token reconciliation | PASS | `openclaw status --json` with canonical token hydration, `openclaw gateway status` | Keep gateway service aligned with canonical token |
+| Control UI enabled in template and rendered config | PASS | `config/openclaw.template.json`, `state/openclaw.json`, config validation in scripts | Preserve `controlUi.enabled=true` |
+| Authenticated dashboard/config flow | PASS | `scripts/Test-OpenClawUI.ps1` | Keep dashboard token auth and config auth aligned |
+| Four-provider allowlist | PASS | `engine/src/openclaw_super_advisor/providers.py`, `engine/tests/unit/test_providers.py` | Keep Groq/Qroq out of runtime policy |
+| Live gateway turn on `super-advisor` | PASS | `scripts/Start-OpenClawUI.ps1`, `scripts/Test-OpenClawUI.ps1` | Keep the harmless turn read-only and side-effect free |
+| Agent topology and routing | PARTIAL | `docs/P2_4_PREPRODUCTION_BLUEPRINT.md`, `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md` | Add isolated `xau-strategy-auditor`, `system-coder-auditor`, and `telegram-publisher` agents with explicit bindings |
+| Learning/backup/self-improvement subsystems | NOT_IMPLEMENTED | `docs/P2_4_PREPRODUCTION_BLUEPRINT.md` | Add the missing storage, backup, restore, and candidate lifecycle layers |
 
 ## Current Evidence
 
 - `python -m pip check` -> `PASS`
 - `python -m mypy engine\src` -> `PASS`
-- `python -m pytest -m "not live" --no-cov --basetemp C:\Data\OpenClawSuperAdvisor\_tmp\pytest` -> `PASS` (`63 passed, 1 deselected`)
-- `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json --basetemp C:\Data\OpenClawSuperAdvisor\_tmp\pytest` -> `PASS` (`63 passed, 1 deselected`, total coverage `95.73%`)
-- `openclaw-advisor validate-skills --strict --project-root . --env-file .env.example --json` -> `PASS`
-- `openclaw-advisor render-config --validate --strict --project-root . --env-file .env.example --json` -> `PASS`
-- `openclaw-advisor provider-policy --strict --project-root . --env-file .env.example --json` -> `BLOCKED` with `NO_ENABLED_PROVIDER`
+- `python -m pytest -m "not live" -q --no-cov --basetemp .\_tmp\pytest` -> `PASS` (`65 passed, 1 deselected`)
+- `python -m pytest engine\tests\unit\test_report_artifacts.py -q --no-cov` -> `PASS` (`6 passed`)
+- `& .\scripts\Start-OpenClawUI.ps1` -> `PASS`
+- `& .\scripts\Test-OpenClawUI.ps1` -> `PASS`
+- `openclaw gateway status` -> `PASS`
+- `openclaw status --json` with canonical token hydration -> `PASS`
+- `openclaw models status --json` after clearing Groq/Qroq env leakage -> `PASS`
 - `openclaw-advisor security-scan --include-history --strict --project-root . --json` -> `PASS`
-- `python -m pip_audit` -> `TIMEOUT` after 10 minutes
-- `engine/tests/unit/test_report_artifacts.py` -> `PASS`
-- `openclaw gateway status` -> `PASS` for connectivity probe, `read-only` capability, and local loopback auth with the current runtime token
-- `openclaw gateway probe` -> `PASS`
-- `openclaw agent --agent super-advisor --message "Return exactly: OPENCLAW_PROVIDER_OK" --timeout 120 --thinking off --json` -> `BLOCKED` by scope upgrade approval and missing `openai/gpt-5.3-chat-latest` model registration
-- `openclaw status --json` -> gateway listening on `127.0.0.1:18789`, auth mismatch reported in the ambient shell, super-advisor enabled
-- `openclaw models status --json` -> default model resolves to `openai/gpt-5.4`; shell env still exposes the gateway token conflict outside the repo
+- `openclaw-advisor render-config --validate --strict --project-root . --json` -> `PASS`
+- `openclaw-advisor provider-policy --strict --project-root . --env-file state\\.env --json` -> `PASS`
 
 ## Notes
 
-- The active code paths no longer contain unsupported-provider references.
-- The ignored runtime snapshot no longer carries provider-specific unsupported artifacts.
-- The live provider gate now has a concrete blocker: the agent turn requires a scope upgrade approval and the default openai model is not registered in the model provider catalog.
-- Report artifact integrity tests now enforce LF line endings, append-only ledger ordering, and secret-free reports.
+- The canonical gateway token is sourced from `state/.env` and was reconciled into process, user, machine, service, and rendered-config paths during recovery.
+- The Control UI is enabled in both the template and the rendered runtime config.
+- The remaining P2.4 gap is structural: the requested multi-agent topology, routing, backup, and learning layers are still not implemented as runtime subsystems.

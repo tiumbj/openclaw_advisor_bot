@@ -744,3 +744,56 @@
   - `openclaw status --json still reports an OPENCLAW_GATEWAY_TOKEN mismatch in the ambient shell environment.`
   - `The gateway UI can start and respond locally, but the separate status snapshot still shows the token conflict until the shell environment is normalized.`
 - Next action: `Normalize the gateway token source in the shell/session environment, then re-run the status snapshot and live agent smoke test.`
+
+## Entry 0025
+
+- Timestamp UTC: `2026-06-14T09:24:42Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-RUNTIME-RECOVERY`
+- Operation: `Completed the P2.4 runtime recovery and token reconciliation pass by normalizing the canonical gateway token source, enabling the Control UI on loopback, verifying authenticated dashboard/config access, and recording the remaining blueprint-only agent/routing/backup gaps without reintroducing unsupported providers.`
+- Files changed:
+  - `docs/IMPLEMENTATION_LEDGER.md`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md`
+  - `docs/P2_4_PIPELINE_WIRING_AUDIT.md`
+  - `docs/P2_4_POST_PATCH_AUDIT.md`
+  - `docs/P2_4_PREPRODUCTION_BLUEPRINT.json`
+  - `docs/P2_4_PREPRODUCTION_BLUEPRINT.md`
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.md`
+  - `docs/P2_4_REPORT_PROVENANCE.json`
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `engine/src/openclaw_super_advisor/_version.py`
+  - `engine/src/openclaw_super_advisor/config.py`
+  - `engine/tests/conftest.py`
+  - `engine/tests/unit/test_env.py`
+  - `engine/tests/unit/test_health.py`
+  - `engine/tests/unit/test_report_artifacts.py`
+  - `scripts/Start-OpenClawUI.ps1`
+  - `scripts/Stop-OpenClawGateway.ps1`
+  - `scripts/Test-OpenClawUI.ps1`
+- Tests run:
+  - `python -m pip check`
+  - `python -m mypy engine\src`
+  - `python -m pytest -m "not live" -q --no-cov --basetemp .\_tmp\pytest`
+  - `python -m pytest engine\tests\unit\test_report_artifacts.py -q --no-cov`
+  - `& .\scripts\Start-OpenClawUI.ps1`
+  - `& .\scripts\Test-OpenClawUI.ps1`
+  - `openclaw gateway status`
+  - `openclaw status --json`
+  - `openclaw models status --json`
+  - `openclaw-advisor validate-env --project-root . --env-file state\.env --json`
+  - `openclaw-advisor validate-skills --strict --project-root . --json`
+  - `openclaw-advisor provider-policy --strict --project-root . --json`
+  - `openclaw-advisor render-config --validate --strict --project-root . --json`
+  - `openclaw-advisor security-scan --include-history --strict --project-root . --json`
+- Result: `PASS`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `PASS`
+- Known defects:
+  - `The multi-agent routing topology is still not implemented.`
+  - `The isolated xau-strategy-auditor, system-coder-auditor, and telegram-publisher runtime agents are still missing.`
+  - `Backup, evidence archive, and skill-promotion subsystems remain blueprint-only.`
+- Next action: `Audit the remaining blueprint-only subsystems and then commit the final runtime-recovery state.`

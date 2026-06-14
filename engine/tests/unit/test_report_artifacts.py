@@ -4,7 +4,6 @@ import json
 import re
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 MARKDOWN_REPORTS = [
@@ -90,6 +89,15 @@ def test_status_file_contains_required_fields() -> None:
     status = json.loads((REPO_ROOT / "docs" / "PROJECT_STATUS.json").read_text(encoding="utf-8"))
     missing = sorted(REQUIRED_STATUS_FIELDS.difference(status))
     assert not missing, missing
+
+
+def test_project_status_avoids_self_referential_commit_hash() -> None:
+    status = json.loads((REPO_ROOT / "docs" / "PROJECT_STATUS.json").read_text(encoding="utf-8"))
+    implementation_commit = status.get("implementation_commit")
+    observed_remote_head = status.get("observed_remote_head")
+    assert implementation_commit
+    assert observed_remote_head
+    assert implementation_commit != observed_remote_head or status.get("phase_status") != "PASS"
 
 
 def test_reports_do_not_contain_secrets() -> None:

@@ -2,20 +2,21 @@
 
 | Area | State | Evidence |
 | --- | --- | --- |
-| Implemented | PARTIAL | Existing advisor-only source and four-provider policy |
-| Wired | PARTIAL | Single-agent runtime with no agent bindings |
+| Implemented | PARTIAL | Advisor-only source, four-provider policy, runtime token reconciliation, and Control UI auth recovery |
+| Wired | PARTIAL | Gateway and authenticated dashboard flow are live, but multi-agent routing is still missing |
 | Static tested | PASS | Provider policy, config validation, skills validation, report artifact tests |
-| Runtime tested | BLOCKED | Gateway auth mismatch; local gateway listener exists |
-| Live tested | BLOCKED | No controlled live provider smoke test in this turn |
-| Shadow ready | NO | No isolated agent topology or learning/backup layer |
-| Production ready | NO | Required agent, learning, and Telegram wiring is not implemented |
-| Blocked | YES | Gateway auth mismatch and missing P2.4 subsystems |
+| Runtime tested | PASS | Gateway, Control UI, and harmless live agent turn now pass with the canonical token |
+| Live tested | PASS | `super-advisor` returned the expected marker without side effects |
+| Shadow ready | NO | No isolated multi-agent topology or learning/backup layer yet |
+| Production ready | NO | Required agent routing, backup, and learning subsystems are still not implemented |
+| Blocked | PARTIAL | Runtime recovery is unblocked; blueprint completion still depends on the missing topology subsystems |
 
 ## Verdict
 
-- Foundation pre-production audit: `IN_PROGRESS`
+- Runtime recovery: `PASS`
+- Blueprint compliance: `PARTIAL`
 - Trading alert production readiness: `NO`
 
 ## Immediate Next Step
 
-- Resolve the gateway token mismatch or confirm it cannot be resolved without changing the safety contract
+- Audit the remaining blueprint-only subsystems: agent routing, isolated agent topology, backup/restore, and learning evidence storage

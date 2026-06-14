@@ -118,6 +118,20 @@ def validate_rendered_config(
     gateway = _as_object(config.get("gateway"), "gateway")
     _require_equal(issues, gateway.get("mode"), "local", "gateway.mode")
     _require_equal(issues, gateway.get("bind"), "loopback", "gateway.bind")
+    _require_equal(issues, gateway.get("port"), 18789, "gateway.port")
+    auth = _as_object(gateway.get("auth"), "gateway.auth")
+    _require_equal(issues, auth.get("mode"), "token", "gateway.auth.mode")
+    token = _as_object(auth.get("token"), "gateway.auth.token")
+    _require_equal(issues, token.get("source"), "env", "gateway.auth.token.source")
+    _require_equal(issues, token.get("provider"), "default", "gateway.auth.token.provider")
+    _require_equal(
+        issues,
+        token.get("id"),
+        "OPENCLAW_GATEWAY_TOKEN",
+        "gateway.auth.token.id",
+    )
+    control_ui = _as_object(gateway.get("controlUi"), "gateway.controlUi")
+    _require_equal(issues, control_ui.get("enabled"), True, "gateway.controlUi.enabled")
 
     hooks = _as_object(config.get("hooks"), "hooks")
     _require_equal(issues, hooks.get("enabled"), False, "hooks.enabled")

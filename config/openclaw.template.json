@@ -7,7 +7,7 @@
   "gateway": {
     "mode": "local",
     "bind": "loopback",
-    "port": "{{OPENCLAW_GATEWAY_PORT}}",
+    "port": {{OPENCLAW_GATEWAY_PORT}},
     "auth": {
       "mode": "token",
       "token": {
@@ -17,7 +17,7 @@
       }
     },
     "controlUi": {
-      "enabled": false
+      "enabled": true
     }
   },
   "hooks": {

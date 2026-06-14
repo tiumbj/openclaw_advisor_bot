@@ -1,9 +1,9 @@
 {
   "schema_version": "p2-4-preproduction-blueprint-v1",
-  "package_version_target": "1.2.5",
-  "current_package_version": "1.2.5",
+  "package_version_target": "1.2.6",
+  "current_package_version": "1.2.6",
   "current_phase": "P2.4",
-  "current_work_package": "WP-P2_4-BLUEPRINT",
+  "current_work_package": "WP-P2_4-RUNTIME-RECOVERY",
   "current_architecture": {
     "agents": [
       "super-advisor"
@@ -13,8 +13,8 @@
       "mode": "local",
       "bind": "loopback",
       "port": 18789,
-      "control_ui_enabled": false,
-      "auth_state": "mismatch_with_shell_env"
+      "control_ui_enabled": true,
+      "auth_state": "token_canonicalized"
     },
     "supported_providers": [
       "openai",
@@ -28,12 +28,12 @@
     "self_improvement_layers": []
   },
   "confirmed_defects": [
-    "Gateway auth mismatches the current shell environment.",
+    "Gateway token reconciliation is now passing in the hydrated runtime paths, but a stale shell session can still cache old process state until restart.",
     "Only one agent exists in the registry.",
     "No routing bindings exist.",
     "No isolated strategy, coder, or publisher agents exist.",
     "No separate learning, backup, or self-improvement subsystem exists.",
-    "Package version is now 1.2.5; the remaining blockers are gateway auth mismatch and missing multi-agent wiring."
+    "Package version is now 1.2.6; the remaining blockers are missing multi-agent wiring, backup, and learning subsystems."
   ],
   "target_architecture": {
     "advisor_only": true,

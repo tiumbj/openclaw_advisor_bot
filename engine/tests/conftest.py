@@ -106,6 +106,9 @@ def _template_text() -> str:
             "provider": "default",
             "id": "OPENCLAW_GATEWAY_TOKEN"
           }
+        },
+        "controlUi": {
+          "enabled": true
         }
       },
       "hooks": {

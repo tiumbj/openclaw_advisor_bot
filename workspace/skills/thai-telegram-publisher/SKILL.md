@@ -1,12 +1,12 @@
 ---
 name: thai-telegram-publisher
 description: Format approved structured payloads into concise Thai without adding numbers or sending automatically.
-version: 1.2.5
+version: 1.2.6
 ---
 
 # thai-telegram-publisher
 
-Version: 1.2.5
+Version: 1.2.6
 
 Purpose: convert an approved structured payload into concise Thai text.
 

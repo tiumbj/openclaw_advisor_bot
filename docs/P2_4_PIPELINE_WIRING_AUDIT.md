@@ -3,8 +3,9 @@
 ## Verified Current Flow
 
 - Python evidence -> `super-advisor`
-- `super-advisor` -> report validation
-- `super-advisor` -> publisher skill only as a static capability
+- `super-advisor` -> loopback gateway auth
+- `super-advisor` -> authenticated dashboard/config readback
+- `super-advisor` -> harmless live marker turn
 
 ## Missing Wiring
 
@@ -18,6 +19,6 @@
 ## Safety Observations
 
 - Tool deny lists remain strict
-- Gateway and messaging tools are denied in the current runtime
-- No direct execution path is available
+- Gateway and messaging tools are denied in the current runtime configuration
+- No direct execution path is available from the advisor turn
 - No live Telegram delivery was attempted during this audit
