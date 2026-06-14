@@ -60,7 +60,32 @@
     "telegram-delivery-safety",
     "telegram-deduplication-throttle",
     "telegram-retry-and-dead-letter",
-    "telegram-security-redaction"
+    "telegram-security-redaction",
+    "market-data-coverage-audit",
+    "data-provenance-contract",
+    "stale-data-detection",
+    "candlestick-structure-analysis",
+    "microstructure-trigger-audit",
+    "m1-m5-pattern-review",
+    "fx-basket-analysis",
+    "us10y-context-review",
+    "intermarket-correlation-audit",
+    "regime-classification",
+    "sample-adequacy-review",
+    "walk-forward-analysis",
+    "overfitting-detection",
+    "alert-failure-analysis",
+    "root-cause-tree-builder",
+    "corrective-hypothesis-design",
+    "advisor-only-enforcement",
+    "privilege-boundary-audit",
+    "secret-exposure-scan",
+    "process-health-monitor",
+    "component-restart-protocol",
+    "incident-escalation-contract",
+    "research-knowledge-lifecycle",
+    "skill-candidate-lifecycle",
+    "experiment-outcome-recording"
   ],
   "agents": {
     "defaults": {
@@ -96,7 +121,32 @@
         "telegram-delivery-safety",
         "telegram-deduplication-throttle",
         "telegram-retry-and-dead-letter",
-        "telegram-security-redaction"
+        "telegram-security-redaction",
+        "market-data-coverage-audit",
+        "data-provenance-contract",
+        "stale-data-detection",
+        "candlestick-structure-analysis",
+        "microstructure-trigger-audit",
+        "m1-m5-pattern-review",
+        "fx-basket-analysis",
+        "us10y-context-review",
+        "intermarket-correlation-audit",
+        "regime-classification",
+        "sample-adequacy-review",
+        "walk-forward-analysis",
+        "overfitting-detection",
+        "alert-failure-analysis",
+        "root-cause-tree-builder",
+        "corrective-hypothesis-design",
+        "advisor-only-enforcement",
+        "privilege-boundary-audit",
+        "secret-exposure-scan",
+        "process-health-monitor",
+        "component-restart-protocol",
+        "incident-escalation-contract",
+        "research-knowledge-lifecycle",
+        "skill-candidate-lifecycle",
+        "experiment-outcome-recording"
       ],
       "contextInjection": "always",
       "memorySearch": {
@@ -608,6 +658,223 @@
           "maxAttempts": 3,
           "backoffSeconds": 2
         }
+      },
+      {
+        "id": "market-data-integrity-agent",
+        "name": "Market Data Integrity Agent",
+        "description": "MT5/FRED data quality audit: missing bars, timezone, provenance.",
+        "workspace": "{{OPENCLAW_MARKET_DATA_INTEGRITY_AGENT_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_MARKET_DATA_INTEGRITY_AGENT_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_MARKET_DATA_INTEGRITY_AGENT_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_MARKET_DATA_INTEGRITY_AGENT_MEMORY_DIR}}",
+        "skills": [
+          "market-data-coverage-audit",
+          "data-provenance-contract",
+          "stale-data-detection"
+        ],
+        "tools": {
+          "allow": ["read", "session_status"],
+          "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"],
+          "exec": {"mode": "deny", "applyPatch": {"enabled": false, "workspaceOnly": true}},
+          "fs": {"workspaceOnly": true},
+          "message": {"allowCrossContextSend": false, "crossContext": {"allowWithinProvider": false, "allowAcrossProviders": false}, "actions": {"allow": []}, "broadcast": {"enabled": false}},
+          "agentToAgent": {"enabled": false},
+          "elevated": {"enabled": false},
+          "sandbox": {"tools": {"allow": ["read", "session_status"], "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"]}}
+        },
+        "secretAccess": {"mode": "none"},
+        "timeoutSeconds": 120,
+        "retry": {"maxAttempts": 3, "backoffSeconds": 2}
+      },
+      {
+        "id": "price-action-microstructure-agent",
+        "name": "Price Action Microstructure Agent",
+        "description": "Candlestick structure, wick/body, rejection, and M1/M5 trigger analysis.",
+        "workspace": "{{OPENCLAW_PRICE_ACTION_MICROSTRUCTURE_AGENT_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_PRICE_ACTION_MICROSTRUCTURE_AGENT_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_PRICE_ACTION_MICROSTRUCTURE_AGENT_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_PRICE_ACTION_MICROSTRUCTURE_AGENT_MEMORY_DIR}}",
+        "skills": [
+          "candlestick-structure-analysis",
+          "microstructure-trigger-audit",
+          "m1-m5-pattern-review"
+        ],
+        "tools": {
+          "allow": ["read", "session_status"],
+          "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"],
+          "exec": {"mode": "deny", "applyPatch": {"enabled": false, "workspaceOnly": true}},
+          "fs": {"workspaceOnly": true},
+          "message": {"allowCrossContextSend": false, "crossContext": {"allowWithinProvider": false, "allowAcrossProviders": false}, "actions": {"allow": []}, "broadcast": {"enabled": false}},
+          "agentToAgent": {"enabled": false},
+          "elevated": {"enabled": false},
+          "sandbox": {"tools": {"allow": ["read", "session_status"], "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"]}}
+        },
+        "secretAccess": {"mode": "none"},
+        "timeoutSeconds": 90,
+        "retry": {"maxAttempts": 2, "backoffSeconds": 2}
+      },
+      {
+        "id": "intermarket-macro-agent",
+        "name": "Intermarket Macro Agent",
+        "description": "USD basket, US10Y, FX correlation, lead/lag, regime classification.",
+        "workspace": "{{OPENCLAW_INTERMARKET_MACRO_AGENT_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_INTERMARKET_MACRO_AGENT_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_INTERMARKET_MACRO_AGENT_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_INTERMARKET_MACRO_AGENT_MEMORY_DIR}}",
+        "skills": [
+          "fx-basket-analysis",
+          "us10y-context-review",
+          "intermarket-correlation-audit",
+          "regime-classification"
+        ],
+        "tools": {
+          "allow": ["read", "session_status"],
+          "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"],
+          "exec": {"mode": "deny", "applyPatch": {"enabled": false, "workspaceOnly": true}},
+          "fs": {"workspaceOnly": true},
+          "message": {"allowCrossContextSend": false, "crossContext": {"allowWithinProvider": false, "allowAcrossProviders": false}, "actions": {"allow": []}, "broadcast": {"enabled": false}},
+          "agentToAgent": {"enabled": false},
+          "elevated": {"enabled": false},
+          "sandbox": {"tools": {"allow": ["read", "session_status"], "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"]}}
+        },
+        "secretAccess": {"mode": "none"},
+        "timeoutSeconds": 120,
+        "retry": {"maxAttempts": 2, "backoffSeconds": 2}
+      },
+      {
+        "id": "statistical-backtest-agent",
+        "name": "Statistical Backtest Agent",
+        "description": "Sample adequacy, walk-forward, stability, overfitting and leakage detection.",
+        "workspace": "{{OPENCLAW_STATISTICAL_BACKTEST_AGENT_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_STATISTICAL_BACKTEST_AGENT_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_STATISTICAL_BACKTEST_AGENT_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_STATISTICAL_BACKTEST_AGENT_MEMORY_DIR}}",
+        "skills": [
+          "sample-adequacy-review",
+          "walk-forward-analysis",
+          "overfitting-detection"
+        ],
+        "tools": {
+          "allow": ["read", "session_status"],
+          "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"],
+          "exec": {"mode": "deny", "applyPatch": {"enabled": false, "workspaceOnly": true}},
+          "fs": {"workspaceOnly": true},
+          "message": {"allowCrossContextSend": false, "crossContext": {"allowWithinProvider": false, "allowAcrossProviders": false}, "actions": {"allow": []}, "broadcast": {"enabled": false}},
+          "agentToAgent": {"enabled": false},
+          "elevated": {"enabled": false},
+          "sandbox": {"tools": {"allow": ["read", "session_status"], "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"]}}
+        },
+        "secretAccess": {"mode": "none"},
+        "timeoutSeconds": 300,
+        "retry": {"maxAttempts": 2, "backoffSeconds": 2}
+      },
+      {
+        "id": "failure-root-cause-agent",
+        "name": "Failure Root Cause Agent",
+        "description": "Alert failure analysis, logic conflict audit, root-cause tree, corrective hypothesis.",
+        "workspace": "{{OPENCLAW_FAILURE_ROOT_CAUSE_AGENT_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_FAILURE_ROOT_CAUSE_AGENT_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_FAILURE_ROOT_CAUSE_AGENT_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_FAILURE_ROOT_CAUSE_AGENT_MEMORY_DIR}}",
+        "skills": [
+          "alert-failure-analysis",
+          "root-cause-tree-builder",
+          "corrective-hypothesis-design"
+        ],
+        "tools": {
+          "allow": ["read", "session_status"],
+          "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"],
+          "exec": {"mode": "deny", "applyPatch": {"enabled": false, "workspaceOnly": true}},
+          "fs": {"workspaceOnly": true},
+          "message": {"allowCrossContextSend": false, "crossContext": {"allowWithinProvider": false, "allowAcrossProviders": false}, "actions": {"allow": []}, "broadcast": {"enabled": false}},
+          "agentToAgent": {"enabled": false},
+          "elevated": {"enabled": false},
+          "sandbox": {"tools": {"allow": ["read", "session_status"], "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"]}}
+        },
+        "secretAccess": {"mode": "none"},
+        "timeoutSeconds": 120,
+        "retry": {"maxAttempts": 2, "backoffSeconds": 2}
+      },
+      {
+        "id": "security-compliance-agent",
+        "name": "Security Compliance Agent",
+        "description": "Advisor-only enforcement, secret exposure scan, agent privilege audit.",
+        "workspace": "{{OPENCLAW_SECURITY_COMPLIANCE_AGENT_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_SECURITY_COMPLIANCE_AGENT_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_SECURITY_COMPLIANCE_AGENT_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_SECURITY_COMPLIANCE_AGENT_MEMORY_DIR}}",
+        "skills": [
+          "advisor-only-enforcement",
+          "privilege-boundary-audit",
+          "secret-exposure-scan"
+        ],
+        "tools": {
+          "allow": ["read", "session_status"],
+          "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"],
+          "exec": {"mode": "deny", "applyPatch": {"enabled": false, "workspaceOnly": true}},
+          "fs": {"workspaceOnly": true},
+          "message": {"allowCrossContextSend": false, "crossContext": {"allowWithinProvider": false, "allowAcrossProviders": false}, "actions": {"allow": []}, "broadcast": {"enabled": false}},
+          "agentToAgent": {"enabled": false},
+          "elevated": {"enabled": false},
+          "sandbox": {"tools": {"allow": ["read", "session_status"], "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"]}}
+        },
+        "secretAccess": {"mode": "none"},
+        "timeoutSeconds": 60,
+        "retry": {"maxAttempts": 2, "backoffSeconds": 2}
+      },
+      {
+        "id": "reliability-watchdog-agent",
+        "name": "Reliability Watchdog Agent",
+        "description": "Process health, heartbeat monitoring, restart protocol, incident escalation.",
+        "workspace": "{{OPENCLAW_RELIABILITY_WATCHDOG_AGENT_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_RELIABILITY_WATCHDOG_AGENT_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_RELIABILITY_WATCHDOG_AGENT_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_RELIABILITY_WATCHDOG_AGENT_MEMORY_DIR}}",
+        "skills": [
+          "process-health-monitor",
+          "component-restart-protocol",
+          "incident-escalation-contract"
+        ],
+        "tools": {
+          "allow": ["read", "session_status"],
+          "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"],
+          "exec": {"mode": "deny", "applyPatch": {"enabled": false, "workspaceOnly": true}},
+          "fs": {"workspaceOnly": true},
+          "message": {"allowCrossContextSend": false, "crossContext": {"allowWithinProvider": false, "allowAcrossProviders": false}, "actions": {"allow": []}, "broadcast": {"enabled": false}},
+          "agentToAgent": {"enabled": false},
+          "elevated": {"enabled": false},
+          "sandbox": {"tools": {"allow": ["read", "session_status"], "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"]}}
+        },
+        "secretAccess": {"mode": "none"},
+        "timeoutSeconds": 30,
+        "retry": {"maxAttempts": 5, "backoffSeconds": 2}
+      },
+      {
+        "id": "knowledge-skill-manager",
+        "name": "Knowledge and Skill Manager",
+        "description": "Research knowledge lifecycle, experiment records, skill candidate management.",
+        "workspace": "{{OPENCLAW_KNOWLEDGE_SKILL_MANAGER_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_KNOWLEDGE_SKILL_MANAGER_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_KNOWLEDGE_SKILL_MANAGER_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_KNOWLEDGE_SKILL_MANAGER_MEMORY_DIR}}",
+        "skills": [
+          "research-knowledge-lifecycle",
+          "skill-candidate-lifecycle",
+          "experiment-outcome-recording"
+        ],
+        "tools": {
+          "allow": ["read", "session_status"],
+          "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"],
+          "exec": {"mode": "deny", "applyPatch": {"enabled": false, "workspaceOnly": true}},
+          "fs": {"workspaceOnly": true},
+          "message": {"allowCrossContextSend": false, "crossContext": {"allowWithinProvider": false, "allowAcrossProviders": false}, "actions": {"allow": []}, "broadcast": {"enabled": false}},
+          "agentToAgent": {"enabled": false},
+          "elevated": {"enabled": false},
+          "sandbox": {"tools": {"allow": ["read", "session_status"], "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","write","edit","apply_patch","exec","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"]}}
+        },
+        "secretAccess": {"mode": "none"},
+        "timeoutSeconds": 120,
+        "retry": {"maxAttempts": 2, "backoffSeconds": 2}
       }
     ]
   },
@@ -656,16 +923,36 @@
         "aliases": ["XAUUSD", "GOLD", "XAUUSD."]
       },
       {
-        "canonical": "DXY",
-        "aliases": ["DXY", "USDX"]
-      },
-      {
         "canonical": "EURUSD",
         "aliases": ["EURUSD", "EURUSD."]
       },
       {
+        "canonical": "GBPUSD",
+        "aliases": ["GBPUSD", "GBPUSD."]
+      },
+      {
         "canonical": "AUDUSD",
         "aliases": ["AUDUSD", "AUDUSD."]
+      },
+      {
+        "canonical": "NZDUSD",
+        "aliases": ["NZDUSD", "NZDUSD."]
+      },
+      {
+        "canonical": "USDJPY",
+        "aliases": ["USDJPY", "USDJPY."]
+      },
+      {
+        "canonical": "USDCHF",
+        "aliases": ["USDCHF", "USDCHF."]
+      },
+      {
+        "canonical": "USDCAD",
+        "aliases": ["USDCAD", "USDCAD."]
+      },
+      {
+        "canonical": "DXY",
+        "aliases": ["DXY", "USDX"]
       },
       {
         "canonical": "US10Y",
