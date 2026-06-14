@@ -1,12 +1,12 @@
 {
   "schema_version": "project-status-v2",
   "project": "openclaw_advisor_bot",
-  "package_version": "1.2.1",
-  "current_phase": "P2.2",
-  "phase": "P2.2",
+  "package_version": "1.2.4",
+  "current_phase": "P2.4",
+  "phase": "P2.4",
   "phase_status": "BLOCKED",
   "current_work_package": "WP-P2_4-BLUEPRINT",
-  "updated_at_utc": "2026-06-14T02:30:00Z",
+  "updated_at_utc": "2026-06-14T02:40:00Z",
   "implementation_commit": "89daf1379333ddba61a813cf700d37ff3fa4426b",
   "status_report_commit": "PENDING",
   "observed_remote_head": "1a2850e9f1eb924a94d68649a2aba029ab77b935",
@@ -77,20 +77,21 @@
   },
   "real_provider_test": {
     "status": "BLOCKED",
-    "blocker": "NO_AVAILABLE_AI_CREDIT"
+    "blocker": "GATEWAY_SCOPE_UPGRADE_PENDING_APPROVAL_AND_MODEL_REGISTRY_MISMATCH"
   },
   "gateway_status": {
     "status": "BLOCKED",
-    "error": "connect ECONNREFUSED 127.0.0.1:18789"
+    "error": "scope upgrade pending approval; model registry mismatch for openai/gpt-5.3-chat-latest"
   },
   "agent_status": {
-    "status": "PASS",
+    "status": "BLOCKED",
     "default_agent": "super-advisor",
-    "enabled": true
+    "enabled": true,
+    "detail": "default model is not registered for the allowed gateway turn"
   },
   "offline_foundation_status": "PASS",
   "p2_2_verdict": "BLOCKED",
-  "credit_blocker": "NO_AVAILABLE_AI_CREDIT",
+  "credit_blocker": "GATEWAY_SCOPE_UPGRADE_PENDING_APPROVAL_AND_MODEL_REGISTRY_MISMATCH",
   "blueprint_status": "IN_PROGRESS",
   "target_package_version": "1.2.4",
   "next_action": "Draft the pre-production audit artifacts, then verify whether the gateway auth mismatch can be resolved without violating the safety contract",
@@ -145,6 +146,15 @@
       "status": "PASS"
     },
     {
+      "name": "gateway_probe",
+      "status": "PASS"
+    },
+    {
+      "name": "agent_live_smoke",
+      "status": "BLOCKED",
+      "reason": "scope upgrade approval pending and default model not registered"
+    },
+    {
       "name": "validate_skills",
       "status": "PASS"
     },
@@ -176,7 +186,7 @@
     "Tracked Groq references are absent from the repository tree.",
     "The ignored runtime snapshot now uses openai/gpt-5.3-chat-latest as the default model namespace.",
     "Historical shell environment variables still expose legacy provider credentials to OpenClaw status output.",
-    "Gateway port 18789 is listening locally, but auth still mismatches the current shell environment.",
+    "Gateway probe is healthy with the local runtime token, but agent turns still need a scope upgrade approval and a registered openai model entry.",
     "The new report artifact tests enforce LF line endings, append-only ledger ordering, and secret-free reports."
   ]
 }

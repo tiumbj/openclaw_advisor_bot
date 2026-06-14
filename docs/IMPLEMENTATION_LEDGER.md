@@ -684,3 +684,30 @@
   - `Only one runtime agent exists; the requested multi-agent topology is still not wired.`
   - `Learning, backup, and self-improvement subsystems are still documentation-only.`
 - Next action: `Decide whether to proceed with source-level agent wiring or stop at the P2.4 pre-production audit boundary.`
+
+## Entry 0023
+
+- Timestamp UTC: `2026-06-14T02:40:00Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-BLUEPRINT`
+- Operation: `Attempted one controlled live Gateway agent turn with the current runtime token and the allowed openai model namespace, then recorded the concrete blocker: the Gateway requested a scope-upgrade approval and the default openai model was not registered in the model provider catalog.`
+- Files changed:
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `openclaw gateway status`
+  - `openclaw gateway probe`
+  - `openclaw agent --agent super-advisor --message "Return exactly: OPENCLAW_PROVIDER_OK" --timeout 120 --thinking off --json`
+  - `openclaw models list --all --json --provider anthropic`
+  - `openclaw models list --all --json --provider claude`
+- Result: `BLOCKED`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `NOT_RUN`
+- Known defects:
+  - `The Gateway requests a scope upgrade approval before the agent turn can proceed.`
+  - `The default openai/gpt-5.3-chat-latest model is not registered in models.providers["openai"].models[].`
+  - `The live provider smoke test therefore remains blocked despite healthy loopback connectivity.`
+- Next action: `Decide whether to repair the model registry and scope approval path or stop at the P2.4 pre-production audit boundary.`

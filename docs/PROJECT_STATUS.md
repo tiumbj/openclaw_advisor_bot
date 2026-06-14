@@ -1,11 +1,11 @@
 # Project Status
 
 - Project: `openclaw_advisor_bot`
-- Current package version: `1.2.1`
-- Current phase: `P2.2`
+- Current package version: `1.2.4`
+- Current phase: `P2.4`
 - Current work package: `WP-P2_4-BLUEPRINT`
 - Phase status: `BLOCKED`
-- Last update UTC: `2026-06-14T02:30:00Z`
+- Last update UTC: `2026-06-14T02:40:00Z`
 - Implementation commit: `89daf1379333ddba61a813cf700d37ff3fa4426b`
 - Status report commit: `PENDING`
 - Observed remote HEAD: `1a2850e9f1eb924a94d68649a2aba029ab77b935`
@@ -17,9 +17,9 @@
 - Selected provider: `openai`
 - Provider static validation: `PASS`
 - Real provider test: `BLOCKED`
-- Credit blocker: `NO_AVAILABLE_AI_CREDIT`
-- Gateway status: `BLOCKED (auth mismatch; port 18789 is already in use by the local gateway process)`
-- Agent status: `PASS (super-advisor enabled; runtime offline)`
+- Credit blocker: `GATEWAY_SCOPE_UPGRADE_PENDING_APPROVAL_AND_MODEL_REGISTRY_MISMATCH`
+- Gateway status: `BLOCKED (probe ok; agent turn requires scope upgrade approval)`
+- Agent status: `BLOCKED (default model is not registered for the allowed gateway turn)`
 - Blueprint status: `P2_4 blueprint and compliance matrix drafted from verified repo/runtime state`
 - Next action: `Normalize the remaining P2.4 audit artifacts, then decide whether the gateway auth mismatch can be resolved safely`
 
@@ -46,12 +46,15 @@
 - `openclaw-advisor security-scan --include-history --strict --project-root . --json` -> `PASS`
 - `python -m pip_audit` -> `TIMEOUT` after 10 minutes
 - `engine/tests/unit/test_report_artifacts.py` -> `PASS`
-- `openclaw status --json` -> gateway listening on `127.0.0.1:18789`, auth mismatch reported, super-advisor enabled
+- `openclaw gateway status` -> `PASS` for connectivity probe, `read-only` capability, and local loopback auth with the current runtime token
+- `openclaw gateway probe` -> `PASS`
+- `openclaw agent --agent super-advisor --message "Return exactly: OPENCLAW_PROVIDER_OK" --timeout 120 --thinking off --json` -> `BLOCKED` by scope upgrade approval and missing `openai/gpt-5.3-chat-latest` model registration
+- `openclaw status --json` -> gateway listening on `127.0.0.1:18789`, auth mismatch reported in the ambient shell, super-advisor enabled
 - `openclaw models status --json` -> default model resolves to `openai/gpt-5.3-chat-latest`; shell env still exposes historical provider credentials outside the repo
 
 ## Notes
 
 - `git grep -n -i groq -- .` returned no matches in the tracked tree.
 - The ignored runtime snapshot still contains historical Groq artifacts under `state\agents\...`; they are outside git but should be cleaned from the active runtime snapshot.
-- The live provider gate remains blocked until the gateway auth mismatch is resolved and a controlled smoke test succeeds.
+- The live provider gate now has a concrete blocker: the agent turn requires a scope upgrade approval and the default openai model is not registered in the model provider catalog.
 - Report artifact integrity tests now enforce LF line endings, append-only ledger ordering, and secret-free reports.
