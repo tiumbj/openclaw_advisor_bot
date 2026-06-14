@@ -24,7 +24,7 @@
     ],
     "allow_paid_provider_smoke_test_default": false,
     "unsupported_provider_rejection": true,
-    "groq_rejection": true
+    "unsupported_provider_rejection": true
   },
   "cases": [
     {
@@ -39,7 +39,7 @@
       "selected_openclaw_provider_id": "openai"
     },
     {
-      "name": "groq_selection",
+      "name": "unsupported_provider_selection",
       "status": "FAIL",
       "reason": "unsupported_provider"
     },

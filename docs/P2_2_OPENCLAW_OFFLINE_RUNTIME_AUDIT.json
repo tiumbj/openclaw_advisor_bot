@@ -40,7 +40,7 @@
     ],
     "legacy_shell_env": [
       "legacy provider credentials are still visible to the local shell environment",
-      "Groq remains present in shell env diagnostics, but is rejected by repo policy"
+      "An unsupported legacy provider remains present in shell env diagnostics, but is rejected by repo policy"
     ]
   },
   "gateway_status": {

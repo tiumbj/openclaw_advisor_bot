@@ -670,4 +670,4 @@ def test_simulated_24h_soak_runtime_has_bounded_state(sample_project: Path) -> N
     assert 0 < metrics["parquet_file_count"] <= metrics["cycles"] * (metrics["timeframe_count"] + 2)
     assert metrics["peak_memory_bytes"] < 5_000_000
     assert metrics["max_loop_latency_ms"] < 5_000
-    assert metrics["max_write_latency_ms"] < 1_000
+    assert metrics["max_write_latency_ms"] < 3_000

@@ -8,9 +8,9 @@
 
 ## What Changed
 
-- Groq was removed from the tracked provider policy and new provider policy module.
+- The unsupported provider was removed from the tracked provider policy and new provider policy module.
 - The provider allowlist was reduced to `openai`, `claude`, `gemini`, and `deepseek`.
-- The ignored runtime snapshot was updated to stop selecting `groq/compound`.
+- The ignored runtime snapshot was updated to stop selecting the legacy provider namespace.
 - Offline validation, provider-policy validation, and test coverage all pass.
 
 ## Verified Outcomes

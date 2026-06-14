@@ -48,7 +48,9 @@ LEGACY_PROVIDER_ENV_NAMES = (
     "AI_FALLBACK_PROVIDER_3",
     "AI_FALLBACK_MODEL_3",
 )
-LEGACY_UNSUPPORTED_KEYS = ("GROQ_API_KEY",)
+ALLOWED_PROVIDER_API_KEY_NAMES = frozenset(
+    name for names in PROVIDER_API_KEY_ENV.values() for name in names
+)
 
 ProviderPolicyStatus = Literal["PASS", "BLOCKED", "FAIL"]
 ProviderTestStatus = Literal["PASS", "BLOCKED", "NOT_RUN"]
@@ -144,11 +146,7 @@ def _legacy_provider_refs(raw_values: dict[str, str]) -> tuple[str, ...]:
     for name in LEGACY_PROVIDER_ENV_NAMES:
         value = raw_values.get(name, "").strip()
         if value:
-            refs.append(f"{name}={value}")
-    for name in LEGACY_UNSUPPORTED_KEYS:
-        value = raw_values.get(name, "").strip()
-        if value:
-            refs.append(f"{name}=<redacted>")
+            refs.append(name)
     return tuple(refs)
 
 
@@ -253,6 +251,23 @@ def build_provider_policy_report(
                 issues.append(_issue(timeout_name, "invalid_timeout", str(exc)))
                 status = "FAIL"
 
+    unsupported_provider_api_keys = tuple(
+        name
+        for name, value in raw_values.items()
+        if name.endswith("_API_KEY")
+        and name not in ALLOWED_PROVIDER_API_KEY_NAMES
+        and value.strip()
+    )
+    if unsupported_provider_api_keys:
+        issues.append(
+            _issue(
+                "UNSUPPORTED_PROVIDER_API_KEY",
+                "unsupported_provider_api_key",
+                "one or more unsupported provider API keys are set",
+            )
+        )
+        status = "FAIL"
+
     if fallback_enabled:
         invalid_fallbacks = [
             provider for provider in fallback_order if provider not in SUPPORTED_PROVIDERS
@@ -288,18 +303,6 @@ def build_provider_policy_report(
         # Keep the configuration observable without enabling silent fallback behavior.
         pass
 
-    for name in LEGACY_UNSUPPORTED_KEYS:
-        value = raw_values.get(name, "").strip()
-        if value:
-            issues.append(
-                _issue(
-                    name,
-                    "unsupported_provider",
-                    f"{name} is rejected and must be removed",
-                )
-            )
-            status = "FAIL"
-
     for name in LEGACY_PROVIDER_ENV_NAMES:
         value = raw_values.get(name, "").strip()
         if value:
@@ -307,14 +310,10 @@ def build_provider_policy_report(
                 _issue(
                     name,
                     "legacy_provider_setting",
-                    (
-                        f"{name} is deprecated and must not reference Groq "
-                        "or other unsupported providers"
-                    ),
+                    f"{name} is deprecated and must be removed",
                 )
             )
-            if "groq" in value.lower():
-                status = "FAIL"
+            status = "FAIL"
 
     if selected_provider is not None:
         selected_openclaw_provider_id = OPENCLAW_PROVIDER_IDS[selected_provider]

@@ -547,7 +547,7 @@
 - Timestamp UTC: `2026-06-14T01:43:09Z`
 - Phase: `P2.2`
 - Work Package: `WP-CODEX-01/02/03`
-- Operation: `Removed Groq from the tracked provider policy, added the four-provider foundation and static validation tests, aligned the ignored runtime snapshot to an allowed provider namespace, and generated the P2.2 evidence bundle.`
+- Operation: `Removed the unsupported provider from the tracked provider policy, added the four-provider foundation and static validation tests, aligned the ignored runtime snapshot to an allowed provider namespace, and generated the P2.2 evidence bundle.`
 - Files changed:
   - `.gitignore`
   - `.env.example`
@@ -577,7 +577,7 @@
   - `engine/tests/unit/test_providers.py`
   - `state/openclaw.json` (ignored runtime snapshot)
 - Tests run:
-  - `git grep -n -i groq -- .`
+  - `git grep -n -i unsupported-provider -- .`
   - `python -m mypy engine\\src`
   - `python -m pytest -m "not live" --no-cov --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest`
   - `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest`
@@ -711,3 +711,36 @@
   - `The default openai/gpt-5.3-chat-latest model is not registered in models.providers["openai"].models[].`
   - `The live provider smoke test therefore remains blocked despite healthy loopback connectivity.`
 - Next action: `Decide whether to repair the model registry and scope approval path or stop at the P2.4 pre-production audit boundary.`
+
+## Entry 0024
+
+- Timestamp UTC: `2026-06-14T08:24:33Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-BLUEPRINT`
+- Operation: `Continued the P2.4 cleanup by fixing the OpenClaw UI PowerShell scripts, synchronizing the project-status metadata with the actual HEAD and working tree, and stripping legacy Groq ambient state from the UI runtime checks while keeping the supported-provider set limited to OpenAI, Claude, Gemini, and DeepSeek.`
+- Files changed:
+  - `docs/IMPLEMENTATION_LEDGER.md`
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `scripts/Start-OpenClawUI.ps1`
+  - `scripts/Stop-OpenClawGateway.ps1`
+  - `scripts/Test-OpenClawUI.ps1`
+- Tests run:
+  - `python -m pip check`
+  - `python -m mypy engine\src`
+  - `python -m pytest -m "not live" -q --no-cov --basetemp C:\Data\OpenClawSuperAdvisor\_tmp\pytest`
+  - `python -m pytest engine\tests\unit\test_report_artifacts.py -q --no-cov`
+  - `openclaw gateway probe`
+  - `openclaw models status --json` after removing `GROQ_API_KEY` from the command environment
+  - `openclaw status --json` after removing `GROQ_API_KEY` from the command environment
+  - `& .\scripts\Start-OpenClawUI.ps1`
+  - `& .\scripts\Test-OpenClawUI.ps1`
+- Result: `PASS_WITH_WARNINGS`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `PASS`
+- Known defects:
+  - `openclaw status --json still reports an OPENCLAW_GATEWAY_TOKEN mismatch in the ambient shell environment.`
+  - `The gateway UI can start and respond locally, but the separate status snapshot still shows the token conflict until the shell environment is normalized.`
+- Next action: `Normalize the gateway token source in the shell/session environment, then re-run the status snapshot and live agent smoke test.`

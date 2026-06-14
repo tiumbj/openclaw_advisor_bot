@@ -23,6 +23,12 @@ workspace/.openclaw/
 *.db
 *.sqlite
 *.sqlite3
+.env
+Data_for_env.txt
+**/Data_for_env.txt
+state/.env
+state/.env.*
+state/private_input/
 
 # IDE / OS
 .vscode/

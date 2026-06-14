@@ -43,7 +43,7 @@
       "runtime_evidence": "openclaw models status --json still points at allowed provider namespace",
       "status": "PASS",
       "gap": "Live provider smoke test not yet run in this turn",
-      "required_action": "Keep Groq unsupported"
+      "required_action": "Keep unsupported providers blocked"
     },
     {
       "requirement_id": "BC-05",

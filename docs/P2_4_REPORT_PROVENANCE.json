@@ -1,6 +1,6 @@
 {
   "schema_version": "p2-4-report-provenance-v1",
-  "source_commit": "1a2850e9f1eb924a94d68649a2aba029ab77b935",
+  "source_commit": "e65b9c88438b8950fa81ffc0a002d6a7751ba1b5",
   "observed_runtime_version": "OpenClaw 2026.6.6 (8c802aa)",
   "evidence_sources": [
     "git status",

@@ -42,20 +42,14 @@ def test_provider_name_and_model_reference_helpers() -> None:
     )
     assert _legacy_provider_refs(
         {
-            "AI_PRIMARY_PROVIDER": "groq",
+            "AI_PRIMARY_PROVIDER": "legacy",
             "AI_PRIMARY_MODEL": "compound",
-            "GROQ_API_KEY": "secret-groq",
         }
-    ) == (
-        "AI_PRIMARY_PROVIDER=groq",
-        "AI_PRIMARY_MODEL=compound",
-        "GROQ_API_KEY=<redacted>",
-    )
+    ) == ("AI_PRIMARY_PROVIDER", "AI_PRIMARY_MODEL")
 
     with pytest.raises(ValueError, match="provider must not be blank"):
         normalize_provider_name(" ")
-    with pytest.raises(ValueError, match="unsupported provider"):
-        normalize_provider_name("groq")
+    assert normalize_provider_name("anthropic") == "claude"
     with pytest.raises(ValueError, match="expected positive integer timeout"):
         _parse_int("0")
     with pytest.raises(ValueError, match="expected integer-like timeout"):
@@ -84,7 +78,7 @@ def test_provider_policy_passes_with_one_enabled_provider(sample_project: Path) 
         .read_text(encoding="utf-8")
         .replace("OPENAI_ENABLED=false", "OPENAI_ENABLED=true")
         .replace("AI_PROVIDER=", "AI_PROVIDER=openai")
-        .replace("OPENAI_MODEL=", "OPENAI_MODEL=openai/gpt-5.3-chat-latest")
+        .replace("OPENAI_MODEL=", "OPENAI_MODEL=openai/gpt-5.4")
         .replace("OPENAI_TIMEOUT_SECONDS=", "OPENAI_TIMEOUT_SECONDS=60")
         .replace("OPENAI_API_KEY=", "OPENAI_API_KEY=secret-openai"),
         encoding="utf-8",
@@ -95,7 +89,7 @@ def test_provider_policy_passes_with_one_enabled_provider(sample_project: Path) 
     assert report.selected_provider == "openai"
     assert report.selected_openclaw_provider_id == OPENCLAW_PROVIDER_IDS["openai"]
     assert report.provider_credentials["openai"] == "present"
-    assert report.provider_models["openai"] == "openai/gpt-5.3-chat-latest"
+    assert report.provider_models["openai"] == "openai/gpt-5.4"
     assert report.provider_timeouts_seconds["openai"] == 60
 
 
@@ -106,7 +100,7 @@ def test_provider_policy_accepts_google_api_key_alias(sample_project: Path) -> N
         .replace("OPENAI_ENABLED=false", "OPENAI_ENABLED=true")
         .replace("GEMINI_ENABLED=false", "GEMINI_ENABLED=true")
         .replace("AI_PROVIDER=", "AI_PROVIDER=openai")
-        .replace("OPENAI_MODEL=", "OPENAI_MODEL=openai/gpt-5.3-chat-latest")
+        .replace("OPENAI_MODEL=", "OPENAI_MODEL=openai/gpt-5.4")
         .replace("GEMINI_MODEL=", "GEMINI_MODEL=google/gemini-2.5-pro")
         .replace("OPENAI_TIMEOUT_SECONDS=", "OPENAI_TIMEOUT_SECONDS=60")
         .replace("GOOGLE_API_KEY=", "GOOGLE_API_KEY=secret-gemini")
@@ -128,7 +122,7 @@ def test_provider_policy_blocks_multiple_enabled_without_primary(
         _provider_env_text(sample_project)
         .replace("OPENAI_ENABLED=false", "OPENAI_ENABLED=true")
         .replace("CLAUDE_ENABLED=false", "CLAUDE_ENABLED=true")
-        .replace("OPENAI_MODEL=", "OPENAI_MODEL=openai/gpt-5.3-chat-latest")
+        .replace("OPENAI_MODEL=", "OPENAI_MODEL=openai/gpt-5.4")
         .replace("CLAUDE_MODEL=", "CLAUDE_MODEL=anthropic/claude-3.7-sonnet")
         .replace("OPENAI_API_KEY=", "OPENAI_API_KEY=secret-openai")
         .replace("ANTHROPIC_API_KEY=", "ANTHROPIC_API_KEY=secret-claude"),
@@ -148,16 +142,16 @@ def test_provider_policy_rejects_disabled_primary_and_legacy_refs(
         _provider_env_text(sample_project)
         .replace("AI_PROVIDER=", "AI_PROVIDER=claude")
         .replace("OPENAI_ENABLED=false", "OPENAI_ENABLED=true")
-        .replace("OPENAI_MODEL=", "OPENAI_MODEL=openai/gpt-5.3-chat-latest")
+        .replace("OPENAI_MODEL=", "OPENAI_MODEL=openai/gpt-5.4")
         .replace("OPENAI_API_KEY=", "OPENAI_API_KEY=secret-openai")
         + "\n"
         + "\n".join(
             [
-                "AI_PRIMARY_PROVIDER=groq",
+                "AI_PRIMARY_PROVIDER=legacy",
                 "AI_PRIMARY_MODEL=compound",
-                "AI_FALLBACK_PROVIDER_1=groq",
+                "AI_FALLBACK_PROVIDER_1=legacy",
                 "AI_FALLBACK_MODEL_1=compound",
-                "GROQ_API_KEY=secret-groq",
+                "UNSUPPORTED_PROVIDER_API_KEY=secret",
             ]
         )
         + "\n",
@@ -168,7 +162,7 @@ def test_provider_policy_rejects_disabled_primary_and_legacy_refs(
     assert report.reason == "SELECTED_PROVIDER_DISABLED"
     assert any(issue.code == "disabled_provider_selected" for issue in report.issues)
     assert any(issue.code == "legacy_provider_setting" for issue in report.issues)
-    assert any(issue.field == "GROQ_API_KEY" for issue in report.issues)
+    assert any(issue.code == "unsupported_provider_api_key" for issue in report.issues)
 
 
 def test_provider_policy_reports_invalid_fallback_order(sample_project: Path) -> None:
@@ -180,9 +174,9 @@ def test_provider_policy_reports_invalid_fallback_order(sample_project: Path) ->
         .replace("AI_PROVIDER_FALLBACK_ENABLED=false", "AI_PROVIDER_FALLBACK_ENABLED=true")
         .replace(
             "AI_PROVIDER_FALLBACK_ORDER=openai,claude,gemini,deepseek",
-            "AI_PROVIDER_FALLBACK_ORDER=claude,deepseek,groq,claude",
+            "AI_PROVIDER_FALLBACK_ORDER=claude,deepseek,legacy,claude",
         )
-        .replace("OPENAI_MODEL=", "OPENAI_MODEL=openai/gpt-5.3-chat-latest")
+        .replace("OPENAI_MODEL=", "OPENAI_MODEL=openai/gpt-5.4")
         .replace("OPENAI_API_KEY=", "OPENAI_API_KEY=secret-openai"),
         encoding="utf-8",
     )
@@ -201,7 +195,7 @@ def test_provider_policy_reports_missing_fields_invalid_model_and_timeout(
         _provider_env_text(sample_project)
         .replace("OPENAI_ENABLED=false", "OPENAI_ENABLED=true")
         .replace("AI_PROVIDER=", "AI_PROVIDER=openai")
-        .replace("OPENAI_MODEL=", "OPENAI_MODEL=gpt-5.3-chat-latest")
+        .replace("OPENAI_MODEL=", "OPENAI_MODEL=gpt-5.4")
         .replace("OPENAI_TIMEOUT_SECONDS=", "OPENAI_TIMEOUT_SECONDS=0"),
         encoding="utf-8",
     )
@@ -212,16 +206,20 @@ def test_provider_policy_reports_missing_fields_invalid_model_and_timeout(
     assert any(issue.code == "invalid_timeout" for issue in report.issues)
 
 
-def test_provider_policy_rejects_groq_and_unknown_provider(sample_project: Path) -> None:
-    env_path = sample_project / "state" / "provider-groq.env"
+def test_provider_policy_rejects_unknown_provider_and_unsupported_api_keys(
+    sample_project: Path,
+) -> None:
+    env_path = sample_project / "state" / "provider-unknown.env"
     env_text = (sample_project / ".env.example").read_text(encoding="utf-8").replace(
-        "AI_PROVIDER=", "AI_PROVIDER=groq"
+        "AI_PROVIDER=", "AI_PROVIDER=unknown"
     )
-    env_path.write_text(env_text + "\nGROQ_API_KEY=secret-groq\n", encoding="utf-8")
+    env_path.write_text(
+        env_text + "\nUNSUPPORTED_PROVIDER_API_KEY=secret\n", encoding="utf-8"
+    )
     report = build_provider_policy_report(build_paths(sample_project), env_path=env_path)
     assert report.status == "FAIL"
     assert any(issue.code == "unsupported_provider" for issue in report.issues)
-    assert any(issue.field == "GROQ_API_KEY" for issue in report.issues)
+    assert any(issue.code == "unsupported_provider_api_key" for issue in report.issues)
     payload = provider_policy_report_as_dict(report)
     assert payload["status"] == "FAIL"
     assert normalize_provider_name("anthropic") == "claude"

@@ -5,7 +5,7 @@ security boundaries, and MT5 read-only market-data runtime without enabling trad
 
 ## Status
 
-- Package version: `1.2.4`
+- Package version: `1.2.5`
 - Phase: `P2.4`
 - Trading execution: disabled by contract
 - CLI surface: validation, audit, and MT5 read-only market-data commands

@@ -2,15 +2,15 @@
 
 ## 1. Current Architecture
 
-- Package version: `1.2.1`
-- Current validated phase: `P2.2`
+- Package version: `1.2.5`
+- Current validated phase: `P2.4`
 - Runtime agent registry contains one configured agent: `super-advisor`
 - Routing bindings are empty
 - Gateway bind target is loopback on port `18789`
 - Control UI is disabled
 - Shell env fallback is disabled in the rendered config
 - Supported providers are restricted to `openai`, `claude`, `gemini`, and `deepseek`
-- Groq is removed from the tracked provider policy and must stay unsupported
+- Unsupported providers are removed from the tracked provider policy and must stay unsupported
 - Current runtime skills discovered for `super-advisor`: 7 ready workspace skills
 - Learning, backup, and self-improvement layers are not implemented as separate production subsystems yet
 
@@ -18,7 +18,7 @@
 
 - `openclaw status --json` reports the gateway as listening but auth mismatched with the current shell environment
 - `openclaw models status --json` still reflects historical provider credentials in shell env diagnostics outside git
-- The repository still reports package version `1.2.1`, not the target `1.2.4`
+- The repository now reports package version `1.2.5`
 - Only `super-advisor` exists; the requested `xau-strategy-auditor`, `system-coder-auditor`, and `telegram-publisher` agents do not exist as isolated runtime agents
 - No routing bindings exist, so agent-to-agent routing is not actually wired
 - No separate immutable evidence archive, outcome ledger, agent memory store, or skill candidate store exists yet

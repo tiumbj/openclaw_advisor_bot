@@ -1,12 +1,12 @@
 ---
 name: advisor-safety-contract
 description: Enforce the advisor-only contract and reject execution or secret exposure.
-version: 1.2.1
+version: 1.2.5
 ---
 
 # advisor-safety-contract
 
-Version: 1.2.1
+Version: 1.2.5
 
 Purpose: enforce the advisor-only contract for every response.
 

@@ -39,7 +39,7 @@ REQUIRED_STATUS_FIELDS = {
     "working_tree_status",
     "ci_status",
     "security_status",
-    "groq_removal_status",
+    "unsupported_provider_removal_status",
     "supported_providers",
     "selected_provider",
     "provider_static_validation",

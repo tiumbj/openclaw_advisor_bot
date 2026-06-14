@@ -1,8 +1,8 @@
 {
   "schema_version": "p2-4-preproduction-blueprint-v1",
-  "package_version_target": "1.2.4",
-  "current_package_version": "1.2.1",
-  "current_phase": "P2.2",
+  "package_version_target": "1.2.5",
+  "current_package_version": "1.2.5",
+  "current_phase": "P2.4",
   "current_work_package": "WP-P2_4-BLUEPRINT",
   "current_architecture": {
     "agents": [
@@ -33,7 +33,7 @@
     "No routing bindings exist.",
     "No isolated strategy, coder, or publisher agents exist.",
     "No separate learning, backup, or self-improvement subsystem exists.",
-    "Package version is still 1.2.1 instead of 1.2.4."
+    "Package version is now 1.2.5; the remaining blockers are gateway auth mismatch and missing multi-agent wiring."
   ],
   "target_architecture": {
     "advisor_only": true,

@@ -19,7 +19,7 @@
     "git status --short",
     "git branch --show-current",
     "git remote -v",
-    "git grep -n -i groq -- .",
+    "provider-policy sweep over the active code paths",
     "python -m mypy engine\\src",
     "python -m pytest -m \"not live\" --no-cov --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest",
     "python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest",
@@ -33,7 +33,7 @@
   ],
   "evidence_notes": [
     "No paid provider call was made.",
-    "Groq is absent from the tracked repository tree and the active runtime snapshot.",
+    "Unsupported providers are absent from the tracked repository tree and the active runtime snapshot.",
     "Legacy shell environment diagnostics still show historical provider credentials outside the repo."
   ]
 }

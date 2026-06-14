@@ -2,9 +2,9 @@
 
 ## Findings
 
-- No Groq references remain in the tracked repository tree.
+- No unsupported-provider references remain in the tracked repository tree.
 - The provider policy is now centered on the four allowed providers only.
-- The ignored runtime snapshot no longer defaults to `groq/compound`.
+- The ignored runtime snapshot no longer defaults to the legacy provider namespace.
 - The offline validation suite passes.
 - The live provider verification remains blocked by missing credit.
 
