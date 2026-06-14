@@ -1,0 +1,39 @@
+{
+  "schema_version": "p2.2-report-provenance-v1",
+  "timestamp_utc": "2026-06-14T01:43:09Z",
+  "base_commit": "65a5cae2088129e549a0f782bec4dcaabc57c35a",
+  "observed_remote_head": "65a5cae2088129e549a0f782bec4dcaabc57c35a",
+  "generated_reports": [
+    "docs/PROJECT_STATUS.md",
+    "docs/PROJECT_STATUS.json",
+    "docs/IMPLEMENTATION_LEDGER.md",
+    "docs/P2_2_CODEX_RECOVERY_AUDIT.md",
+    "docs/P2_2_PROVIDER_STATIC_VALIDATION.json",
+    "docs/P2_2_PROVIDER_CONFIGURATION_AUDIT.md",
+    "docs/P2_2_OPENCLAW_OFFLINE_RUNTIME_AUDIT.json",
+    "docs/P2_2_SECURITY_AUDIT.json",
+    "docs/P2_2_TEST_RESULTS.json",
+    "docs/P2_2_POST_PATCH_AUDIT.md"
+  ],
+  "source_commands": [
+    "git status --short",
+    "git branch --show-current",
+    "git remote -v",
+    "git grep -n -i groq -- .",
+    "python -m mypy engine\\src",
+    "python -m pytest -m \"not live\" --no-cov --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest",
+    "python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest",
+    "openclaw-advisor validate-skills --strict --project-root . --env-file .env.example --json",
+    "openclaw-advisor render-config --validate --strict --project-root . --env-file .env.example --json",
+    "openclaw-advisor provider-policy --strict --project-root . --env-file .env.example --json",
+    "openclaw-advisor security-scan --include-history --strict --project-root . --json",
+    "python -m pip_audit",
+    "openclaw status --json",
+    "openclaw models status --json"
+  ],
+  "evidence_notes": [
+    "No paid provider call was made.",
+    "Groq is absent from the tracked repository tree and the active runtime snapshot.",
+    "Legacy shell environment diagnostics still show historical provider credentials outside the repo."
+  ]
+}

@@ -11,6 +11,7 @@ from .env import CanonicalEnvMissingError, DuplicateEnvError, audit_environment
 from .health import run_health_check_as_dict
 from .market_data import build_market_data_service
 from .paths import build_paths
+from .providers import build_provider_policy_report, provider_policy_report_as_dict
 from .scanning import perform_security_scan
 from .skills import validate_skills
 
@@ -59,6 +60,12 @@ def build_parser() -> argparse.ArgumentParser:
     render_parser.add_argument("--env-file", type=Path, default=None)
     render_parser.add_argument("--validate", action="store_true")
     render_parser.add_argument("--strict", action="store_true")
+
+    provider_parser = subparsers.add_parser("provider-policy")
+    provider_parser.set_defaults(command_id="provider-policy")
+    _common_parser(provider_parser)
+    provider_parser.add_argument("--env-file", type=Path, default=None)
+    provider_parser.add_argument("--strict", action="store_true")
 
     mt5_health_parser = subparsers.add_parser("mt5-health", aliases=["market-health"])
     mt5_health_parser.set_defaults(command_id="mt5-health")
@@ -172,6 +179,16 @@ def main(argv: list[str] | None = None) -> int:
                 return 1 if strict and not validation.valid else 0
             _print(payload)
             return 0
+        if command_id == "provider-policy":
+            provider_env = env_file or paths.canonical_env_example_path
+            provider_report = build_provider_policy_report(paths, env_path=provider_env)
+            payload = {
+                "version": __version__,
+                "phase": PHASE,
+                "policy": provider_policy_report_as_dict(provider_report),
+            }
+            _print(payload)
+            return 1 if strict and provider_report.status == "FAIL" else 0
         if command_id in {
             "mt5-health",
             "mt5-discover-symbols",

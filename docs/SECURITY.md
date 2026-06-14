@@ -1,7 +1,7 @@
 # Security
 
 Version: `1.2.1`  
-Phase: `P2.1`
+Phase: `P2.2`
 
 - `state\.env` and `state\openclaw.json` are local runtime artifacts and must not be tracked.
 - The config template enforces a read-only sandbox with only `read` and `session_status`.

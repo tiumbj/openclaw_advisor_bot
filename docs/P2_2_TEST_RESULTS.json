@@ -1,0 +1,61 @@
+{
+  "schema_version": "p2.2-test-results-v1",
+  "timestamp_utc": "2026-06-14T01:43:09Z",
+  "overall_status": "PASS_WITH_WARNINGS",
+  "results": [
+    {
+      "name": "pip_check",
+      "command": "python -m pip check",
+      "status": "PASS"
+    },
+    {
+      "name": "mypy",
+      "command": "python -m mypy engine\\src",
+      "status": "PASS"
+    },
+    {
+      "name": "pytest_non_live",
+      "command": "python -m pytest -m \"not live\" --no-cov --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest",
+      "status": "PASS",
+      "summary": "52 passed, 1 deselected"
+    },
+    {
+      "name": "pytest_non_live_coverage",
+      "command": "python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest",
+      "status": "PASS",
+      "summary": "52 passed, 1 deselected, total coverage 93.84%"
+    },
+    {
+      "name": "validate_skills",
+      "command": "openclaw-advisor validate-skills --strict --project-root . --env-file .env.example --json",
+      "status": "PASS"
+    },
+    {
+      "name": "render_config",
+      "command": "openclaw-advisor render-config --validate --strict --project-root . --env-file .env.example --json",
+      "status": "PASS"
+    },
+    {
+      "name": "provider_policy",
+      "command": "openclaw-advisor provider-policy --strict --project-root . --env-file .env.example --json",
+      "status": "BLOCKED",
+      "summary": "NO_ENABLED_PROVIDER"
+    },
+    {
+      "name": "security_scan",
+      "command": "openclaw-advisor security-scan --include-history --strict --project-root . --json",
+      "status": "PASS",
+      "summary": {
+        "pass": true,
+        "active_source_violations": 0,
+        "documentation_hits": 3408,
+        "test_hits": 12
+      }
+    },
+    {
+      "name": "pip_audit",
+      "command": "python -m pip_audit",
+      "status": "TIMEOUT"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 # Environment Variables
 
 Version: `1.2.1`  
-Phase: `P2.1`
+Phase: `P2.2`
 
 - Canonical publication-safe template: `.env.example`
 - Runtime-only local file: `state\.env`

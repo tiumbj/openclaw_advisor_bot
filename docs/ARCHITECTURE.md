@@ -1,7 +1,7 @@
 # Architecture
 
 Version: `1.2.1`  
-Phase: `P2.1`
+Phase: `P2.2`
 
 OpenClaw Super Advisor remains an **alert/advisor-only** foundation.
 

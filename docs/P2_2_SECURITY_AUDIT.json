@@ -1,0 +1,21 @@
+{
+  "schema_version": "p2.2-security-audit-v1",
+  "timestamp_utc": "2026-06-14T01:43:09Z",
+  "status": "PASS_WITH_WARNINGS",
+  "repository_security_scan": {
+    "pass": true,
+    "active_source_violations": 0,
+    "documentation_hits": 3408,
+    "test_hits": 12
+  },
+  "pip_audit": {
+    "status": "TIMEOUT",
+    "attempts": 2,
+    "timeout_minutes": 10
+  },
+  "notes": [
+    "No active source violations were reported by the repository security scan.",
+    "The repository still contains historical documentation and test strings that mention forbidden action names, but they were classified by the scanner as documentation or test-only hits.",
+    "The dependency audit did not complete within the available execution window."
+  ]
+}

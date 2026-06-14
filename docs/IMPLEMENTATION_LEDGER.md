@@ -541,3 +541,61 @@
 - Known defects:
   - `Live MT5 verification remains blocked by environment readiness, but it is non-blocking for P2.1.`
 - Next action: `Re-run the mandatory P2.2 gate using the validated P2.1 status artifacts.`
+
+## Entry 0020
+
+- Timestamp UTC: `2026-06-14T01:43:09Z`
+- Phase: `P2.2`
+- Work Package: `WP-CODEX-01/02/03`
+- Operation: `Removed Groq from the tracked provider policy, added the four-provider foundation and static validation tests, aligned the ignored runtime snapshot to an allowed provider namespace, and generated the P2.2 evidence bundle.`
+- Files changed:
+  - `.gitignore`
+  - `.env.example`
+  - `README.md`
+  - `docs/ARCHITECTURE.md`
+  - `docs/ENVIRONMENT_VARIABLES.md`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+  - `docs/P2_COVERAGE.json`
+  - `docs/P2_2_CODEX_RECOVERY_AUDIT.md`
+  - `docs/P2_2_OPENCLAW_OFFLINE_RUNTIME_AUDIT.json`
+  - `docs/P2_2_POST_PATCH_AUDIT.md`
+  - `docs/P2_2_PROVIDER_CONFIGURATION_AUDIT.md`
+  - `docs/P2_2_PROVIDER_STATIC_VALIDATION.json`
+  - `docs/P2_2_REPORT_PROVENANCE.json`
+  - `docs/P2_2_SECURITY_AUDIT.json`
+  - `docs/P2_2_TEST_RESULTS.json`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/PROJECT_STATUS.md`
+  - `engine/src/openclaw_super_advisor/_version.py`
+  - `engine/src/openclaw_super_advisor/cli.py`
+  - `engine/src/openclaw_super_advisor/env.py`
+  - `engine/src/openclaw_super_advisor/providers.py`
+  - `engine/tests/conftest.py`
+  - `engine/tests/integration/test_cli.py`
+  - `engine/tests/unit/test_env.py`
+  - `engine/tests/unit/test_health.py`
+  - `engine/tests/unit/test_providers.py`
+  - `state/openclaw.json` (ignored runtime snapshot)
+- Tests run:
+  - `git grep -n -i groq -- .`
+  - `python -m mypy engine\\src`
+  - `python -m pytest -m "not live" --no-cov --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest`
+  - `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest`
+  - `openclaw-advisor validate-skills --strict --project-root . --env-file .env.example --json`
+  - `openclaw-advisor render-config --validate --strict --project-root . --env-file .env.example --json`
+  - `openclaw-advisor provider-policy --strict --project-root . --env-file .env.example --json`
+  - `openclaw-advisor security-scan --include-history --strict --project-root . --json`
+  - `python -m pip_audit`
+  - `openclaw status --json`
+  - `openclaw models status --json`
+- Result: `BLOCKED`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `PASS_WITH_WARNINGS`
+- Known defects:
+  - `No available AI credit for a controlled live provider smoke test.`
+  - `Local gateway service is unreachable: connect ECONNREFUSED 127.0.0.1:18789.`
+  - `python -m pip_audit timed out twice in this workspace window.`
+  - `Legacy shell environment diagnostics still surface historical provider credentials outside the repo.`
+- Next action: `Add valid credit to one allowed provider, run one controlled smoke test, then commit and push the P2.2 foundation.`

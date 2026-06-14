@@ -1,7 +1,7 @@
 # Testing
 
 Version: `1.2.1`  
-Phase: `P2.1`
+Phase: `P2.2`
 
 - `engine\tests\unit` covers environment, config, skills, health helpers, and market-data
   reliability logic.

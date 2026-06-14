@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from openclaw_super_advisor._version import PHASE
 from openclaw_super_advisor.cli import _parse_datetime, build_parser, main
 from openclaw_super_advisor.market_data import build_market_data_service
 from openclaw_super_advisor.market_data.fake_backend import FakeMt5Backend, FakeMt5Scenario
@@ -119,12 +120,18 @@ def test_cli_validation_commands(sample_project: Path) -> None:
     rendered = _run(
         ["render-config", "--project-root", root, "--env-file", env_example, "--validate", "--json"]
     )
+    provider_policy = _run(
+        ["provider-policy", "--project-root", root, "--env-file", env_example, "--json"]
+    )
 
     assert health["runtime_agent_id"] == "super-advisor"
     assert env["valid"] is True
     assert skills["valid"] is True
     assert security["summary"]["pass"] is True
     assert rendered["validation"]["valid"] is True
+    assert provider_policy["phase"] == PHASE
+    assert provider_policy["policy"]["status"] == "BLOCKED"
+    assert provider_policy["policy"]["reason"] == "NO_ENABLED_PROVIDER"
 
 
 def test_cli_market_data_commands(monkeypatch: pytest.MonkeyPatch, sample_project: Path) -> None:
@@ -208,6 +215,7 @@ def test_cli_help_and_no_trade_commands() -> None:
     assert "mt5-health" in help_text
     assert "market-backfill" in help_text
     assert "market-storage-check" in help_text
+    assert "provider-policy" in help_text
     assert "buy" not in help_text.lower()
     assert "sell" not in help_text.lower()
     assert "trade" not in help_text.lower()

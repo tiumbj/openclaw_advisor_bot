@@ -15,6 +15,8 @@ def test_audit_environment_uses_portable_paths(sample_project: Path) -> None:
     paths = build_paths(sample_project)
     report = audit_environment(paths)
     assert report.status("OPENCLAW_HOME") == "PRESENT"
+    assert report.status("AI_PROVIDER") == "BLANK"
+    assert report.status("OPENAI_ENABLED") == "PRESENT"
     assert report.status("OPENAI_API_KEY") == "BLANK"
     assert report.valid
 

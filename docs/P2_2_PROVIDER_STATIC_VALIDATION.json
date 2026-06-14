@@ -1,0 +1,66 @@
+{
+  "schema_version": "p2.2-provider-static-validation-v1",
+  "timestamp_utc": "2026-06-14T01:43:09Z",
+  "status": "PASS",
+  "supported_providers": [
+    "openai",
+    "claude",
+    "gemini",
+    "deepseek"
+  ],
+  "openclaw_provider_ids": {
+    "openai": "openai",
+    "claude": "anthropic",
+    "gemini": "google",
+    "deepseek": "deepseek"
+  },
+  "provider_policy_rules": {
+    "fallback_enabled_default": false,
+    "fallback_order": [
+      "openai",
+      "claude",
+      "gemini",
+      "deepseek"
+    ],
+    "allow_paid_provider_smoke_test_default": false,
+    "unsupported_provider_rejection": true,
+    "groq_rejection": true
+  },
+  "cases": [
+    {
+      "name": "no_enabled_provider",
+      "status": "BLOCKED",
+      "reason": "NO_ENABLED_PROVIDER"
+    },
+    {
+      "name": "single_enabled_provider",
+      "status": "PASS",
+      "selected_provider": "openai",
+      "selected_openclaw_provider_id": "openai"
+    },
+    {
+      "name": "groq_selection",
+      "status": "FAIL",
+      "reason": "unsupported_provider"
+    },
+    {
+      "name": "unknown_provider",
+      "status": "FAIL",
+      "reason": "unsupported_provider"
+    },
+    {
+      "name": "gemini_alias_mapping",
+      "status": "PASS",
+      "resolved_provider": "gemini",
+      "resolved_openclaw_provider_id": "google"
+    }
+  ],
+  "evidence_files": [
+    "engine/src/openclaw_super_advisor/providers.py",
+    "engine/src/openclaw_super_advisor/env.py",
+    "engine/src/openclaw_super_advisor/cli.py",
+    "engine/tests/unit/test_providers.py",
+    "engine/tests/integration/test_cli.py",
+    "docs/P2_2_PROVIDER_CONFIGURATION_AUDIT.md"
+  ]
+}

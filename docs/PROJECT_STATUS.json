@@ -1,387 +1,154 @@
 {
-  "schema_version": "project-status-v1",
+  "schema_version": "project-status-v2",
   "project": "openclaw_advisor_bot",
   "package_version": "1.2.1",
-  "phase": "P2.1",
-  "phase_status": "PASSED",
-  "current_work_package": "WP-08",
-  "updated_at_utc": "2026-06-13T15:08:00Z",
-  "local_commit": "c9b67235a42db155b40bbacbc43f2918b53d796d",
-  "remote_commit": "c9b67235a42db155b40bbacbc43f2918b53d796d",
-  "local_remote_aligned": true,
-  "working_tree_clean": false,
-  "ci_status": "PASS",
-  "security_status": "PASS",
-  "live_mt5_status": "BLOCKED",
+  "phase": "P2.2",
+  "phase_status": "BLOCKED",
+  "current_work_package": "WP-CODEX-01/02/03",
+  "updated_at_utc": "2026-06-14T01:43:09Z",
+  "implementation_commit": "PENDING",
+  "status_report_commit": "PENDING",
+  "observed_remote_head": "65a5cae2088129e549a0f782bec4dcaabc57c35a",
+  "working_tree_status": {
+    "clean": false,
+    "tracked_changes": [
+      ".gitignore",
+      ".env.example",
+      "README.md",
+      "docs/ARCHITECTURE.md",
+      "docs/ENVIRONMENT_VARIABLES.md",
+      "docs/P2_COVERAGE.json",
+      "docs/PROJECT_STATUS.md",
+      "docs/PROJECT_STATUS.json",
+      "docs/P2_2_CODEX_RECOVERY_AUDIT.md",
+      "docs/P2_2_OPENCLAW_OFFLINE_RUNTIME_AUDIT.json",
+      "docs/P2_2_POST_PATCH_AUDIT.md",
+      "docs/P2_2_PROVIDER_CONFIGURATION_AUDIT.md",
+      "docs/P2_2_PROVIDER_STATIC_VALIDATION.json",
+      "docs/P2_2_REPORT_PROVENANCE.json",
+      "docs/P2_2_SECURITY_AUDIT.json",
+      "docs/P2_2_TEST_RESULTS.json",
+      "docs/SECURITY.md",
+      "docs/TESTING.md",
+      "engine/src/openclaw_super_advisor/_version.py",
+      "engine/src/openclaw_super_advisor/cli.py",
+      "engine/src/openclaw_super_advisor/env.py",
+      "engine/src/openclaw_super_advisor/providers.py",
+      "engine/tests/conftest.py",
+      "engine/tests/integration/test_cli.py",
+      "engine/tests/unit/test_env.py",
+      "engine/tests/unit/test_health.py",
+      "engine/tests/unit/test_providers.py"
+    ],
+    "ignored_runtime_updates": [
+      "state/openclaw.json",
+      "workspace/.openclaw/"
+    ]
+  },
+  "ci_status": "NOT RUN",
+  "security_status": "PASS_WITH_WARNINGS",
+  "groq_removal_status": "REMOVED_FROM_TRACED_CODE_AND_ACTIVE_RUNTIME_SNAPSHOT; legacy shell env reference still visible",
+  "supported_providers": [
+    "openai",
+    "claude",
+    "gemini",
+    "deepseek"
+  ],
+  "selected_provider": null,
+  "provider_static_validation": {
+    "status": "PASS",
+    "provider_policy": "BLOCKED",
+    "provider_policy_reason": "NO_ENABLED_PROVIDER"
+  },
+  "real_provider_test": {
+    "status": "BLOCKED",
+    "blocker": "NO_AVAILABLE_AI_CREDIT"
+  },
+  "gateway_status": {
+    "status": "BLOCKED",
+    "error": "connect ECONNREFUSED 127.0.0.1:18789"
+  },
+  "agent_status": {
+    "status": "PASS",
+    "default_agent": "super-advisor",
+    "enabled": true
+  },
+  "offline_foundation_status": "PASS",
+  "p2_2_verdict": "BLOCKED",
+  "credit_blocker": "NO_AVAILABLE_AI_CREDIT",
+  "next_action": "Add valid credit to one allowed provider and run one controlled smoke test",
   "work_packages": [
     {
-      "id": "WP-00",
-      "name": "Repository and Report Bootstrap",
-      "status": "PASS",
-      "commit": "0940182d7b14b44bd72dbd353f315d796c3c2765",
-      "tests": [
-        "baseline_git_audit",
-        "remote_alignment_check",
-        "github_actions_observation"
-      ],
-      "evidence": [
-        "docs/P2_1_BASELINE_AUDIT.md"
-      ],
-      "next_action": "Start WP-01 workflow hardening."
+      "id": "WP-CODEX-01",
+      "name": "Remove Groq Completely",
+      "status": "PASS"
     },
     {
-      "id": "WP-01",
-      "name": "GitHub Actions Future Compatibility",
-      "status": "PASS",
-      "commit": "0940182d7b14b44bd72dbd353f315d796c3c2765",
-      "tests": [
-        "official_action_release_audit",
-        "official_runner_guidance_audit",
-        "wp01_local_validation",
-        "wp01_github_warning_confirmation",
-        "wp01_artifact_v7_validation",
-        "wp01_github_clean_confirmation"
-      ],
-      "evidence": [
-        ".github/workflows/ci.yml",
-        ".github/workflows/security.yml"
-      ],
-      "next_action": "Start WP-02 readiness check."
+      "id": "WP-CODEX-02",
+      "name": "Four-provider Configuration Foundation",
+      "status": "PASS"
     },
     {
-      "id": "WP-02",
-      "name": "Live MT5 Read-only Verification",
-      "status": "BLOCKED",
-      "commit": "7032f5b3876c79f5838ea8758c8925c0f4da1297",
-      "tests": [
-        "wp02_redacted_mt5_readiness",
-        "wp02_github_workflow_confirmation"
-      ],
-      "evidence": [
-        "docs/P2_1_LIVE_MT5_REPORT.md",
-        "docs/P2_1_LIVE_MT5_REPORT.json"
-      ],
-      "next_action": "Keep blocked state recorded and continue reliability hardening."
+      "id": "WP-CODEX-03",
+      "name": "Static Provider Validation",
+      "status": "PASS"
     },
     {
-      "id": "WP-03",
-      "name": "Disconnect and Reconnect Reliability",
-      "status": "PASS",
-      "commit": "d1315a1e69559c4495b1c5b7ef3441b2916cc4ca",
-      "tests": [
-        "wp03_wp05_local_reliability_validation",
-        "wp03_wp05_github_workflow_confirmation"
-      ],
-      "evidence": [
-        "engine/src/openclaw_super_advisor/market_data/collector.py",
-        "engine/src/openclaw_super_advisor/market_data/fake_backend.py",
-        "engine/tests/unit/test_market_data_reliability.py"
-      ],
-      "next_action": "Start WP-06 simulated soak coverage."
-    },
-    {
-      "id": "WP-04",
-      "name": "Tick and Bar Integrity Failure Injection",
-      "status": "PASS",
-      "commit": "d1315a1e69559c4495b1c5b7ef3441b2916cc4ca",
-      "tests": [
-        "wp03_wp05_local_reliability_validation",
-        "wp03_wp05_github_workflow_confirmation"
-      ],
-      "evidence": [
-        "engine/src/openclaw_super_advisor/market_data/quality.py",
-        "engine/tests/unit/test_market_data_reliability.py"
-      ],
-      "next_action": "Start WP-06 simulated soak coverage."
-    },
-    {
-      "id": "WP-05",
-      "name": "Storage Crash and Recovery",
-      "status": "PASS",
-      "commit": "d1315a1e69559c4495b1c5b7ef3441b2916cc4ca",
-      "tests": [
-        "wp03_wp05_local_reliability_validation",
-        "wp03_wp05_github_workflow_confirmation"
-      ],
-      "evidence": [
-        "engine/tests/unit/test_market_data_reliability.py",
-        "engine/src/openclaw_super_advisor/market_data/collector.py"
-      ],
-      "next_action": "Start WP-06 simulated soak coverage."
-    },
-    {
-      "id": "WP-06",
-      "name": "Long-running Soak Test",
-      "status": "PASS",
-      "commit": "e4f0b7df5adb220ed91cdd8ef7e5443d4fa03739",
-      "tests": [
-        "wp06_simulated_soak_validation",
-        "wp06_first_github_workflow_confirmation",
-        "wp06_latency_threshold_fix_validation",
-        "wp06_latency_threshold_fix_github_confirmation"
-      ],
-      "evidence": [
-        "engine/tests/unit/test_market_data_reliability.py",
-        "docs/P2_1_SOAK_REPORT.md",
-        "docs/P2_1_SOAK_REPORT.json"
-      ],
-      "next_action": "Start WP-07 post-patch audit."
-    },
-    {
-      "id": "WP-07",
-      "name": "Full Post-Patch Audit",
-      "status": "PASS",
-      "commit": "c9b67235a42db155b40bbacbc43f2918b53d796d",
-      "tests": [
-        "wp07_repo_audit",
-        "wp07_cli_regression_validation"
-      ],
-      "evidence": [
-        "docs/P2_1_POST_PATCH_AUDIT.md"
-      ],
-      "next_action": "No further action."
-    },
-    {
-      "id": "WP-08",
-      "name": "Phase Closure",
-      "status": "PASS",
-      "commit": "c9b67235a42db155b40bbacbc43f2918b53d796d",
-      "tests": [
-        "wp08_full_local_validation",
-        "wp08_security_evidence_generation",
-        "wp08_github_closure_confirmation"
-      ],
-      "evidence": [
-        "docs/P2_1_TEST_RESULTS.json",
-        "docs/P2_1_SECURITY_REPORT.json",
-        "docs/P2_1_REPORT_PROVENANCE.json",
-        "docs/P2_1_SKILL_VALIDATION.json",
-        "docs/P2_1_RENDER_CONFIG_VALIDATION.json"
-      ],
-      "next_action": "Re-run the P2.2 gate."
+      "id": "WP-CODEX-04",
+      "name": "OpenClaw Offline Runtime Audit",
+      "status": "BLOCKED"
     }
   ],
   "tests": [
     {
-      "name": "baseline_git_audit",
-      "status": "PASS",
-      "command": "git status; git branch --show-current; git remote -v; git fetch origin --prune; git log --oneline --decorate --graph -n 30; git rev-parse HEAD; git rev-parse origin/main",
-      "timestamp_utc": "2026-06-13T14:14:44Z",
-      "exit_code": 0,
-      "commit_sha": "5a3774e979de56f19381097abc511a939c86ec49",
-      "evidence_file": "docs/P2_1_BASELINE_AUDIT.md",
-      "tool_version": "git 2.53.0.windows.2"
+      "name": "pip_check",
+      "status": "PASS"
     },
     {
-      "name": "github_actions_observation",
-      "status": "PASS",
-      "command": "gh run list --commit 5a3774e979de56f19381097abc511a939c86ec49 --limit 10",
-      "timestamp_utc": "2026-06-13T14:14:44Z",
-      "exit_code": 0,
-      "commit_sha": "5a3774e979de56f19381097abc511a939c86ec49",
-      "evidence_file": "docs/P2_1_BASELINE_AUDIT.md",
-      "tool_version": "gh 2.89.0"
+      "name": "mypy",
+      "status": "PASS"
     },
     {
-      "name": "wp00_bootstrap_workflow_validation",
+      "name": "pytest_non_live",
       "status": "PASS",
-      "command": "gh run watch 27469195284 --exit-status; gh run watch 27469195276 --exit-status; gh run list --commit eca0c72b7dfc38c541636324e46298df21ac3124 --limit 10",
-      "timestamp_utc": "2026-06-13T14:17:16Z",
-      "exit_code": 0,
-      "commit_sha": "eca0c72b7dfc38c541636324e46298df21ac3124",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "gh 2.89.0"
+      "details": "52 passed, 1 deselected"
     },
     {
-      "name": "official_action_release_audit",
+      "name": "pytest_non_live_coverage",
       "status": "PASS",
-      "command": "gh release list -R actions/checkout --limit 5; gh release list -R actions/setup-python --limit 5; review official GitHub changelog entries for Node24 migration and Windows 2025 VS2026 migration",
-      "timestamp_utc": "2026-06-13T14:17:16Z",
-      "exit_code": 0,
-      "commit_sha": "eca0c72b7dfc38c541636324e46298df21ac3124",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "gh 2.89.0 / web fetch"
+      "details": "52 passed, 1 deselected, total coverage 93.84%"
     },
     {
-      "name": "wp01_local_validation",
-      "status": "PASS",
-      "command": "python -c \"yaml.safe_load(...)\"; python -m pip check; python -m ruff check .; python -m mypy engine\\\\src; python -m pytest -m \"not live\"; python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json; openclaw-advisor validate-skills --strict; openclaw-advisor render-config --validate --strict; openclaw-advisor security-scan --include-history --strict; python -m pip_audit",
-      "timestamp_utc": "2026-06-13T14:18:28Z",
-      "exit_code": 0,
-      "commit_sha": "eca0c72b7dfc38c541636324e46298df21ac3124",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "Python 3.12.10"
+      "name": "validate_skills",
+      "status": "PASS"
     },
     {
-      "name": "wp01_github_warning_confirmation",
-      "status": "PASS",
-      "command": "gh run watch 27469283454 --exit-status; gh run watch 27469283464 --exit-status; gh run list --commit 1f0ea3f08d2b3686f57192f2461acaf325617224 --limit 10",
-      "timestamp_utc": "2026-06-13T14:21:37Z",
-      "exit_code": 0,
-      "commit_sha": "1f0ea3f08d2b3686f57192f2461acaf325617224",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "gh 2.89.0"
+      "name": "render_config",
+      "status": "PASS"
     },
     {
-      "name": "wp01_artifact_v7_validation",
-      "status": "PASS",
-      "command": "python -c \"yaml.safe_load(...)\"; python -m pip check; python -m ruff check .; python -m mypy engine\\\\src; python -m pytest -m \"not live\"; python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json; openclaw-advisor validate-skills --strict; openclaw-advisor render-config --validate --strict; openclaw-advisor security-scan --include-history --strict; python -m pip_audit",
-      "timestamp_utc": "2026-06-13T14:22:43Z",
-      "exit_code": 0,
-      "commit_sha": "1f0ea3f08d2b3686f57192f2461acaf325617224",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "Python 3.12.10"
-    },
-    {
-      "name": "wp01_github_clean_confirmation",
-      "status": "PASS",
-      "command": "gh run watch 27469376996 --exit-status; gh run watch 27469377019 --exit-status; gh run list --commit 0940182d7b14b44bd72dbd353f315d796c3c2765 --limit 10",
-      "timestamp_utc": "2026-06-13T14:25:04Z",
-      "exit_code": 0,
-      "commit_sha": "0940182d7b14b44bd72dbd353f315d796c3c2765",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "gh 2.89.0"
-    },
-    {
-      "name": "wp02_redacted_mt5_readiness",
+      "name": "provider_policy",
       "status": "BLOCKED",
-      "command": "python -c \"load_settings(...)\" redacted MT5 readiness probe",
-      "timestamp_utc": "2026-06-13T14:25:04Z",
-      "exit_code": 0,
-      "commit_sha": "0940182d7b14b44bd72dbd353f315d796c3c2765",
-      "evidence_file": "docs/P2_1_LIVE_MT5_REPORT.md",
-      "tool_version": "Python 3.12.10"
+      "reason": "NO_ENABLED_PROVIDER"
     },
     {
-      "name": "wp02_github_workflow_confirmation",
+      "name": "security_scan",
       "status": "PASS",
-      "command": "gh run list --commit 7032f5b3876c79f5838ea8758c8925c0f4da1297 --limit 10",
-      "timestamp_utc": "2026-06-13T14:30:37Z",
-      "exit_code": 0,
-      "commit_sha": "7032f5b3876c79f5838ea8758c8925c0f4da1297",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "gh 2.89.0"
+      "summary": {
+        "pass": true,
+        "active_source_violations": 0,
+        "documentation_hits": 3408,
+        "test_hits": 12
+      }
     },
     {
-      "name": "wp03_wp05_local_reliability_validation",
-      "status": "PASS",
-      "command": "python -m pip check; python -m ruff check .; python -m mypy engine\\\\src; python -m pytest -m \"not live\"; python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json; openclaw-advisor validate-skills --strict; openclaw-advisor render-config --validate --strict; openclaw-advisor security-scan --include-history --strict; python -m pip_audit",
-      "timestamp_utc": "2026-06-13T14:30:37Z",
-      "exit_code": 0,
-      "commit_sha": "7032f5b3876c79f5838ea8758c8925c0f4da1297",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "Python 3.12.10"
-    },
-    {
-      "name": "wp03_wp05_github_workflow_confirmation",
-      "status": "PASS",
-      "command": "gh run watch 27469573908 --exit-status; gh run watch 27469573895 --exit-status; gh run list --commit d1315a1e69559c4495b1c5b7ef3441b2916cc4ca --limit 10",
-      "timestamp_utc": "2026-06-13T14:33:39Z",
-      "exit_code": 0,
-      "commit_sha": "d1315a1e69559c4495b1c5b7ef3441b2916cc4ca",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "gh 2.89.0"
-    },
-    {
-      "name": "wp03_wp05_status_commit_workflow_confirmation",
-      "status": "PASS",
-      "command": "gh run list --commit 80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906 --limit 10",
-      "timestamp_utc": "2026-06-13T14:39:53Z",
-      "exit_code": 0,
-      "commit_sha": "80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "gh 2.89.0"
-    },
-    {
-      "name": "wp06_simulated_soak_validation",
-      "status": "PASS",
-      "command": "python -m pip check; python -m ruff check .; python -m mypy engine\\\\src; python -m pytest -m \"not live\"; python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json; openclaw-advisor validate-skills --strict; openclaw-advisor render-config --validate --strict; openclaw-advisor security-scan --include-history --strict; python -m pip_audit; python -c \"from engine.tests.unit.test_market_data_reliability import run_simulated_24h_soak; ...\"",
-      "timestamp_utc": "2026-06-13T14:39:53Z",
-      "exit_code": 0,
-      "commit_sha": "80ebe318b5e89e9b2b56a4ad2ccaf21b2c833906",
-      "evidence_file": "docs/P2_1_SOAK_REPORT.md",
-      "tool_version": "Python 3.12.10"
-    },
-    {
-      "name": "wp06_first_github_workflow_confirmation",
-      "status": "FAIL",
-      "command": "gh run watch 27469789876 --exit-status; gh run watch 27469789877 --exit-status; gh run list --commit 1fe8070a7f4b23a6fc4a5c15bbd58f926c471767 --limit 10",
-      "timestamp_utc": "2026-06-13T14:44:48Z",
-      "exit_code": 1,
-      "commit_sha": "1fe8070a7f4b23a6fc4a5c15bbd58f926c471767",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "gh 2.89.0"
-    },
-    {
-      "name": "wp06_latency_threshold_fix_validation",
-      "status": "PASS",
-      "command": "python -m pip check; python -m ruff check .; python -m mypy engine\\\\src; python -m pytest -m \"not live\"; python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json; openclaw-advisor validate-skills --strict; openclaw-advisor render-config --validate --strict; openclaw-advisor security-scan --include-history --strict; python -m pip_audit",
-      "timestamp_utc": "2026-06-13T14:44:48Z",
-      "exit_code": 0,
-      "commit_sha": "1fe8070a7f4b23a6fc4a5c15bbd58f926c471767",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "Python 3.12.10"
-    },
-    {
-      "name": "wp06_latency_threshold_fix_github_confirmation",
-      "status": "PASS",
-      "command": "gh run watch 27469903679 --exit-status; gh run watch 27469903671 --exit-status; gh run list --commit e4f0b7df5adb220ed91cdd8ef7e5443d4fa03739 --limit 10",
-      "timestamp_utc": "2026-06-13T14:47:19Z",
-      "exit_code": 0,
-      "commit_sha": "e4f0b7df5adb220ed91cdd8ef7e5443d4fa03739",
-      "evidence_file": "docs/IMPLEMENTATION_LEDGER.md",
-      "tool_version": "gh 2.89.0"
+      "name": "pip_audit",
+      "status": "TIMEOUT"
     }
   ],
-  "blockers": [
-    {
-      "id": "baseline-version-drift",
-      "status": "PASS",
-      "summary": "Code, workspace, skill, schema-title, and health metadata are now aligned at 1.2.1 / P2.1.",
-      "redacted_error": "None.",
-      "required_action": "No further action."
-    },
-    {
-      "id": "workflow-compatibility-drift",
-      "status": "PASS",
-      "summary": "Workflows now use Node24-compatible actions, the Windows 2025 VS2026 test image, pip caching, minimal permissions, and artifact upload without the prior Node20 warning.",
-      "redacted_error": "None.",
-      "required_action": "No further action in WP-01."
-    },
-    {
-      "id": "wp02-live-mt5-unavailable",
-      "status": "BLOCKED",
-      "summary": "Live MT5 verification cannot run in the current environment because MT5 is disabled and the MetaTrader5 package, terminal path, and session credentials are unavailable.",
-      "redacted_error": "MT5 readiness probe returned disabled/unavailable booleans only.",
-      "required_action": "Enable MT5 and provide a live terminal/session environment to run WP-02 later."
-    },
-    {
-      "id": "wp06-ci-latency-threshold",
-      "status": "PASS",
-      "summary": "The first WP-06 GitHub ci run failed because the soak test asserted a local-only max loop latency threshold that was too strict under coverage instrumentation on the hosted runner, and the follow-up threshold fix passed on GitHub Actions.",
-      "redacted_error": "Resolved after raising the bounded latency ceiling to a hosted-runner-safe threshold.",
-      "required_action": "No further action in WP-06."
-    }
-  ],
-  "next_action": "Re-run the mandatory P2.2 gate against the validated P2.1 closure, then begin OpenClaw runtime verification.",
-  "evidence_files": [
-    "docs/P2_1_BASELINE_AUDIT.md",
-    "docs/P2_1_LIVE_MT5_REPORT.md",
-    "docs/P2_1_LIVE_MT5_REPORT.json",
-    "docs/P2_1_POST_PATCH_AUDIT.md",
-    "docs/P2_1_TEST_RESULTS.json",
-    "docs/P2_1_SECURITY_REPORT.json",
-    "docs/P2_1_REPORT_PROVENANCE.json",
-    "docs/P2_1_SKILL_VALIDATION.json",
-    "docs/P2_1_RENDER_CONFIG_VALIDATION.json",
-    "docs/P2_1_SOAK_REPORT.md",
-    "docs/P2_1_SOAK_REPORT.json",
-    "docs/PROJECT_STATUS.md",
-    "docs/PROJECT_STATUS.json",
-    "docs/IMPLEMENTATION_LEDGER.md",
-    "engine/src/openclaw_super_advisor/market_data/collector.py",
-    "engine/src/openclaw_super_advisor/market_data/fake_backend.py",
-    "engine/src/openclaw_super_advisor/market_data/quality.py",
-    "engine/tests/unit/test_market_data_reliability.py"
+  "notes": [
+    "Tracked Groq references are absent from the repository tree.",
+    "The ignored runtime snapshot now uses openai/gpt-5.3-chat-latest as the default model namespace.",
+    "Historical shell environment variables still expose legacy provider credentials to OpenClaw status output."
   ]
 }

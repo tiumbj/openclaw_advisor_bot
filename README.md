@@ -6,7 +6,7 @@ security boundaries, and MT5 read-only market-data runtime without enabling trad
 ## Status
 
 - Package version: `1.2.1`
-- Phase: `P2.1`
+- Phase: `P2.2`
 - Trading execution: disabled by contract
 - CLI surface: validation, audit, and MT5 read-only market-data commands
 - Runtime config source: `config\openclaw.template.json`
@@ -31,6 +31,7 @@ security boundaries, and MT5 read-only market-data runtime without enabling trad
 .\.venv\Scripts\openclaw-advisor.exe validate-env
 .\.venv\Scripts\openclaw-advisor.exe validate-skills --strict
 .\.venv\Scripts\openclaw-advisor.exe security-scan --strict
+.\.venv\Scripts\openclaw-advisor.exe provider-policy --strict
 .\.venv\Scripts\openclaw-advisor.exe render-config --validate --strict
 ```
 

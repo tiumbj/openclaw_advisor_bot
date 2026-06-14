@@ -16,6 +16,8 @@ state/*
 data/runtime/
 logs/
 archive/
+_tmp/
+workspace/.openclaw/
 
 # Local data
 *.db

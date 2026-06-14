@@ -1,0 +1,54 @@
+{
+  "schema_version": "p2.2-openclaw-offline-runtime-audit-v1",
+  "timestamp_utc": "2026-06-14T01:43:09Z",
+  "status": "BLOCKED",
+  "offline_foundation_status": "PASS",
+  "real_provider_test": "BLOCKED",
+  "real_provider_blocker": "NO_AVAILABLE_AI_CREDIT",
+  "openclaw_status": {
+    "runtimeVersion": "2026.6.6",
+    "gateway": {
+      "reachable": false,
+      "error": "connect ECONNREFUSED 127.0.0.1:18789",
+      "installed": false
+    },
+    "heartbeat": {
+      "defaultAgentId": "super-advisor",
+      "enabledAgents": [
+        "super-advisor"
+      ]
+    },
+    "tasks": {
+      "total": 6,
+      "active": 0,
+      "terminal": 6,
+      "failures": 6
+    },
+    "agents": {
+      "defaultId": "super-advisor",
+      "enabled": true,
+      "totalSessions": 8
+    }
+  },
+  "models_status": {
+    "defaultModel": "openai/gpt-5.3-chat-latest",
+    "allowed": [
+      "openai/gpt-5.3-chat-latest"
+    ],
+    "missingProvidersInUse": [
+      "openai"
+    ],
+    "legacy_shell_env": [
+      "legacy provider credentials are still visible to the local shell environment",
+      "Groq remains present in shell env diagnostics, but is rejected by repo policy"
+    ]
+  },
+  "gateway_status": {
+    "status": "BLOCKED",
+    "detail": "Local gateway service is not running"
+  },
+  "agent_status": {
+    "status": "PASS",
+    "detail": "super-advisor is registered and enabled"
+  }
+}
