@@ -111,12 +111,12 @@
     {
       "name": "pytest_non_live",
       "status": "PASS",
-      "details": "52 passed, 1 deselected"
+      "details": "58 passed, 1 deselected"
     },
     {
       "name": "pytest_non_live_coverage",
       "status": "PASS",
-      "details": "52 passed, 1 deselected, total coverage 93.84%"
+      "details": "58 passed, 1 deselected, total coverage 95.73%"
     },
     {
       "name": "validate_skills",

@@ -35,8 +35,8 @@
 
 - `python -m pip check` -> `PASS`
 - `python -m mypy engine\src` -> `PASS`
-- `python -m pytest -m "not live" --no-cov --basetemp C:\Data\OpenClawSuperAdvisor\_tmp\pytest` -> `PASS` (`52 passed, 1 deselected`)
-- `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json --basetemp C:\Data\OpenClawSuperAdvisor\_tmp\pytest` -> `PASS` (`52 passed, 1 deselected`, total coverage `93.84%`)
+- `python -m pytest -m "not live" --no-cov --basetemp C:\Data\OpenClawSuperAdvisor\_tmp\pytest` -> `PASS` (`58 passed, 1 deselected`)
+- `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json --basetemp C:\Data\OpenClawSuperAdvisor\_tmp\pytest` -> `PASS` (`58 passed, 1 deselected`, total coverage `95.73%`)
 - `openclaw-advisor validate-skills --strict --project-root . --env-file .env.example --json` -> `PASS`
 - `openclaw-advisor render-config --validate --strict --project-root . --env-file .env.example --json` -> `PASS`
 - `openclaw-advisor provider-policy --strict --project-root . --env-file .env.example --json` -> `BLOCKED` with `NO_ENABLED_PROVIDER`

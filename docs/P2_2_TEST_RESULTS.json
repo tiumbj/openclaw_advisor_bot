@@ -17,13 +17,13 @@
       "name": "pytest_non_live",
       "command": "python -m pytest -m \"not live\" --no-cov --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest",
       "status": "PASS",
-      "summary": "52 passed, 1 deselected"
+      "summary": "58 passed, 1 deselected"
     },
     {
       "name": "pytest_non_live_coverage",
       "command": "python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest",
       "status": "PASS",
-      "summary": "52 passed, 1 deselected, total coverage 93.84%"
+      "summary": "58 passed, 1 deselected, total coverage 95.73%"
     },
     {
       "name": "validate_skills",
