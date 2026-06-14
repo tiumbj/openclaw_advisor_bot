@@ -1,323 +1,438 @@
 {
-  "schema_version": "p2-4-preproduction-blueprint-v1",
-  "package_version_target": "1.2.6",
-  "current_package_version": "1.2.6",
-  "current_phase": "P2.4",
-  "current_work_package": "WP-P2_4-RUNTIME-RECOVERY",
-  "current_architecture": {
-    "agents": [
-      "super-advisor"
-    ],
-    "routing_bindings": [],
-    "gateway": {
-      "mode": "local",
-      "bind": "loopback",
-      "port": 18789,
-      "control_ui_enabled": true,
-      "auth_state": "token_canonicalized"
-    },
-    "supported_providers": [
-      "openai",
-      "claude",
-      "gemini",
-      "deepseek"
-    ],
-    "skills_ready": 7,
-    "learning_layers": [],
-    "backup_layers": [],
-    "self_improvement_layers": []
+  "schema_version": "p2-4-master-blueprint-v2",
+  "package_version_target": "1.2.8",
+  "phase": "P2.4",
+  "work_package": "WP-P2_4-MAIN-24X7-DEEP-SKILLS",
+  "generated_at": "2026-06-14",
+  "status": "SOURCE_OF_TRUTH",
+  "supersedes": ["p2-4-preproduction-blueprint-v1"],
+
+  "advisor_only_invariants": {
+    "no_order_send": true,
+    "no_position_close": true,
+    "no_execution_kernel": true,
+    "ADVISOR_ONLY_expected": "true",
+    "EXECUTION_ALLOWED_expected": "false",
+    "ALLOW_ORDER_SEND_expected": "false",
+    "enforcement_layers": ["ast_scan", "env_spec", "skill_validator", "agent_isolation"]
   },
-  "confirmed_defects": [
-    "Gateway token reconciliation is now passing in the hydrated runtime paths, but a stale shell session can still cache old process state until restart.",
-    "Only one agent exists in the registry.",
-    "No routing bindings exist.",
-    "No isolated strategy, coder, or publisher agents exist.",
-    "No separate learning, backup, or self-improvement subsystem exists.",
-    "Package version is now 1.2.6; the remaining blockers are missing multi-agent wiring, backup, and learning subsystems."
-  ],
-  "target_architecture": {
-    "advisor_only": true,
-    "read_only_mt5": true,
-    "provider_allowlist": [
-      "openai",
-      "claude",
-      "gemini",
-      "deepseek"
-    ],
-    "agents": [
-      "super-advisor",
-      "xau-strategy-auditor",
-      "system-coder-auditor",
-      "telegram-publisher"
-    ],
-    "isolated_workspaces_required": true,
-    "immutable_evidence_archive": true,
-    "append_only_outcome_ledger": true,
-    "per_agent_memory": true,
-    "skill_candidate_lifecycle": true,
-    "backup_restore": true,
-    "self_improvement_mode": "proposal_only"
-  },
-  "agent_topology": [
-    {
-      "id": "super-advisor",
-      "responsibilities": [
-        "coordinator",
-        "safety_policy",
-        "evidence_validation",
-        "orchestration",
-        "final_publication_decision",
-        "incident_coordination"
-      ],
-      "forbidden": [
-        "numeric_calculation_authority",
-        "source_code_modification_authority"
-      ]
-    },
-    {
-      "id": "xau-strategy-auditor",
-      "responsibilities": [
-        "xauusd_market_interpretation",
-        "multi_timeframe_reasoning",
-        "price_action_review",
-        "order_block_review",
-        "chart_pattern_review",
-        "candlestick_microstructure",
-        "strategy_logic_audit",
-        "alert_quality_review"
-      ],
-      "forbidden": [
-        "telegram_tool",
-        "direct_mt5_tool",
-        "score_modification"
-      ]
-    },
-    {
-      "id": "system-coder-auditor",
-      "responsibilities": [
-        "python_architecture_audit",
-        "pipeline_audit",
-        "dead_code_detection",
-        "logic_conflict_detection",
-        "schema_review",
-        "test_generation",
-        "safe_patch_proposal",
-        "rollback_review"
-      ],
-      "forbidden": [
-        "runtime_secret_access",
-        "direct_main_write",
-        "telegram_control",
-        "direct_mt5_access"
-      ]
-    },
-    {
-      "id": "telegram-publisher",
-      "responsibilities": [
-        "thai_formatting",
-        "payload_validation",
-        "delivery_result_recording"
-      ],
-      "forbidden": [
-        "market_analysis",
-        "score_authority",
-        "code_write_authority",
-        "direct_provider_selection_authority"
-      ]
-    }
-  ],
-  "skill_matrix": {
-    "super-advisor": [
-      "advisor-safety-contract",
-      "environment-health",
-      "evidence-audit",
-      "agent-orchestration-contract",
-      "super-potential-review",
-      "incident-reporting",
-      "publication-policy"
-    ],
-    "xau-strategy-auditor": [
-      "xauusd-market-analysis",
-      "multi-timeframe-structure-review",
-      "price-action-order-block",
-      "chart-pattern-filter-review",
-      "candlestick-microstructure",
-      "strategy-logic-audit",
-      "realtime-evidence-review",
-      "super-potential-audit",
-      "alert-quality-improvement"
-    ],
-    "system-coder-auditor": [
-      "python-pipeline-micro-audit",
-      "code-architecture-review",
-      "logic-conflict-detection",
-      "dead-code-and-duplicate-review",
-      "test-and-regression-design",
-      "blueprint-compliance-audit",
-      "safe-patch-workflow",
-      "release-and-rollback",
-      "skill-improvement-proposal"
-    ],
-    "telegram-publisher": [
-      "thai-telegram-publisher",
-      "telegram-message-contract",
-      "telegram-delivery-safety",
-      "telegram-deduplication-throttle",
-      "telegram-retry-and-dead-letter",
-      "telegram-security-redaction"
+
+  "main_agent_manager": {
+    "agent_id": "main-agent-manager",
+    "compatibility_alias": "super-advisor",
+    "role": "MAIN",
+    "user_facing": true,
+    "entry_points": ["openclaw_control_ui", "approved_cli", "telegram_command_channel"],
+    "runtime_modules": [
+      "Planner", "Scheduler", "PersistentTaskQueue", "AgentRouter",
+      "DependencyManager", "ResultValidator", "EvidenceArbiter",
+      "ConflictResolver", "ExperimentManager", "KnowledgeManager",
+      "RecoveryManager", "IncidentManager", "ReleaseGate", "OperatorInterface"
     ]
   },
-  "tool_matrix": {
-    "super-advisor": {
-      "allowed": [
-        "read approved evidence",
-        "session status",
-        "internal agent invocation",
-        "approved publisher invocation",
-        "incident logging"
-      ],
-      "denied": [
-        "shell",
-        "source write",
-        "raw MT5",
-        "direct Telegram message",
-        "credential access",
-        "browser",
-        "arbitrary HTTP"
-      ]
+
+  "agent_topology": {
+    "total_agents": 12,
+    "agents": [
+      {
+        "agent_id": "main-agent-manager",
+        "compatibility_id": "super-advisor",
+        "role": "MAIN — sole user-facing coordinator",
+        "user_facing": true,
+        "secret_access": "none",
+        "timeout_seconds": 300,
+        "retry_max": 2
+      },
+      {
+        "agent_id": "market-data-integrity-agent",
+        "role": "MT5/FRED data quality and provenance",
+        "user_facing": false,
+        "secret_access": "none",
+        "timeout_seconds": 120,
+        "retry_max": 3
+      },
+      {
+        "agent_id": "xau-strategy-research-agent",
+        "compatibility_id": "xau-strategy-auditor",
+        "role": "XAUUSD multi-timeframe research and alert-quality review",
+        "user_facing": false,
+        "secret_access": "none",
+        "timeout_seconds": 90,
+        "retry_max": 2
+      },
+      {
+        "agent_id": "price-action-microstructure-agent",
+        "role": "Candlestick and M1/M5 trigger microstructure analysis",
+        "user_facing": false,
+        "secret_access": "none",
+        "timeout_seconds": 90,
+        "retry_max": 2
+      },
+      {
+        "agent_id": "intermarket-macro-agent",
+        "role": "USD basket, US10Y, FX correlation, regime classification",
+        "user_facing": false,
+        "secret_access": "none",
+        "timeout_seconds": 120,
+        "retry_max": 2
+      },
+      {
+        "agent_id": "statistical-backtest-agent",
+        "role": "Sample adequacy, walk-forward, overfitting detection",
+        "user_facing": false,
+        "secret_access": "none",
+        "timeout_seconds": 300,
+        "retry_max": 2
+      },
+      {
+        "agent_id": "failure-root-cause-agent",
+        "role": "Alert failure, logic conflict, root-cause tree",
+        "user_facing": false,
+        "secret_access": "none",
+        "timeout_seconds": 120,
+        "retry_max": 2
+      },
+      {
+        "agent_id": "system-coder-auditor",
+        "compatibility_id": "system-coder-auditor",
+        "role": "Python audit; isolated worktree patch only",
+        "default_mode": "READ_ONLY_AUDIT",
+        "patch_mode": "ISOLATED_WORKTREE_PATCH",
+        "user_facing": false,
+        "secret_access": "none",
+        "timeout_seconds": 90,
+        "retry_max": 2
+      },
+      {
+        "agent_id": "security-compliance-agent",
+        "role": "Advisor-only enforcement, secret scan, privilege audit",
+        "user_facing": false,
+        "secret_access": "none",
+        "timeout_seconds": 60,
+        "retry_max": 2
+      },
+      {
+        "agent_id": "telegram-publisher",
+        "compatibility_id": "telegram-publisher",
+        "role": "Thai Telegram formatting and delivery safety gate",
+        "user_facing": false,
+        "secret_access": "approved_payload_only",
+        "timeout_seconds": 60,
+        "retry_max": 3,
+        "forbidden": ["market_analysis", "numeric_calculation", "code_write"]
+      },
+      {
+        "agent_id": "reliability-watchdog-agent",
+        "role": "Heartbeat, process health, restart, incident escalation",
+        "user_facing": false,
+        "secret_access": "none",
+        "timeout_seconds": 30,
+        "retry_max": 5
+      },
+      {
+        "agent_id": "knowledge-skill-manager",
+        "role": "Research knowledge, experiment records, skill lifecycle",
+        "user_facing": false,
+        "secret_access": "none",
+        "timeout_seconds": 120,
+        "retry_max": 2,
+        "self_approval_forbidden": true
+      }
+    ]
+  },
+
+  "evidence_pipeline": {
+    "suppression_gate": false,
+    "pipeline": [
+      "MT5_FRED_source",
+      "python_deterministic_analysis",
+      "integrity_validation",
+      "evidence_bus_non_suppressing",
+      "immutable_evidence_archive",
+      "main_agent_manager",
+      "specialist_agent_assignment",
+      "agent_evidence_based_analysis",
+      "main_result_validation",
+      "alert_or_research_or_improvement",
+      "telegram_publisher_or_experiment_manager",
+      "outcome_ledger",
+      "knowledge_store",
+      "next_cycle"
+    ],
+    "python_owns": [
+      "OHLC", "tick_bar_data", "indicators", "zones", "FVG", "FVP_POC_VAH_VAL",
+      "VWAP", "Fibo", "market_structure", "pattern_candidates", "scores",
+      "distances", "headroom", "session", "intermarket_metrics",
+      "correlations", "timestamps", "state", "provenance"
+    ],
+    "agent_cannot": [
+      "calculate_numerics", "modify_numerics", "fabricate_values",
+      "suppress_valid_records", "alter_evidence_scores"
+    ],
+    "integrity_gate": {
+      "quarantine_invalid": true,
+      "create_data_quality_warning": true,
+      "preserve_raw_diagnostic": true,
+      "never_fabricate_replacement": true,
+      "valid_degraded_statuses": ["VALID", "DELAYED", "STALE", "PARTIAL", "CONFLICT", "UNKNOWN", "SOURCE_UNAVAILABLE"]
+    }
+  },
+
+  "mt5_pipeline": {
+    "required_symbols": ["XAUUSD", "EURUSD", "GBPUSD", "AUDUSD", "NZDUSD", "USDJPY", "USDCHF", "USDCAD"],
+    "optional_symbols": ["DXY", "US10Y"],
+    "broker_suffix_variants_supported": true,
+    "auto_discovery": true,
+    "env_override_supported": true,
+    "read_only": true,
+    "forbidden_methods": ["order_send", "position_close", "order_check"],
+    "timezone": "UTC_normalized",
+    "thai_time_presentation": true,
+    "reconnect": true,
+    "bounded_retry": true,
+    "circuit_breaker": true
+  },
+
+  "fred_integration": {
+    "enabled": true,
+    "base_url": "https://api.stlouisfed.org",
+    "series": {
+      "US10Y": {
+        "series_id": "DGS10",
+        "internal_id": "US10Y_DAILY",
+        "frequency": "DAILY",
+        "unit": "Percent",
+        "realtime_class": "DAILY_MACRO",
+        "use_as_intraday": false
+      },
+      "USD_BROAD": {
+        "series_id": "DTWEXBGS",
+        "internal_id": "DXY_PROXY_FRED",
+        "is_proxy": true,
+        "is_exact_dxy": false,
+        "usage": "macro_usd_strength_context"
+      }
     },
-    "xau-strategy-auditor": {
-      "allowed": [
-        "read approved evidence packet",
-        "read strategy specification",
-        "return structured review"
-      ],
-      "denied": [
-        "write",
-        "shell",
-        "Telegram",
-        "MT5",
-        "credential access",
-        "direct code mutation"
-      ]
+    "resilience": {
+      "timeout_handling": "circuit_breaker",
+      "missing_dot_value": "treat_as_gap_not_fabricate",
+      "api_failure_stops_pipeline": false,
+      "cache_enabled": true
+    }
+  },
+
+  "fx_basket": {
+    "pairs": ["EURUSD", "GBPUSD", "AUDUSD", "NZDUSD", "USDJPY", "USDCHF", "USDCAD"],
+    "method": "normalized_returns",
+    "direction_reversal_required": ["EURUSD", "GBPUSD", "AUDUSD", "NZDUSD"],
+    "timestamp_alignment": "same_bar_same_timeframe",
+    "missing_component_handling": "mark_missing_not_fabricate",
+    "expose_component_contribution": true,
+    "formula_versioned_in_provenance": true,
+    "internal_id": "FX_BASKET_COMPUTED"
+  },
+
+  "persistent_operation": {
+    "job_queue": {
+      "storage": "SQLite",
+      "lease_with_heartbeat": true,
+      "idempotency_key": true,
+      "bounded_retry": true,
+      "exponential_backoff": true,
+      "circuit_breaker_per_task_type": true,
+      "dead_letter_queue": true,
+      "cancellation_api": true
     },
-    "system-coder-auditor": {
-      "allowed_read_only": [
-        "read source bundle",
-        "read tests",
-        "read dependency graph"
-      ],
-      "allowed_patch_mode": [
-        "isolated worktree only",
-        "allowlisted development commands"
-      ],
-      "denied": [
-        "direct write to main",
-        "push without release gate",
-        "runtime .env",
-        "Telegram",
-        "MT5",
-        "broker",
-        "production state",
-        "service control"
-      ]
+    "scheduler": {
+      "persistent_schedule_store": true,
+      "single_instance_enforced": true,
+      "resume_on_restart": true
     },
-    "telegram-publisher": {
-      "allowed": [
-        "read approved publication payload",
-        "Telegram send tool",
-        "delivery-result logging"
+    "stagnation_detection": true,
+    "duplicate_hypothesis_detection": true,
+    "resource_limit_enforced": true
+  },
+
+  "experiment_lifecycle": {
+    "states": [
+      "OBSERVATION", "HYPOTHESIS", "EXPERIMENT_DESIGNED", "DATA_VALIDATED",
+      "BACKTEST_RUNNING", "RESULT_REVIEW", "REJECTED", "NEEDS_MORE_DATA",
+      "APPROVED_CANDIDATE", "ISOLATED_PATCH", "REGRESSION_TEST", "SECURITY_REVIEW",
+      "RELEASE_PROPOSAL", "HUMAN_RELEASE_GATE", "RELEASED", "ROLLED_BACK"
+    ],
+    "required_transition_fields": [
+      "experiment_id", "correlation_id", "evidence_ids", "owner_agent",
+      "start_time", "end_time", "input_data_range", "dataset_hash",
+      "formula_version", "result", "failure_reason", "reviewer", "approval",
+      "rollback_reference"
+    ],
+    "self_approval_forbidden": true,
+    "human_gate_required": true
+  },
+
+  "windows_autostart": {
+    "method": "windows_task_scheduler_or_service",
+    "startup_order": [
+      "load_canonical_env", "validate_token_config", "start_gateway",
+      "start_python_engine", "start_main", "start_scheduler", "start_queue_workers",
+      "start_watchdog", "validate_mt5", "validate_fred_nonblocking",
+      "resume_pending_jobs", "send_SYSTEM_RECOVERED"
+    ],
+    "duplicate_prevention": ["pid_file", "windows_mutex"],
+    "idempotent_registration": true
+  },
+
+  "external_heartbeat": {
+    "local_emitter_required": true,
+    "interval_seconds": 300,
+    "schema_version": "heartbeat-v1",
+    "signature": "hmac-sha256",
+    "external_monitor_reference_impl_required": true,
+    "missed_heartbeat_contract_required": true,
+    "telegram_offline_alert_schema_required": true,
+    "warning_if_not_configured": "HEARTBEAT_EXTERNAL_NOT_CONFIGURED"
+  },
+
+  "telegram_system_alerts": {
+    "event_types": [
+      "SYSTEM_STARTED", "SYSTEM_RECOVERED", "SYSTEM_SHUTTING_DOWN",
+      "SYSTEM_OFFLINE_DETECTED", "GATEWAY_FAILED", "PYTHON_ENGINE_FAILED",
+      "QUEUE_STALLED", "DATA_STALE", "MT5_DISCONNECTED", "FRED_UNAVAILABLE",
+      "DISK_LOW", "DATABASE_LOCKED", "EXPERIMENT_FAILED", "SECURITY_INCIDENT"
+    ],
+    "required_fields": [
+      "severity", "timestamp_thai", "timestamp_utc", "component",
+      "root_cause", "current_impact", "recovery_action", "correlation_id"
+    ],
+    "deduplication": true,
+    "throttle": true,
+    "retry": true,
+    "dead_letter": true
+  },
+
+  "backup_restore": {
+    "excludes_secrets": true,
+    "hash_chained_manifest": true,
+    "restore_drill_required": true,
+    "excluded_patterns": [".env", "tokens", "apikey", "password", ".venv", "data/backups"]
+  },
+
+  "security_boundaries": {
+    "advisor_only_scan": "AST + source text",
+    "secret_scan": "working_tree + staged + git_history",
+    "runtime_state_not_tracked": true,
+    "cross_agent_memory_forbidden": true,
+    "telegram_from_publisher_only": true,
+    "code_write_to_main_requires_gate": true,
+    "no_fabricated_numerics": true
+  },
+
+  "test_strategy": {
+    "categories": ["unit", "integration", "security", "live"],
+    "ci_excludes_live": true,
+    "no_paid_api_in_ci": true,
+    "required_new_tests": {
+      "main_orchestration": [
+        "test_only_main_is_user_facing",
+        "test_main_creates_dependency_plan",
+        "test_main_assigns_correct_agent",
+        "test_main_rejects_unproven_result",
+        "test_main_resolves_agent_conflict",
+        "test_main_resumes_after_restart",
+        "test_main_does_not_duplicate_completed_task",
+        "test_main_stops_on_operator_command"
       ],
-      "denied": [
-        "market analysis",
-        "source write",
-        "shell",
-        "provider configuration",
-        "MT5",
-        "internal score modification"
+      "skills": [
+        "test_skill_has_operational_contract",
+        "test_skill_has_analysis_procedure",
+        "test_skill_has_failure_modes",
+        "test_skill_has_test_vectors",
+        "test_skill_not_shallow_placeholder",
+        "test_duplicate_skill_logic_rejected",
+        "test_skill_owner_matches_agent",
+        "test_skill_runtime_discovery",
+        "test_skill_tool_policy_enforced"
+      ],
+      "no_suppression_evidence": [
+        "test_watch_evidence_is_not_dropped",
+        "test_low_score_evidence_is_not_dropped",
+        "test_conflicting_evidence_is_not_dropped",
+        "test_unknown_value_is_preserved",
+        "test_invalid_record_is_quarantined",
+        "test_agent_cannot_mutate_numeric_evidence"
+      ],
+      "mt5_fred": [
+        "test_mt5_symbol_auto_discovery",
+        "test_mt5_symbol_suffix_mapping",
+        "test_mt5_read_only_enforcement",
+        "test_fred_api_key_not_logged",
+        "test_fred_dgs10_daily_classification",
+        "test_fred_dtwexbgs_is_marked_proxy",
+        "test_fred_missing_dot_value",
+        "test_fred_stale_cache",
+        "test_fred_timeout_bounded_retry",
+        "test_fred_failure_does_not_stop_pipeline",
+        "test_fx_basket_direction_normalization",
+        "test_fx_basket_timestamp_alignment"
+      ],
+      "persistent_operation": [
+        "test_scheduler_persists_jobs",
+        "test_worker_recovers_leased_job",
+        "test_retry_is_bounded",
+        "test_circuit_breaker_opens",
+        "test_stagnation_detection",
+        "test_duplicate_hypothesis_detection",
+        "test_checkpoint_resume",
+        "test_dead_letter_persistence"
+      ],
+      "shutdown_recovery": [
+        "test_graceful_shutdown_checkpoints_jobs",
+        "test_startup_resumes_jobs",
+        "test_duplicate_service_rejected",
+        "test_system_recovered_telegram_payload",
+        "test_shutdown_telegram_payload",
+        "test_external_heartbeat_schema",
+        "test_missed_heartbeat_incident"
+      ],
+      "security": [
+        "test_no_broker_write",
+        "test_no_mt5_order_send",
+        "test_agent_cannot_read_state_env",
+        "test_specialist_cannot_contact_user_directly",
+        "test_only_publisher_can_send_telegram",
+        "test_coding_agent_cannot_write_main",
+        "test_agent_cannot_self_approve",
+        "test_backup_excludes_secrets",
+        "test_no_token_in_logs"
       ]
     }
   },
-  "message_routing": [
-    "Python deterministic pipeline -> structured evidence packet -> super-advisor",
-    "super-advisor -> xau-strategy-auditor -> structured review",
-    "super-advisor -> final policy -> telegram-publisher",
-    "telegram-publisher -> Telegram delivery"
-  ],
-  "data_ownership": [
-    "Python owns numbers and calculations",
-    "Agents may not invent or alter numbers",
-    "Missing values remain UNKNOWN",
-    "Telegram formatting may not fabricate prices, targets, or probabilities"
-  ],
-  "event_schemas": [
-    "SYSTEM_HEALTH",
-    "DATA_QUALITY_WARNING",
-    "SUPER_POTENTIAL_CANDIDATE_INTERNAL",
-    "SUPER_POTENTIAL_CONFIRMED",
-    "SUPER_POTENTIAL_INVALIDATED",
-    "SYSTEM_INCIDENT"
-  ],
-  "persistence_and_backup": {
-    "immutable_evidence_archive": true,
-    "append_only_outcome_ledger": true,
-    "per_agent_memory": true,
-    "skill_candidate_store": true,
-    "backup_includes": [
-      "evidence manifests",
-      "outcome ledger",
-      "agent memory",
-      "skill versions",
-      "config templates",
-      "evaluation results",
-      "release metadata"
-    ]
+
+  "audit_evidence_bundle": {
+    "path": "artifacts/p2_4_main_24x7_audit_readiness/",
+    "required_files": [
+      "AUDIT_MANIFEST.json",
+      "P2_4_FINAL_BLUEPRINT.md",
+      "P2_4_FINAL_BLUEPRINT.json",
+      "P2_4_FINAL_COMPLIANCE_MATRIX.md",
+      "P2_4_FINAL_COMPLIANCE_MATRIX.json",
+      "P2_4_LOGIC_CONFLICT_MATRIX.md",
+      "P2_4_LOGIC_CONFLICT_MATRIX.json",
+      "P2_4_AGENT_RUNTIME_AUDIT.json",
+      "P2_4_SKILL_DEPTH_AUDIT.json",
+      "P2_4_MAIN_ORCHESTRATION_E2E.json",
+      "P2_4_NO_SUPPRESSION_EVIDENCE_TEST.json",
+      "P2_4_INTERMARKET_AUDIT.json",
+      "P2_4_MT5_DATA_AUDIT.json",
+      "P2_4_FRED_ADAPTER_AUDIT.json",
+      "P2_4_24X7_RECOVERY_AUDIT.json",
+      "P2_4_BROWSER_E2E.json",
+      "P2_4_SECURITY_AUDIT.json",
+      "P2_4_TEST_EVIDENCE.json",
+      "P2_4_RELEASE_READINESS.json"
+    ],
+    "no_secrets_in_bundle": true
   },
-  "security_boundaries": [
-    "advisor-only",
-    "no execution",
-    "mt5 read-only",
-    "no secrets in reports",
-    "no unrestricted self-modification",
-    "no direct write to main",
-    "no automatic deployment"
-  ],
-  "test_plan": [
-    "report artifact integrity tests",
-    "provider policy tests",
-    "agent registry and skill discovery tests",
-    "routing and binding tests",
-    "telegram formatting snapshot tests",
-    "backup and restore tests",
-    "self-improvement dry-run tests",
-    "secret-scan tests",
-    "ci verification"
-  ],
-  "rollback_plan": [
-    "keep a rollback commit before topology changes",
-    "use isolated worktree patches for experimental coder changes",
-    "validate before merge",
-    "remove only the last experimental patch on failure",
-    "preserve the original safety contract"
-  ],
-  "files_to_change": [
-    "engine/src/openclaw_super_advisor/_version.py",
-    "engine/src/openclaw_super_advisor/cli.py",
-    "engine/src/openclaw_super_advisor/config.py",
-    "engine/src/openclaw_super_advisor/env.py",
-    "engine/src/openclaw_super_advisor/providers.py",
-    "engine/src/openclaw_super_advisor/skills.py",
-    "config/openclaw.template.json",
-    "workspace/skills/*/SKILL.md",
-    "state/openclaw.json",
-    "state/agents/*",
-    "docs/*P2_4*",
-    "engine/tests/*"
-  ],
-  "expected_risks": [
-    "gateway auth mismatch may continue to block live provider verification",
-    "new agent topology may expose validation failures if skills or tool policies are inconsistent",
-    "backup and memory foundations may need more storage layout work",
-    "telegram dry-run may need credential alignment before any live smoke test"
-  ]
+
+  "p2_4_closure_decision": "READY_FOR_PREPRODUCTION_AUDIT_NOT_PRODUCTION_APPROVED"
 }
