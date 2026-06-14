@@ -1,7 +1,7 @@
 ---
 name: stale-data-detection
 description: Detect stale MT5 ticks and FRED observations before they corrupt evidence scoring.
-version: 1.2.9
+version: 1.2.10
 owner_agent: market-data-integrity-agent
 purpose: Enforce freshness thresholds per data class (REALTIME vs DAILY_MACRO).
 allowed_inputs:

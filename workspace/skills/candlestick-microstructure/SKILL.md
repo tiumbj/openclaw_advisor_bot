@@ -1,7 +1,7 @@
 ---
 name: candlestick-microstructure
 description: Candlestick microstructure review skill.
-version: 1.2.9
+version: 1.2.10
 owner_agent: xau-strategy-auditor
 purpose: Review candle microstructure evidence.
 allowed_inputs:

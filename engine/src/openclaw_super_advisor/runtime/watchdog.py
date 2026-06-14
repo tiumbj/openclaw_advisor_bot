@@ -8,10 +8,10 @@ does NOT run complex logic, and fails safe (no side-effects if checks fail).
 """
 from __future__ import annotations
 
-import time
-from dataclasses import dataclass, field
+from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import UTC, datetime
-from typing import Any, Callable
+from typing import Any
 
 from ..constants import TELEGRAM_SYSTEM_EVENTS
 
@@ -92,7 +92,9 @@ class Watchdog:
 
     Usage:
         watchdog = Watchdog(max_restart_attempts=3)
-        watchdog.register(ComponentProbe("gateway", probe_gateway, failure_event_type="GATEWAY_FAILED"))
+        watchdog.register(
+            ComponentProbe("gateway", probe_gateway, failure_event_type="GATEWAY_FAILED")
+        )
         report = watchdog.check_all()
     """
 

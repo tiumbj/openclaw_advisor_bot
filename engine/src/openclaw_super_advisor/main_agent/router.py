@@ -12,7 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from ..agent_topology import REALTIME_ROUTE_ALLOWLIST, CODE_AUDIT_ROUTE_ALLOWLIST
+from ..agent_topology import CODE_AUDIT_ROUTE_ALLOWLIST, REALTIME_ROUTE_ALLOWLIST
 from .planner import AgentTask, DependencyPlan
 
 

@@ -17,8 +17,9 @@ from __future__ import annotations
 
 import signal
 import threading
+from collections.abc import Callable
 from datetime import UTC, datetime
-from typing import Any, Callable
+from typing import Any
 
 _SHUTDOWN_EVENT = threading.Event()
 _SHUTDOWN_LOCK = threading.Lock()
@@ -51,6 +52,7 @@ def trigger_shutdown(reason: str = "manual") -> None:
 
 
 def _do_shutdown(source: str) -> None:
+    _ = source
     with _SHUTDOWN_LOCK:
         if _SHUTDOWN_EVENT.is_set():
             return
@@ -65,11 +67,13 @@ def _do_shutdown(source: str) -> None:
 
 
 def _sigterm_handler(signum: int, frame: object) -> None:
+    _ = frame
     _do_shutdown(f"signal:{signum}")
 
 
 def _sigint_handler(signum: int, frame: object) -> None:
-    _do_shutdown(f"signal:SIGINT")
+    _ = (signum, frame)
+    _do_shutdown("signal:SIGINT")
 
 
 def install_signal_handlers() -> None:
@@ -84,7 +88,7 @@ def install_signal_handlers() -> None:
         pass
     # Windows SIGBREAK (Ctrl+Break)
     try:
-        signal.signal(signal.SIGBREAK, _sigterm_handler)  # type: ignore[attr-defined]
+        signal.signal(signal.SIGBREAK, _sigterm_handler)
     except (OSError, AttributeError):
         pass
 

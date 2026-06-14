@@ -1,7 +1,7 @@
 ---
 name: environment-health
 description: Environment health validation skill.
-version: 1.2.9
+version: 1.2.10
 owner_agent: super-advisor
 purpose: Verify runtime environment safety and readiness.
 allowed_inputs:

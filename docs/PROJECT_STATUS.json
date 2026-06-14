@@ -1,51 +1,33 @@
 {
-  "schema_version": "project-status-v3",
+  "schema_version": "project-status-v4",
   "project": "openclaw_advisor_bot",
-  "package_version": "1.2.9",
+  "package_version": "1.2.10",
   "current_phase": "P2.4",
   "phase": "P2.4",
   "phase_status": "IN_PROGRESS",
   "audit_readiness": "NOT_READY",
-  "audit_gate": "P2.4 IN_PROGRESS — TRUTH RECONCILIATION AND TEST CLOSURE IN PROGRESS",
-  "current_work_package": "WP-P2_4-TRUTH-RECONCILIATION",
-  "updated_at_utc": "2026-06-14T00:00:00Z",
-  "evidence_base_commit": "5e247b2e9e2c0c1d6c3e9b7d9c6b7c7b0c7b0c7b",
-  "generated_from_worktree": true,
-  "observed_remote_head_before_change": "5e247b2e9e2c0c1d6c3e9b7d9c6b7c7b0c7b0c7b",
+  "audit_gate": "P2.4 IN_PROGRESS - REMEDIATION COMMITTED LOCALLY, GITHUB GATES PENDING",
+  "current_work_package": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION",
+  "updated_at_utc": "2026-06-14T23:45:00Z",
+  "baseline_commit": "a996540297e43cd0cb540379575ab636f0986b5e",
+  "observed_remote_head_before_remediation": "a996540297e43cd0cb540379575ab636f0986b5e",
+  "observed_remote_head": "a996540297e43cd0cb540379575ab636f0986b5e",
   "implementation_commit": "PENDING",
   "status_report_commit": "PENDING",
-  "observed_remote_head": "5e247b2",
+  "next_phase": "PRE_PRODUCTION_AUDIT",
+  "next_phase_started": false,
+  "ci_status": "PENDING_GITHUB_ACTIONS",
+  "security_status": "PENDING_GITHUB_ACTIONS",
+  "unsupported_provider_removal_status": "PASS",
+  "supported_providers": ["openai", "claude", "gemini", "deepseek"],
+  "selected_provider": "claude",
+  "credit_blocker": "NONE",
+  "next_action": "commit and push remediation, then verify GitHub ci and security workflows on pushed HEAD",
   "working_tree_status": {
     "clean": false,
-    "tracked_changes": ["truth reconciliation in progress"],
-    "untracked_changes": [],
-    "ignored_runtime_updates": [
-      "state/openclaw.json",
-      "state/.env",
-      "workspace/.openclaw/",
-      "engine/docs/"
-    ]
-  },
-  "ci_status": "NOT RUN",
-  "security_status": "PASS",
-  "token_reconciliation_status": "PASS",
-  "canonical_token_source": "state/.env",
-  "unsupported_provider_removal_status": "PASS",
-  "agent_status": {
-    "status": "PASS",
-    "agent_count": 12,
-    "runtime_agent_id": "super-advisor",
-    "all_agents_valid": true
-  },
-  "credit_blocker": "NONE",
-  "next_action": "run full validation pipeline, commit truth reconciliation, push to origin/main",
-  "control_ui_status": "PASS",
-  "gateway_status": {
-    "status": "PASS",
-    "bind": "127.0.0.1",
-    "port": 18789,
-    "auth_mode": "token",
-    "control_ui_enabled": true
+    "tracked_changes": ["WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION in progress"],
+    "untracked_changes": ["engine/.tmp_pytest/"],
+    "ignored_runtime_updates": ["state/openclaw.json", "state/.env", "workspace/.openclaw/"]
   },
   "provider_static_validation": {
     "status": "PASS",
@@ -57,50 +39,19 @@
     "blocker": "NO_ENABLED_PROVIDER",
     "detail": "All providers disabled in .env.example; offline contract and policy checks pass."
   },
-  "agent_topology": {
-    "status": "PASS",
+  "gateway_status": {
+    "status": "PASS_LOCAL",
+    "bind": "127.0.0.1",
+    "port": 18789,
+    "auth_mode": "token",
+    "control_ui_enabled": true,
+    "control_ui_e2e": "PASS"
+  },
+  "agent_status": {
+    "status": "PASS_LOCAL",
     "agent_count": 12,
-    "agents": [
-      "super-advisor",
-      "xau-strategy-auditor",
-      "system-coder-auditor",
-      "telegram-publisher",
-      "market-data-integrity-agent",
-      "price-action-microstructure-agent",
-      "intermarket-macro-agent",
-      "statistical-backtest-agent",
-      "failure-root-cause-agent",
-      "security-compliance-agent",
-      "reliability-watchdog-agent",
-      "knowledge-skill-manager"
-    ]
-  },
-  "skills": {
-    "status": "IN_PROGRESS",
-    "skill_count": 56,
-    "violations": 0,
-    "lc_014_compliance": "IN_PROGRESS"
-  },
-  "supported_providers": ["openai", "claude", "gemini", "deepseek"],
-  "selected_provider": "claude",
-  "blueprint_compliance": {
-    "status": "IN_PROGRESS",
-    "pass": 27,
-    "partial": 1,
-    "false_positive": 1,
-    "not_implemented": 2
-  },
-  "lc_findings": {
-    "total": 31,
-    "fixed_pre_session": 24,
-    "fixed_this_session": 4,
-    "false_positive": 1,
-    "open": 2
-  },
-  "version_sync": {
-    "status": "PASS",
-    "version": "1.2.9",
-    "files_updated": ["_version.py", "README.md", ".env.example", "workspace/AGENTS.md", "56 SKILL.md files"]
+    "runtime_agent_id": "super-advisor",
+    "all_agents_valid": true
   },
   "work_packages": [
     {"id": "WP-CODEX-01", "name": "Remove Unsupported Provider Completely", "status": "PASS"},
@@ -111,35 +62,62 @@
     {"id": "WP-P2_4-RUNTIME-RECOVERY", "name": "Runtime Recovery, Token Reconciliation, and UI Auth", "status": "PASS"},
     {"id": "WP-P2_4-MASTER-BLUEPRINT-INTEGRATION", "name": "Master Blueprint Implementation, Integration and Audit-Readiness", "status": "PASS"},
     {"id": "WP-P2_4-MAIN-24X7-DEEP-SKILLS", "name": "MAIN 24x7 Research Platform Deep Implementation", "status": "COMPLETE"},
-    {"id": "WP-P2_4-TRUTH-RECONCILIATION", "name": "Truth Reconciliation, Test Closure and Audit-Readiness", "status": "IN_PROGRESS"}
+    {"id": "WP-P2_4-TRUTH-RECONCILIATION", "name": "Truth Reconciliation, Test Closure and Audit-Readiness", "status": "COMPLETE_LOCAL"},
+    {"id": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION", "name": "Final remediation before independent pre-production audit", "status": "IN_PROGRESS"}
   ],
-  "tests": [
-    {"name": "pytest_non_live", "status": "IN_PROGRESS", "details": "195 passed target; 4 pre-existing failures under repair"},
-    {"name": "validate_env", "status": "PASS"},
-    {"name": "validate_skills", "status": "IN_PROGRESS", "details": "56 skills, LC-014 compliance in progress"},
-    {"name": "validate_agents", "status": "PASS", "details": "12 agents"},
-    {"name": "validate_routing", "status": "PASS"},
-    {"name": "provider_policy", "status": "PASS"},
-    {"name": "render_config", "status": "PASS"},
-    {"name": "evidence_verify", "status": "PASS"},
-    {"name": "pipeline_dry_run", "status": "PASS"},
-    {"name": "security_scan", "status": "PASS", "summary": {"pass": true, "active_source_violations": 0}}
+  "github_failure_evidence": {
+    "ci": {
+      "run_id": "27503144728",
+      "workflow": "ci",
+      "job": "validate",
+      "failed_step": "Ruff",
+      "failed_command": "python -m ruff check .",
+      "exit_code": 1,
+      "root_cause_report": "docs/P2_4_CI_FAILURE_ROOT_CAUSE.md"
+    },
+    "security": {
+      "run_id": "27503144729",
+      "workflow": "security",
+      "job": "audit",
+      "failed_step": "Secret, source, AST, constant, graph, and tracking scan",
+      "failed_command": "openclaw-advisor security-scan --include-history --strict | Tee-Object -FilePath security-scan.json",
+      "exit_code": 1,
+      "root_cause_report": "docs/P2_4_SECURITY_FAILURE_ROOT_CAUSE.md"
+    }
+  },
+  "local_gates": [
+    {"name": "pip_check", "command": "python -m pip check", "status": "PASS"},
+    {"name": "ruff", "command": "python -m ruff check .", "status": "PASS"},
+    {"name": "mypy", "command": "python -m mypy engine\\src", "status": "PASS"},
+    {"name": "pytest_non_live", "command": "python -m pytest -m \"not live\"", "status": "PASS", "summary": "197 passed, 1 deselected, total coverage 87.04%"},
+    {"name": "validate_skills", "command": "openclaw-advisor validate-skills --strict", "status": "PASS", "summary": "56 skills"},
+    {"name": "validate_agents", "command": "openclaw-advisor validate-agents --strict", "status": "PASS", "summary": "12 agents"},
+    {"name": "validate_routing", "command": "openclaw-advisor validate-routing --strict", "status": "PASS"},
+    {"name": "render_config", "command": "openclaw-advisor render-config --validate --strict", "status": "PASS"},
+    {"name": "security_scan", "command": "openclaw-advisor security-scan --include-history --strict", "status": "PASS", "summary": "active_source_violations=0"},
+    {"name": "pip_audit", "command": "python -m pip_audit", "status": "PASS", "summary": "No known vulnerabilities found"},
+    {"name": "package_build", "command": "python -m pip wheel . --no-deps --wheel-dir dist", "status": "PASS"},
+    {"name": "control_ui_e2e", "command": ".\\scripts\\Test-OpenClawUI.ps1", "status": "PASS", "summary": "authenticated websocket/session/agent turn pass"}
   ],
-  "coverage_progress": {
-    "fred_adapter_py": "96%",
-    "fx_basket_py": "100%",
-    "job_queue_py": "94%",
-    "experiment_py": "95%"
+  "coverage": {
+    "total_percent": 87.04,
+    "threshold_percent": 85.0,
+    "artifact": "docs/P2_COVERAGE.json"
+  },
+  "safety_boundaries": {
+    "advisor_only": true,
+    "broker_write_enabled": false,
+    "mt5_order_send_enabled": false,
+    "strict_security_scan": true
   },
   "remaining_gaps": [
-    "browser E2E not run (BLOCKED_EXTERNAL on headless Windows CI)",
-    "HUMAN_RELEASE_GATE not passed"
+    "Replacement GitHub ci workflow has not yet passed on the remediation commit.",
+    "Replacement GitHub security workflow has not yet passed on the remediation commit.",
+    "HUMAN_RELEASE_GATE is not passed and is required before production promotion."
   ],
   "notes": [
-    "P2.4 IN_PROGRESS: Truth Reconciliation session active.",
-    "Version bumped to 1.2.9 across all 56 skills, _version.py, README, AGENTS.md, .env.example.",
-    "LC fixes: LC-014 (semantic depth), LC-017 (research cycle), LC-020 (main_agent pkg), LC-030 (heartbeat doc).",
-    "LC-022 confirmed FALSE_POSITIVE: intentional pass with comment in providers.py.",
-    "4 core modules now >=90% test coverage: fred_adapter(96), fx_basket(100), job_queue(94), experiment(95)."
+    "Do not start PRE_PRODUCTION_AUDIT from this status file.",
+    "Do not mark P2.4 COMPLETE from local gates alone.",
+    "Commit and push remediation, then update this file only after GitHub ci and security pass."
   ]
 }

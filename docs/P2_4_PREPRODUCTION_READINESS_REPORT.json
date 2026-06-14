@@ -1,15 +1,33 @@
 {
-  "implemented": "PARTIAL",
-  "wired": "PARTIAL",
-  "static_tested": "PASS",
-  "runtime_tested": "BLOCKED",
-  "live_tested": "BLOCKED",
-  "shadow_ready": "NO",
-  "production_ready": "NO",
-  "blocked": "YES",
-  "verdict": {
-    "foundation_preproduction_audit": "IN_PROGRESS",
-    "trading_alert_production_readiness": "NO"
+  "schema_version": "p2-4-readiness-v3",
+  "package_version": "1.2.10",
+  "phase": "P2.4",
+  "work_package": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION",
+  "phase_status": "IN_PROGRESS",
+  "audit_readiness": "NOT_READY",
+  "updated_at_utc": "2026-06-14T23:45:00Z",
+  "baseline_commit": "a996540297e43cd0cb540379575ab636f0986b5e",
+  "verdict": "NOT_READY_UNTIL_GITHUB_CI_AND_SECURITY_PASS",
+  "local_evidence": {
+    "ruff": "PASS",
+    "mypy": "PASS",
+    "pip_check": "PASS",
+    "pytest_non_live": "PASS: 197 passed, 1 deselected, total coverage 87.04%",
+    "security_scan": "PASS: active_source_violations=0",
+    "pip_audit": "PASS: no known vulnerabilities found",
+    "package_build": "PASS",
+    "control_ui_e2e": "PASS"
   },
-  "immediate_next_step": "Resolve the gateway token mismatch or confirm it cannot be resolved without changing the safety contract"
+  "remote_evidence": {
+    "ci": "PENDING",
+    "security": "PENDING"
+  },
+  "required_closure": [
+    "Push remediation to origin/main.",
+    "Verify GitHub ci passes on pushed HEAD.",
+    "Verify GitHub security passes on pushed HEAD.",
+    "Only then update phase_status=COMPLETE and audit_readiness=READY."
+  ],
+  "next_phase": "PRE_PRODUCTION_AUDIT",
+  "next_phase_started": false
 }

@@ -1,7 +1,7 @@
 ---
 name: research-knowledge-lifecycle
 description: Manage the lifecycle of research findings from observation through validated knowledge entry.
-version: 1.2.9
+version: 1.2.10
 owner_agent: knowledge-skill-manager
 purpose: Ensure research outputs are stored, versioned, and accessible to all agents without duplication.
 allowed_inputs:

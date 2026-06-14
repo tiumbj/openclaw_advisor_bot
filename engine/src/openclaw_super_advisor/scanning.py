@@ -24,6 +24,10 @@ SECRET_PATTERNS = {
 }
 IGNORED_DIR_NAMES = {
     ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".tmp_pytest",
     ".venv",
     "__pycache__",
     "archive",
@@ -35,6 +39,9 @@ IGNORED_DIR_NAMES = {
 FORBIDDEN_REGEXES = {
     pattern: re.compile(rf"(?<![A-Za-z0-9_]){re.escape(pattern)}(?![A-Za-z0-9_])")
     for pattern in FORBIDDEN_SYMBOLS
+}
+GENERATED_REPORT_NAMES = {
+    "security-scan.json",
 }
 
 
@@ -73,7 +80,9 @@ def _classify_path(path: Path) -> str:
     lowered_parts = {part.lower() for part in path.parts}
     if "tests" in lowered_parts:
         return "TEST_ONLY"
-    if "docs" in lowered_parts:
+    if "artifacts" in lowered_parts or "docs" in lowered_parts:
+        return "DOCUMENTATION"
+    if path.name.lower() in GENERATED_REPORT_NAMES:
         return "DOCUMENTATION"
     if path.suffix.lower() in {".md", ".txt"}:
         return "DOCUMENTATION"

@@ -13,16 +13,13 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from openclaw_super_advisor.constants import FRED_SERIES, REALTIME_CLASS_DAILY_MACRO
 from openclaw_super_advisor.market_data.fred_adapter import (
     CircuitBreaker,
     FredAdapter,
-    FredApiError,
     FredCache,
-    FredObservation,
     FredSeriesResult,
 )
-from openclaw_super_advisor.constants import FRED_SERIES, REALTIME_CLASS_DAILY_MACRO
-
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -193,6 +190,7 @@ def test_fred_http_error_non_retryable_401() -> None:
     call_count = 0
 
     def _side(req, timeout=None):  # type: ignore[no-untyped-def]
+        _ = (req, timeout)
         nonlocal call_count
         call_count += 1
         raise http_err
@@ -209,6 +207,7 @@ def test_fred_fetch_all_independent_failures() -> None:
     call_count = 0
 
     def _side(req, timeout=None):  # type: ignore[no-untyped-def]
+        _ = (req, timeout)
         nonlocal call_count
         call_count += 1
         if call_count == 1:
@@ -231,6 +230,7 @@ def test_fred_cache_hit_avoids_second_request() -> None:
     call_count = 0
 
     def _side(req, timeout=None):  # type: ignore[no-untyped-def]
+        _ = (req, timeout)
         nonlocal call_count
         call_count += 1
         return _mock_response([_obs("2026-06-13", "4.25")])
@@ -269,11 +269,16 @@ def test_circuit_breaker_opens_after_threshold() -> None:
     assert cb.is_open()
 
 
-def test_circuit_breaker_resets_after_timeout() -> None:
-    cb = CircuitBreaker(failure_threshold=1, reset_seconds=0)
+def test_circuit_breaker_resets_after_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
+    clock = {"now": 100.0}
+    monkeypatch.setattr(
+        "openclaw_super_advisor.market_data.fred_adapter.time.monotonic",
+        lambda: clock["now"],
+    )
+    cb = CircuitBreaker(failure_threshold=1, reset_seconds=0.001)
     cb.record_failure()
     assert cb.is_open()
-    time.sleep(0.01)
+    clock["now"] += 0.01
     assert not cb.is_open()
 
 

@@ -1,65 +1,62 @@
-# P2.4 Blueprint Compliance Matrix (Final)
+# P2.4 Blueprint Compliance Matrix
 
-**Version**: 1.2.8  
+**Version**: 1.2.10  
 **Phase**: P2.4  
-**Work Package**: WP-P2_4-MAIN-24X7-DEEP-SKILLS  
-**Generated**: 2026-06-14T14:10:00Z  
-**HEAD**: `be75860311243379ea0304f75bf65cf013b984e2`  
-**origin/main**: `be75860311243379ea0304f75bf65cf013b984e2` (verified equal)
+**Work Package**: WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION  
+**Generated**: 2026-06-14T23:45:00Z  
+**Baseline HEAD**: `a996540297e43cd0cb540379575ab636f0986b5e`
 
 ## Summary
 
-- PASS: 20
-- PARTIAL: 2
-- BLOCKED_EXTERNAL: 3
-- NOT_IMPLEMENTED: 0
+- Local blueprint implementation gates: `PASS_LOCAL`
+- GitHub CI gate: `PENDING`
+- GitHub security gate: `PENDING`
+- Audit readiness: `NOT_READY`
+- Production gate: `BLOCKED` (`HUMAN_RELEASE_GATE` not passed)
 
 ## Audit Gate
 
-**P2.4 COMPLETE — READY FOR PRE-PRODUCTION AUDIT**  
-Production gate: **BLOCKED** (HUMAN_RELEASE_GATE not passed)
+**P2.4 IN_PROGRESS - REMEDIATION COMMITTED LOCALLY, GITHUB GATES PENDING**
 
 ## Matrix
 
-| ID | Section | Requirement | Expected | Actual | Status | Evidence |
-|----|---------|-------------|----------|--------|--------|---------|
-| BC-01 | Architecture | Advisor-only (no execution) | No execution path | Denied in config, constants, skills | PASS | `security-scan` pass=True, 0 active violations |
-| BC-02 | Architecture | No broker write / no OrderSend | No write tool | `ALLOW_ORDER_SEND=false`, `ADVISOR_ONLY=true`, `_STANDARD_DENY` | PASS | `security-scan`, `constants.py` |
-| BC-03 | Architecture | MT5 read-only | Readonly adapter | `mt5_readonly.py` only reads | PASS | `test_market_data_reliability.py` 10/10 |
-| BC-04 | Architecture | Four-provider allowlist | openai/claude/gemini/deepseek | Groq/Qroq removed; `providers.py` enforces list | PASS | `test_providers.py` 9/9 |
-| BC-05 | Runtime | Gateway token canonical source | `state/.env` is truth | Health check confirms topology_valid=True | PASS | `health` → topology_valid=True |
-| BC-06 | Runtime | Control UI on loopback only | `controlUi.enabled=true` | Template: host=127.0.0.1 | PASS | `render-config --validate` valid=True |
-| BC-07 | Security | Token-gated dashboard | Requires OPENCLAW_GATEWAY_TOKEN | Template enforces auth | PASS | `config/openclaw.template.json` |
-| BC-08 | Security | Python numeric ownership | Python owns numerics | Agents cannot fabricate numerics per Blueprint | PASS | `workspace/AGENTS.md`, `constants.py` |
-| BC-09 | Security | UNKNOWN handling | Missing = UNKNOWN | Policy enforced in tests | PASS | `test_health.py` passes |
-| BC-10 | Agent Topology | 12-agent topology | MAIN + 11 specialists | `build_agent_topology()` creates 12 AgentContracts | PASS | `validate-agents` valid=True, `test_required_agents_exist` 12/12 |
-| BC-11 | Agent Topology | Agent isolation | Unique dirs per agent | All 12 agents have isolated workspace/agentDir/sessionStore/memoryDir | PASS | `test_agent_workspaces_are_isolated` → 12 agents |
-| BC-12 | Agent Topology | Route allowlists | REALTIME + CODE_AUDIT | Both defined in `agent_topology.py` | PASS | `validate-routing` valid=True |
-| BC-13 | Skills | 56-skill catalog | 56 skills across 12 agents | `SKILL_NAMES` = 56-tuple, config has 56 entries | PASS | `validate-skills` valid=True |
-| BC-14 | Skills | Skill frontmatter + semantic validation | All v1.2.8, no violations | 56 SKILL.md files, 0 secret/market_number violations | PASS | `validate-skills` valid=True |
-| BC-15 | Security | `_STANDARD_DENY` on all agents | 27-entry deny tuple | All agents carry `_STANDARD_DENY` from `constants.py` | PASS | `constants.py`, `validate-agents` |
-| BC-16 | Data | MT5 8-symbol pipeline | All 8 FX pairs | `MT5_SYMBOL_ENV_VARS` in constants, specs in `env.py` | PASS | `test_market_data.py` 15/15 |
-| BC-17 | Data | FRED integration | DGS10, DTWEXBGS | `fred_adapter.py` with TTL cache + circuit breaker | PARTIAL | Implemented; 0% test coverage |
-| BC-18 | Data | FX basket (DXY proxy) | 7-pair, normalized returns | `fx_basket.py` compute_fx_basket() | PARTIAL | Implemented; 0% test coverage |
-| BC-19 | Scheduler | Persistent job queue | SQLite WAL, lease, DLQ | `job_queue.py` PersistentJobQueue | BLOCKED_EXTERNAL | Implemented; 0% test coverage |
-| BC-20 | Research | 16-state experiment lifecycle | FSM, self-approval forbidden | `experiment.py` ExperimentStore | BLOCKED_EXTERNAL | Implemented; HUMAN_RELEASE_GATE required |
-| BC-21 | Runtime | External heartbeat | HMAC-SHA256 signed POST | `heartbeat.py` HeartbeatEmitter | PASS | `test_misc_runtime.py` passes |
-| BC-22 | Runtime | Graceful shutdown | SIGTERM/SIGINT/SIGBREAK | `shutdown.py` GracefulShutdown | PASS | Implemented |
-| BC-23 | Runtime | Watchdog probes | ComponentProbe + callback | `watchdog.py` Watchdog | PASS | Implemented |
-| BC-24 | Telegram | 14 system event types | Full taxonomy + dedup | `persistence/__init__.py` 14 events | PASS | `test_report_artifacts.py` passes |
-| BC-25 | Windows | Auto-start (Task Scheduler) | Idempotent single-instance | `Register-StartupTask.ps1` + `Start-AdvisorStack.ps1` | PASS | Scripts parse without errors |
-| BC-26 | Security | No Groq/Qroq leakage | Absent from all paths | Removed from `providers.py`; `provider-policy` BLOCKED | PASS | `provider-policy`, `providers.py` |
-| BC-27 | Security | Secret non-exposure in skills | No API keys in SKILL.md files | `secret-exposure-scan` skill uses pattern list | PASS | `security-scan` pass=True |
-| BC-28 | Verification | Full test suite | All non-live tests pass | 77 passed, 0 failed | PASS | `03_TEST_RESULTS.txt` |
-| BC-29 | Verification | Browser E2E | Dashboard smoke test | Not available in this sandbox | BLOCKED_EXTERNAL | Manual test required |
-| BC-30 | Verification | Push to origin | HEAD == origin/main | HEAD = be75860 = origin/main | PASS | Git verified |
+| ID | Section | Requirement | Status | Evidence |
+|----|---------|-------------|--------|----------|
+| BC-01 | Architecture | Advisor-only, no execution | PASS_LOCAL | strict security scan active source violations `0` |
+| BC-02 | Architecture | No broker write / no order execution | PASS_LOCAL | safety constants and scanner enforcement unchanged |
+| BC-03 | Architecture | MT5 read-only | PASS_LOCAL | no broker write path enabled |
+| BC-04 | Architecture | Four-provider allowlist | PASS_LOCAL | provider tests and policy remain passing |
+| BC-05 | Runtime | Gateway token canonical source | PASS_LOCAL | `.\scripts\Test-OpenClawUI.ps1` token consistency true |
+| BC-06 | Runtime | Control UI loopback only | PASS_LOCAL | local E2E root/config/auth checks pass |
+| BC-07 | Security | Token-gated dashboard | PASS_LOCAL | unauthenticated config `401`, authenticated config `200` |
+| BC-08 | Security | Python numeric ownership | PASS_LOCAL | unchanged safety boundary |
+| BC-09 | Security | UNKNOWN handling | PASS_LOCAL | non-live tests pass |
+| BC-10 | Agent Topology | 12-agent topology | PASS_LOCAL | `validate-agents --strict` |
+| BC-11 | Agent Topology | Agent isolation | PASS_LOCAL | agent validation |
+| BC-12 | Agent Topology | Route allowlists | PASS_LOCAL | `validate-routing --strict` |
+| BC-13 | Skills | 56-skill catalog | PASS_LOCAL | `validate-skills --strict` |
+| BC-14 | Skills | Skill frontmatter + semantic validation | PASS_LOCAL | all 56 skills versioned `1.2.10` |
+| BC-15 | Security | Standard deny policy | PASS_LOCAL | strict security scan |
+| BC-16 | Data | MT5 symbol pipeline | PASS_LOCAL | non-live tests pass |
+| BC-17 | Data | FRED integration | PASS_LOCAL | covered by unit tests; reported module coverage remains above target |
+| BC-18 | Data | FX basket proxy | PASS_LOCAL | covered by unit tests; reported module coverage remains above target |
+| BC-19 | Scheduler | Persistent job queue | PASS_LOCAL | non-live tests pass |
+| BC-20 | Research | Experiment lifecycle | PASS_LOCAL | non-live tests pass |
+| BC-21 | Runtime | External heartbeat | PASS_LOCAL | non-live tests pass |
+| BC-22 | Runtime | Graceful shutdown | PASS_LOCAL | added runtime coverage |
+| BC-23 | Runtime | Watchdog probes | PASS_LOCAL | added runtime coverage |
+| BC-24 | Telegram | System event taxonomy | PASS_LOCAL | non-live tests pass |
+| BC-25 | Windows | Auto-start scripts | PASS_LOCAL | existing script checks remain in suite |
+| BC-26 | Security | No unsupported provider leakage | PASS_LOCAL | provider policy and scanner |
+| BC-27 | Security | Secret non-exposure | PASS_LOCAL | strict security scan |
+| BC-28 | Verification | Full non-live suite | PASS_LOCAL | `197 passed, 1 deselected` |
+| BC-29 | Verification | Browser/control UI E2E | PASS_LOCAL | `.\scripts\Test-OpenClawUI.ps1` overall pass |
+| BC-30 | Verification | Push and remote gates | PENDING | requires GitHub `ci` and `security` after push |
 
 ## Remaining Risk Register
 
 | ID | Risk | Mitigation |
-|----|------|-----------|
-| RR-01 | `fred_adapter.py`, `fx_basket.py` — 0% test coverage | Add unit tests with mocked HTTP before production |
-| RR-02 | `job_queue.py`, `experiment.py` — 0% test coverage | Add SQLite integration tests and FSM unit tests |
-| RR-03 | `state/.env` missing 6 new vars | User must add MT5 symbol vars + FRED_CACHE_TTL_SECONDS |
-| RR-04 | Browser E2E not run | Run dashboard smoke test before PRE-PRODUCTION promotion |
-| RR-05 | HUMAN_RELEASE_GATE not passed | Required before any code reaches production |
+|----|------|------------|
+| RR-01 | GitHub CI replacement run not yet verified | Push remediation and inspect GitHub Actions logs |
+| RR-02 | GitHub security replacement run not yet verified | Push remediation and inspect GitHub Actions logs |
+| RR-03 | HUMAN_RELEASE_GATE not passed | Required before production promotion |

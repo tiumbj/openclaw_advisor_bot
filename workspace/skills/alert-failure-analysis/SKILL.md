@@ -1,7 +1,7 @@
 ---
 name: alert-failure-analysis
 description: Analyse failed or low-quality alerts in the Outcome Ledger to identify systematic failure patterns.
-version: 1.2.9
+version: 1.2.10
 owner_agent: failure-root-cause-agent
 purpose: Drive continuous improvement by surfacing recurring alert failure root causes.
 allowed_inputs:

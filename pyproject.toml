@@ -67,6 +67,7 @@ output = "docs/P2_COVERAGE.json"
 line-length = 100
 target-version = "py312"
 src = ["engine/src", "engine/tests", "scripts"]
+extend-exclude = ["engine/.tmp_pytest"]
 
 [tool.ruff.lint]
 select = [

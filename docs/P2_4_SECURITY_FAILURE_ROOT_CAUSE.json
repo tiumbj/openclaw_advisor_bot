@@ -1,0 +1,54 @@
+{
+  "schema_version": "p2-4-root-cause-v1",
+  "work_package": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION",
+  "phase": "P2.4",
+  "package_version": "1.2.10",
+  "baseline_commit": "a996540297e43cd0cb540379575ab636f0986b5e",
+  "github_failure": {
+    "workflow": "security",
+    "run_id": "27503144729",
+    "job": "audit",
+    "step": "Secret, source, AST, constant, graph, and tracking scan",
+    "command": "openclaw-advisor security-scan --include-history --strict | Tee-Object -FilePath security-scan.json",
+    "exit_code": 1,
+    "source": "gh run view 27503144729 --log-failed"
+  },
+  "root_cause": "Generated reports and artifact bundles that quote historical forbidden-symbol findings were classified as ACTIVE_SOURCE, causing strict security-scan failure.",
+  "security_boundary": {
+    "strict_mode_kept": true,
+    "forbidden_symbol_rules_kept": true,
+    "active_source_failures_still_fail": true,
+    "classification_fix": [
+      "Classify artifacts as DOCUMENTATION.",
+      "Classify generated security-scan.json as DOCUMENTATION.",
+      "Ignore Python cache directories and local pytest temp directories."
+    ]
+  },
+  "dependency_audit": {
+    "initial_local_failure": [
+      {"package": "pip", "installed_version": "25.0.1", "status": "VULNERABLE"},
+      {"package": "pyarrow", "installed_version": "19.0.1", "status": "VULNERABLE"}
+    ],
+    "project_requirement": "pyarrow>=23.0.1,<24",
+    "remediation_commands": [
+      "python -m pip install --upgrade pip",
+      "python -m pip install -e \".[dev]\""
+    ],
+    "resolved_versions": {
+      "pip": "26.1.2",
+      "pyarrow": "23.0.1",
+      "openclaw-advisor-foundation": "1.2.10"
+    }
+  },
+  "local_verification": [
+    {"command": "openclaw-advisor security-scan --include-history --strict", "status": "PASS", "summary": "active_source_violations=0"},
+    {"command": "python -m pip_audit", "status": "PASS", "summary": "No known vulnerabilities found"},
+    {"command": "python -m pip check", "status": "PASS"},
+    {"command": "openclaw-advisor render-config --validate --strict", "status": "PASS"},
+    {"command": "openclaw-advisor validate-skills --strict", "status": "PASS"},
+    {"command": ".\\scripts\\Test-OpenClawUI.ps1", "status": "PASS"}
+  ],
+  "closure_status": "PENDING_GITHUB_ACTIONS",
+  "phase_status": "IN_PROGRESS",
+  "audit_readiness": "NOT_READY"
+}

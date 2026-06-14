@@ -1,7 +1,7 @@
 ---
 name: telegram-delivery-safety
 description: Telegram delivery safety skill.
-version: 1.2.9
+version: 1.2.10
 owner_agent: telegram-publisher
 purpose: Enforce delivery safety and redaction.
 allowed_inputs:

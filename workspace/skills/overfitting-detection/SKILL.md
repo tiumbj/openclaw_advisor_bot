@@ -1,7 +1,7 @@
 ---
 name: overfitting-detection
 description: Detect parameter overfitting in strategy backtests using robustness metrics.
-version: 1.2.9
+version: 1.2.10
 owner_agent: statistical-backtest-agent
 purpose: Block strategies that rely on data-mined parameters from reaching the experiment promotion gate.
 allowed_inputs:

@@ -1,7 +1,7 @@
 ---
 name: strategy-logic-audit
 description: Strategy logic audit skill.
-version: 1.2.9
+version: 1.2.10
 owner_agent: xau-strategy-auditor
 purpose: Audit strategy logic against approved evidence.
 allowed_inputs:

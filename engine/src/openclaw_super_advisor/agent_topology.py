@@ -75,7 +75,9 @@ def _agent_specs() -> dict[str, dict[str, object]]:
     return {
         "super-advisor": {
             "name": "OpenClaw MAIN Agent Manager",
-            "description": "Sole user-facing coordinator; planner, router, evidence arbiter, release gate.",
+            "description": (
+                "Sole user-facing coordinator; planner, router, evidence arbiter, release gate."
+            ),
             "secret_access": "none",
             "timeout_seconds": 300,
             "retry_max_attempts": 2,
@@ -110,7 +112,9 @@ def _agent_specs() -> dict[str, dict[str, object]]:
         },
         "price-action-microstructure-agent": {
             "name": "Price Action Microstructure Agent",
-            "description": "Candlestick structure, wick/body, rejection, and M1/M5 trigger analysis.",
+            "description": (
+                "Candlestick structure, wick/body, rejection, and M1/M5 trigger analysis."
+            ),
             "secret_access": "none",
             "timeout_seconds": 90,
             "retry_max_attempts": 2,
@@ -124,14 +128,19 @@ def _agent_specs() -> dict[str, dict[str, object]]:
         },
         "statistical-backtest-agent": {
             "name": "Statistical Backtest Agent",
-            "description": "Sample adequacy, walk-forward, stability, overfitting and leakage detection.",
+            "description": (
+                "Sample adequacy, walk-forward, stability, overfitting and leakage detection."
+            ),
             "secret_access": "none",
             "timeout_seconds": 300,
             "retry_max_attempts": 2,
         },
         "failure-root-cause-agent": {
             "name": "Failure Root Cause Agent",
-            "description": "Alert failure analysis, logic conflict audit, root-cause tree, corrective hypothesis.",
+            "description": (
+                "Alert failure analysis, logic conflict audit, root-cause tree, "
+                "corrective hypothesis."
+            ),
             "secret_access": "none",
             "timeout_seconds": 120,
             "retry_max_attempts": 2,
@@ -145,14 +154,18 @@ def _agent_specs() -> dict[str, dict[str, object]]:
         },
         "reliability-watchdog-agent": {
             "name": "Reliability Watchdog Agent",
-            "description": "Process health, heartbeat monitoring, restart protocol, incident escalation.",
+            "description": (
+                "Process health, heartbeat monitoring, restart protocol, incident escalation."
+            ),
             "secret_access": "none",
             "timeout_seconds": 30,
             "retry_max_attempts": 5,
         },
         "knowledge-skill-manager": {
             "name": "Knowledge and Skill Manager",
-            "description": "Research knowledge lifecycle, experiment records, skill candidate management.",
+            "description": (
+                "Research knowledge lifecycle, experiment records, skill candidate management."
+            ),
             "secret_access": "none",
             "timeout_seconds": 120,
             "retry_max_attempts": 2,

@@ -10,13 +10,12 @@ from __future__ import annotations
 
 import json
 import sqlite3
-import time
+from collections.abc import Generator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Generator
-
+from typing import Any
 
 JOB_STATE_QUEUED = "QUEUED"
 JOB_STATE_LEASED = "LEASED"
@@ -292,7 +291,8 @@ class PersistentJobQueue:
             jtype = job.job_type
             self._circuit_failures[jtype] = self._circuit_failures.get(jtype, 0) + 1
 
-            if job.attempt >= job.max_attempts or self._circuit_failures.get(jtype, 0) >= self._circuit_threshold:
+            circuit_open = self._circuit_failures.get(jtype, 0) >= self._circuit_threshold
+            if job.attempt >= job.max_attempts or circuit_open:
                 conn.execute(
                     """
                     UPDATE jobs
@@ -310,7 +310,6 @@ class PersistentJobQueue:
                     (job_id, jtype, json.dumps(job.payload), error, now),
                 )
             else:
-                backoff = min(2 ** job.attempt, 300)
                 conn.execute(
                     """
                     UPDATE jobs

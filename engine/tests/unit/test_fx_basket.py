@@ -9,11 +9,6 @@ import math
 
 import pytest
 
-from openclaw_super_advisor.market_data.fx_basket import (
-    FORMULA_VERSION,
-    FxBasketResult,
-    compute_fx_basket,
-)
 from openclaw_super_advisor.constants import (
     FX_BASKET_INTERNAL_ID,
     FX_BASKET_PAIRS,
@@ -22,7 +17,10 @@ from openclaw_super_advisor.constants import (
     REALTIME_CLASS_STALE,
     REALTIME_CLASS_UNKNOWN,
 )
-
+from openclaw_super_advisor.market_data.fx_basket import (
+    FORMULA_VERSION,
+    compute_fx_basket,
+)
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -123,7 +121,7 @@ def test_usdchf_and_usdcad_are_direct() -> None:
 # ── basket_value calculation ──────────────────────────────────────────────────
 
 def test_basket_value_in_basis_points() -> None:
-    """Basket = avg_usd_return × 10,000, rounded to 4dp."""
+    """Basket = avg_usd_return x 10,000, rounded to 4dp."""
     # All 7 pairs: all flat except USDJPY +1%
     data = _full_pair_data(pct_move=0.0)
     data["USDJPY"] = (1.0100, 1.0000, REALTIME_CLASS_INTRADAY_REALTIME)

@@ -20,7 +20,6 @@ from openclaw_super_advisor.scheduler.job_queue import (
     PersistentJobQueue,
 )
 
-
 # ── fixtures ──────────────────────────────────────────────────────────────────
 
 @pytest.fixture()

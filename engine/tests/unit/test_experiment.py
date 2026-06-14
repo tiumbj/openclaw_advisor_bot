@@ -18,7 +18,6 @@ from openclaw_super_advisor.research.experiment import (
     ExperimentStore,
 )
 
-
 # ── fixtures ──────────────────────────────────────────────────────────────────
 
 @pytest.fixture()
@@ -102,7 +101,7 @@ def test_create_stores_metadata(store: ExperimentStore) -> None:
 
 
 def test_create_file_written(store: ExperimentStore, tmp_path: Path) -> None:
-    exp = _create(store)
+    _create(store)
     path = tmp_path / "experiments" / "exp-001.json"
     assert path.exists()
 
@@ -127,7 +126,7 @@ def test_load_roundtrip(store: ExperimentStore) -> None:
 
 
 def test_load_nonexistent_raises(store: ExperimentStore) -> None:
-    with pytest.raises(Exception):
+    with pytest.raises(FileNotFoundError):
         store.load("no-such-exp")
 
 

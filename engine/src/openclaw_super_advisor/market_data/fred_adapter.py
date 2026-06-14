@@ -10,10 +10,10 @@ from __future__ import annotations
 import json
 import time
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from typing import Any
-from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 from ..constants import (
     FRED_SERIES,
@@ -159,7 +159,8 @@ class FredAdapter:
                 last_exc = exc
                 if isinstance(exc, HTTPError) and exc.code in (400, 401, 403):
                     self._circuit.record_failure()
-                    raise FredApiError(f"FRED API non-retryable HTTP {exc.code}: {series_id}") from exc
+                    message = f"FRED API non-retryable HTTP {exc.code}: {series_id}"
+                    raise FredApiError(message) from exc
                 backoff = 2 ** attempt
                 time.sleep(backoff)
             except Exception as exc:
@@ -168,7 +169,8 @@ class FredAdapter:
                 raise FredApiError(f"FRED fetch error for {series_id}: {exc}") from exc
 
         self._circuit.record_failure()
-        raise FredApiError(f"FRED {series_id} failed after {self._max_retries} retries") from last_exc
+        message = f"FRED {series_id} failed after {self._max_retries} retries"
+        raise FredApiError(message) from last_exc
 
     def _parse_latest(
         self,

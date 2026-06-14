@@ -1,7 +1,7 @@
 ---
 name: incident-escalation-contract
 description: Define escalation path for system incidents from watchdog through Telegram to human review.
-version: 1.2.9
+version: 1.2.10
 owner_agent: reliability-watchdog-agent
 purpose: Ensure all incidents reach the right handler at the right severity within defined SLAs.
 allowed_inputs:

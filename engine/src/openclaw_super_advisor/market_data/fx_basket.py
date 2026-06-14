@@ -126,7 +126,8 @@ def compute_fx_basket(
         status = "INSUFFICIENT_DATA"
         rtclass = REALTIME_CLASS_UNKNOWN
     else:
-        avg_return = sum(c.return_value for c in valid_components) / used  # type: ignore[arg-type]
+        returns = [c.return_value for c in valid_components if c.return_value is not None]
+        avg_return = sum(returns) / used
         basket_value = round(avg_return * 10_000, 4)  # basis points for readability
         stale_count = sum(
             1 for c in valid_components

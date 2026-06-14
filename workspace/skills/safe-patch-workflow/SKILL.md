@@ -1,7 +1,7 @@
 ---
 name: safe-patch-workflow
 description: Safe patch workflow skill.
-version: 1.2.9
+version: 1.2.10
 owner_agent: system-coder-auditor
 purpose: Propose safe isolated patches and rollback steps.
 allowed_inputs:

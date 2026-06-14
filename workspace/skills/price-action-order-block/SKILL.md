@@ -1,7 +1,7 @@
 ---
 name: price-action-order-block
 description: Price action order block review skill.
-version: 1.2.9
+version: 1.2.10
 owner_agent: xau-strategy-auditor
 purpose: Review price action and order block evidence.
 allowed_inputs:

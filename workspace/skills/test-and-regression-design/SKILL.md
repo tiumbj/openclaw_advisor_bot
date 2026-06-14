@@ -1,7 +1,7 @@
 ---
 name: test-and-regression-design
 description: Test and regression design skill.
-version: 1.2.9
+version: 1.2.10
 owner_agent: system-coder-auditor
 purpose: Design tests and regression checks.
 allowed_inputs:
