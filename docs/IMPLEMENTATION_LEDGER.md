@@ -599,3 +599,88 @@
   - `python -m pip_audit timed out twice in this workspace window.`
   - `Legacy shell environment diagnostics still surface historical provider credentials outside the repo.`
 - Next action: `Add valid credit to one allowed provider, run one controlled smoke test, then commit and push the P2.2 foundation.`
+
+## Entry 0021
+
+- Timestamp UTC: `2026-06-14T02:00:00Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-BLUEPRINT`
+- Operation: `Drafted the pre-production blueprint and blueprint compliance matrix from verified repository and runtime state, then recorded the current gateway auth mismatch, single-agent topology, and missing learning/backup/self-improvement layers without changing production behavior.`
+- Files changed:
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+  - `docs/P2_4_PREPRODUCTION_BLUEPRINT.md`
+  - `docs/P2_4_PREPRODUCTION_BLUEPRINT.json`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json`
+  - `engine/tests/unit/test_report_artifacts.py`
+- Tests run:
+  - `openclaw --version`
+  - `openclaw --help`
+  - `openclaw gateway --help`
+  - `openclaw agents --help`
+  - `openclaw skills --help`
+  - `openclaw models --help`
+  - `openclaw hooks --help`
+  - `openclaw status --json`
+  - `openclaw models status --json`
+  - `openclaw agents list --json`
+  - `openclaw agents bindings --json`
+  - `openclaw skills list --agent super-advisor`
+  - `openclaw gateway status`
+- Result: `IN_PROGRESS`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `NOT_RUN`
+- Known defects:
+  - `Package version is still 1.2.1, not the target 1.2.4.`
+  - `Only one agent is registered and no routing bindings exist yet.`
+  - `Gateway port 18789 is listening locally, but auth mismatches the shell environment.`
+  - `Learning, backup, and self-improvement foundations are still missing.`
+- Next action: `Implement the report integrity tests and the missing pre-production foundations, then decide whether P2.2 can be closed or remains blocked.`
+
+## Entry 0022
+
+- Timestamp UTC: `2026-06-14T02:20:00Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-BLUEPRINT`
+- Operation: `Validated the new report artifact integrity tests, normalized report files to LF, reran the non-live suite, re-ran the source type check, re-ran the repository security scan after cleaning generated scratch files, and refreshed coverage evidence without changing production code paths.`
+- Files changed:
+  - `docs/PROJECT_STATUS.md`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+  - `docs/P2_COVERAGE.json`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md`
+  - `docs/P2_4_PREPRODUCTION_BLUEPRINT.json`
+  - `docs/P2_4_PREPRODUCTION_BLUEPRINT.md`
+  - `engine/tests/unit/test_report_artifacts.py`
+  - `docs/P2_4_AGENT_SKILL_MATRIX.md`
+  - `docs/P2_4_LEARNING_BACKUP_AUDIT.md`
+  - `docs/P2_4_PIPELINE_WIRING_AUDIT.md`
+  - `docs/P2_4_POST_PATCH_AUDIT.md`
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.json`
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.md`
+  - `docs/P2_4_REPORT_PROVENANCE.json`
+  - `docs/P2_4_SELF_IMPROVEMENT_READINESS.md`
+  - `docs/P2_4_TELEGRAM_MESSAGE_AUDIT.md`
+- Tests run:
+  - `python -m pytest engine\tests\unit\test_report_artifacts.py -q --no-cov`
+  - `python -m pytest -m "not live" -q --no-cov --basetemp C:\Data\OpenClawSuperAdvisor\_tmp\pytest`
+  - `python -m pip check`
+  - `openclaw-advisor security-scan --include-history --strict --project-root . --json`
+  - `python -m mypy engine\src`
+  - `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json --basetemp C:\Data\OpenClawSuperAdvisor\_tmp\pytest`
+- Result: `PASS`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `PASS`
+- Known defects:
+  - `Package version is still 1.2.1, not the target 1.2.4.`
+  - `Gateway auth mismatch still blocks a controlled live provider smoke test.`
+  - `Only one runtime agent exists; the requested multi-agent topology is still not wired.`
+  - `Learning, backup, and self-improvement subsystems are still documentation-only.`
+- Next action: `Decide whether to proceed with source-level agent wiring or stop at the P2.4 pre-production audit boundary.`

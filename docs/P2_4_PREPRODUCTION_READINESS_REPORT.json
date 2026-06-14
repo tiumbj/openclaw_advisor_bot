@@ -1,0 +1,15 @@
+{
+  "implemented": "PARTIAL",
+  "wired": "PARTIAL",
+  "static_tested": "PASS",
+  "runtime_tested": "BLOCKED",
+  "live_tested": "BLOCKED",
+  "shadow_ready": "NO",
+  "production_ready": "NO",
+  "blocked": "YES",
+  "verdict": {
+    "foundation_preproduction_audit": "IN_PROGRESS",
+    "trading_alert_production_readiness": "NO"
+  },
+  "immediate_next_step": "Resolve the gateway token mismatch or confirm it cannot be resolved without changing the safety contract"
+}

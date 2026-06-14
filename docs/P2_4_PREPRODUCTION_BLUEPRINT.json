@@ -1,0 +1,323 @@
+{
+  "schema_version": "p2-4-preproduction-blueprint-v1",
+  "package_version_target": "1.2.4",
+  "current_package_version": "1.2.1",
+  "current_phase": "P2.2",
+  "current_work_package": "WP-P2_4-BLUEPRINT",
+  "current_architecture": {
+    "agents": [
+      "super-advisor"
+    ],
+    "routing_bindings": [],
+    "gateway": {
+      "mode": "local",
+      "bind": "loopback",
+      "port": 18789,
+      "control_ui_enabled": false,
+      "auth_state": "mismatch_with_shell_env"
+    },
+    "supported_providers": [
+      "openai",
+      "claude",
+      "gemini",
+      "deepseek"
+    ],
+    "skills_ready": 7,
+    "learning_layers": [],
+    "backup_layers": [],
+    "self_improvement_layers": []
+  },
+  "confirmed_defects": [
+    "Gateway auth mismatches the current shell environment.",
+    "Only one agent exists in the registry.",
+    "No routing bindings exist.",
+    "No isolated strategy, coder, or publisher agents exist.",
+    "No separate learning, backup, or self-improvement subsystem exists.",
+    "Package version is still 1.2.1 instead of 1.2.4."
+  ],
+  "target_architecture": {
+    "advisor_only": true,
+    "read_only_mt5": true,
+    "provider_allowlist": [
+      "openai",
+      "claude",
+      "gemini",
+      "deepseek"
+    ],
+    "agents": [
+      "super-advisor",
+      "xau-strategy-auditor",
+      "system-coder-auditor",
+      "telegram-publisher"
+    ],
+    "isolated_workspaces_required": true,
+    "immutable_evidence_archive": true,
+    "append_only_outcome_ledger": true,
+    "per_agent_memory": true,
+    "skill_candidate_lifecycle": true,
+    "backup_restore": true,
+    "self_improvement_mode": "proposal_only"
+  },
+  "agent_topology": [
+    {
+      "id": "super-advisor",
+      "responsibilities": [
+        "coordinator",
+        "safety_policy",
+        "evidence_validation",
+        "orchestration",
+        "final_publication_decision",
+        "incident_coordination"
+      ],
+      "forbidden": [
+        "numeric_calculation_authority",
+        "source_code_modification_authority"
+      ]
+    },
+    {
+      "id": "xau-strategy-auditor",
+      "responsibilities": [
+        "xauusd_market_interpretation",
+        "multi_timeframe_reasoning",
+        "price_action_review",
+        "order_block_review",
+        "chart_pattern_review",
+        "candlestick_microstructure",
+        "strategy_logic_audit",
+        "alert_quality_review"
+      ],
+      "forbidden": [
+        "telegram_tool",
+        "direct_mt5_tool",
+        "score_modification"
+      ]
+    },
+    {
+      "id": "system-coder-auditor",
+      "responsibilities": [
+        "python_architecture_audit",
+        "pipeline_audit",
+        "dead_code_detection",
+        "logic_conflict_detection",
+        "schema_review",
+        "test_generation",
+        "safe_patch_proposal",
+        "rollback_review"
+      ],
+      "forbidden": [
+        "runtime_secret_access",
+        "direct_main_write",
+        "telegram_control",
+        "direct_mt5_access"
+      ]
+    },
+    {
+      "id": "telegram-publisher",
+      "responsibilities": [
+        "thai_formatting",
+        "payload_validation",
+        "delivery_result_recording"
+      ],
+      "forbidden": [
+        "market_analysis",
+        "score_authority",
+        "code_write_authority",
+        "direct_provider_selection_authority"
+      ]
+    }
+  ],
+  "skill_matrix": {
+    "super-advisor": [
+      "advisor-safety-contract",
+      "environment-health",
+      "evidence-audit",
+      "agent-orchestration-contract",
+      "super-potential-review",
+      "incident-reporting",
+      "publication-policy"
+    ],
+    "xau-strategy-auditor": [
+      "xauusd-market-analysis",
+      "multi-timeframe-structure-review",
+      "price-action-order-block",
+      "chart-pattern-filter-review",
+      "candlestick-microstructure",
+      "strategy-logic-audit",
+      "realtime-evidence-review",
+      "super-potential-audit",
+      "alert-quality-improvement"
+    ],
+    "system-coder-auditor": [
+      "python-pipeline-micro-audit",
+      "code-architecture-review",
+      "logic-conflict-detection",
+      "dead-code-and-duplicate-review",
+      "test-and-regression-design",
+      "blueprint-compliance-audit",
+      "safe-patch-workflow",
+      "release-and-rollback",
+      "skill-improvement-proposal"
+    ],
+    "telegram-publisher": [
+      "thai-telegram-publisher",
+      "telegram-message-contract",
+      "telegram-delivery-safety",
+      "telegram-deduplication-throttle",
+      "telegram-retry-and-dead-letter",
+      "telegram-security-redaction"
+    ]
+  },
+  "tool_matrix": {
+    "super-advisor": {
+      "allowed": [
+        "read approved evidence",
+        "session status",
+        "internal agent invocation",
+        "approved publisher invocation",
+        "incident logging"
+      ],
+      "denied": [
+        "shell",
+        "source write",
+        "raw MT5",
+        "direct Telegram message",
+        "credential access",
+        "browser",
+        "arbitrary HTTP"
+      ]
+    },
+    "xau-strategy-auditor": {
+      "allowed": [
+        "read approved evidence packet",
+        "read strategy specification",
+        "return structured review"
+      ],
+      "denied": [
+        "write",
+        "shell",
+        "Telegram",
+        "MT5",
+        "credential access",
+        "direct code mutation"
+      ]
+    },
+    "system-coder-auditor": {
+      "allowed_read_only": [
+        "read source bundle",
+        "read tests",
+        "read dependency graph"
+      ],
+      "allowed_patch_mode": [
+        "isolated worktree only",
+        "allowlisted development commands"
+      ],
+      "denied": [
+        "direct write to main",
+        "push without release gate",
+        "runtime .env",
+        "Telegram",
+        "MT5",
+        "broker",
+        "production state",
+        "service control"
+      ]
+    },
+    "telegram-publisher": {
+      "allowed": [
+        "read approved publication payload",
+        "Telegram send tool",
+        "delivery-result logging"
+      ],
+      "denied": [
+        "market analysis",
+        "source write",
+        "shell",
+        "provider configuration",
+        "MT5",
+        "internal score modification"
+      ]
+    }
+  },
+  "message_routing": [
+    "Python deterministic pipeline -> structured evidence packet -> super-advisor",
+    "super-advisor -> xau-strategy-auditor -> structured review",
+    "super-advisor -> final policy -> telegram-publisher",
+    "telegram-publisher -> Telegram delivery"
+  ],
+  "data_ownership": [
+    "Python owns numbers and calculations",
+    "Agents may not invent or alter numbers",
+    "Missing values remain UNKNOWN",
+    "Telegram formatting may not fabricate prices, targets, or probabilities"
+  ],
+  "event_schemas": [
+    "SYSTEM_HEALTH",
+    "DATA_QUALITY_WARNING",
+    "SUPER_POTENTIAL_CANDIDATE_INTERNAL",
+    "SUPER_POTENTIAL_CONFIRMED",
+    "SUPER_POTENTIAL_INVALIDATED",
+    "SYSTEM_INCIDENT"
+  ],
+  "persistence_and_backup": {
+    "immutable_evidence_archive": true,
+    "append_only_outcome_ledger": true,
+    "per_agent_memory": true,
+    "skill_candidate_store": true,
+    "backup_includes": [
+      "evidence manifests",
+      "outcome ledger",
+      "agent memory",
+      "skill versions",
+      "config templates",
+      "evaluation results",
+      "release metadata"
+    ]
+  },
+  "security_boundaries": [
+    "advisor-only",
+    "no execution",
+    "mt5 read-only",
+    "no secrets in reports",
+    "no unrestricted self-modification",
+    "no direct write to main",
+    "no automatic deployment"
+  ],
+  "test_plan": [
+    "report artifact integrity tests",
+    "provider policy tests",
+    "agent registry and skill discovery tests",
+    "routing and binding tests",
+    "telegram formatting snapshot tests",
+    "backup and restore tests",
+    "self-improvement dry-run tests",
+    "secret-scan tests",
+    "ci verification"
+  ],
+  "rollback_plan": [
+    "keep a rollback commit before topology changes",
+    "use isolated worktree patches for experimental coder changes",
+    "validate before merge",
+    "remove only the last experimental patch on failure",
+    "preserve the original safety contract"
+  ],
+  "files_to_change": [
+    "engine/src/openclaw_super_advisor/_version.py",
+    "engine/src/openclaw_super_advisor/cli.py",
+    "engine/src/openclaw_super_advisor/config.py",
+    "engine/src/openclaw_super_advisor/env.py",
+    "engine/src/openclaw_super_advisor/providers.py",
+    "engine/src/openclaw_super_advisor/skills.py",
+    "config/openclaw.template.json",
+    "workspace/skills/*/SKILL.md",
+    "state/openclaw.json",
+    "state/agents/*",
+    "docs/*P2_4*",
+    "engine/tests/*"
+  ],
+  "expected_risks": [
+    "gateway auth mismatch may continue to block live provider verification",
+    "new agent topology may expose validation failures if skills or tool policies are inconsistent",
+    "backup and memory foundations may need more storage layout work",
+    "telegram dry-run may need credential alignment before any live smoke test"
+  ]
+}

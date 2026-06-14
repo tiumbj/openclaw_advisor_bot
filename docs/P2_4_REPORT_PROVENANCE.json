@@ -1,0 +1,37 @@
+{
+  "schema_version": "p2-4-report-provenance-v1",
+  "source_commit": "1a2850e9f1eb924a94d68649a2aba029ab77b935",
+  "observed_runtime_version": "OpenClaw 2026.6.6 (8c802aa)",
+  "evidence_sources": [
+    "git status",
+    "git branch --show-current",
+    "git remote -v",
+    "git rev-parse HEAD",
+    "git rev-parse origin/main",
+    "openclaw --version",
+    "openclaw --help",
+    "openclaw gateway --help",
+    "openclaw agents --help",
+    "openclaw skills --help",
+    "openclaw models --help",
+    "openclaw hooks --help",
+    "openclaw status --json",
+    "openclaw models status --json",
+    "openclaw agents list --json",
+    "openclaw agents bindings --json",
+    "openclaw skills list --agent super-advisor",
+    "openclaw gateway status",
+    "python -m pip check",
+    "python -m mypy engine\\src",
+    "python -m pytest engine\\tests\\unit\\test_report_artifacts.py -q --no-cov",
+    "python -m pytest -m not live -q --no-cov --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest",
+    "openclaw-advisor security-scan --include-history --strict --project-root . --json",
+    "python -m pytest -m not live --cov=openclaw_super_advisor --cov-report=term-missing --cov-report=json --basetemp C:\\Data\\OpenClawSuperAdvisor\\_tmp\\pytest"
+  ],
+  "redaction_status": "reports_only",
+  "notes": [
+    "No tracked secrets were written to reports.",
+    "Generated scratch files were cleaned before the final security scan.",
+    "The gateway listener remains local on 127.0.0.1:18789 but auth is still mismatched."
+  ]
+}
