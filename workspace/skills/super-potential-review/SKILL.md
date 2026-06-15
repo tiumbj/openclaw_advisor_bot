@@ -1,7 +1,7 @@
 ---
 name: super-potential-review
 description: Super potential review skill.
-version: 1.2.13
+version: 1.2.14
 owner_agent: super-advisor
 purpose: Review approved evidence for super potential candidates.
 allowed_inputs:

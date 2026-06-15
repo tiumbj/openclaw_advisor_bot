@@ -1,33 +1,31 @@
 {
   "schema_version": "project-status-v5",
   "project": "openclaw_advisor_bot",
-  "package_version": "1.2.13",
+  "package_version": "1.2.14",
   "current_phase": "P2.4",
   "phase": "P2.4",
   "phase_status": "REMEDIATION_IN_PROGRESS",
   "audit_readiness": "NOT_READY",
   "audit_gate": "BROWSER_SANDBOX_BLOCKED_UPSTREAM",
-  "current_work_package": "WP-P2_4-BROWSER-SANDBOX-PROVENANCE-RECONCILIATION",
-  "updated_at_utc": "2026-06-15T08:35:00Z",
+  "current_work_package": "WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT",
+  "updated_at_utc": "2026-06-15T13:00:00Z",
   "audit_baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "audit_report_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
-  "baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "observed_remote_head": "b247db0e3e240e76f8ba754110287792fdb40a44",
-  "implementation_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
-  "status_report_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
-  "remediation_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
+  "report_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
+  "validated_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
+  "containing_commit_resolution": "git log -1 --format=%H -- docs/PROJECT_STATUS.json",
+  "provenance_model_version": "non-self-referential-v1",
   "production_gate": "HUMAN_RELEASE_GATE_CLOSED",
   "next_phase": "PRE_PRODUCTION_AUDIT",
   "next_phase_started": false,
   "remote_validation": {
-    "validated_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
+    "validated_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
     "ci": {
-      "run_id": 27541180318,
+      "run_id": 27544625989,
       "status": "completed",
       "conclusion": "success"
     },
     "security": {
-      "run_id": 27541180341,
+      "run_id": 27544625996,
       "status": "completed",
       "conclusion": "success",
       "dependency_vulnerability_scan": "success"
@@ -45,7 +43,7 @@
   ],
   "selected_provider": "claude",
   "credit_blocker": "NONE",
-  "next_action": "Keep browser disabled and await any upstream fix; remote validation is scoped to the reconciled baseline commit.",
+  "next_action": "Run full validation suite in isolated worktree, commit, push, and verify remote CI conclusions for the NFD-001 / PPA-0001 remediation commit.",
   "provider_static_validation": {
     "status": "PASS",
     "provider_policy": "BLOCKED",
@@ -70,7 +68,7 @@
     "status_probe_pass": true,
     "ui_bootstrap_pass": true,
     "overall_pass": true,
-    "script_version": "1.2.13",
+    "script_version": "1.2.14",
     "runtime_token_source": "env",
     "runtime_token_variable": "OPENCLAW_GATEWAY_TOKEN",
     "warnings": []
@@ -149,15 +147,15 @@
     },
     {
       "name": "pytest_non_live_clean_venv",
-      "command": ".venv-audit\\Scripts\\python.exe -m pytest -m \"not live\" -q --basetemp ._tmp\\audit-venv-pytest (PYTHONNOUSERSITE=1, no PYTHONPATH)",
+      "command": ".venv-blueprint\\Scripts\\python.exe -m pytest -m \"not live\" -q --basetemp C:\\Temp\\audit_pytest_tmp",
       "status": "PASS",
-      "summary": "272 passed, 1 deselected"
+      "summary": "293 passed, 1 deselected (272 baseline + 21 new boundary tests; NFD-001 defect eliminated)"
     },
     {
       "name": "coverage_gate_clean_venv",
-      "command": ".venv-audit\\Scripts\\python.exe -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-branch --cov-fail-under=85",
+      "command": ".venv-blueprint\\Scripts\\python.exe -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-branch --cov-fail-under=85",
       "status": "PASS",
-      "summary": "coverage 85.81%"
+      "summary": "coverage 85.89% (threshold 85.0%)"
     },
     {
       "name": "validate_skills",
@@ -184,14 +182,15 @@
     },
     {
       "name": "security_scan",
-      "command": "openclaw-advisor security-scan --include-history --strict",
-      "status": "PASS"
+      "command": ".venv-blueprint\\Scripts\\openclaw-advisor.exe security-scan --include-history --strict",
+      "status": "PASS_LOCAL",
+      "summary": "active_source_violations=0; 5 working_tree false positives in .venv-blueprint/ binary files (ruff.exe, arrow.dll) — gitignored, absent from CI"
     },
     {
       "name": "pip_audit",
       "command": "python -m pip_audit",
       "status": "TIMEOUT",
-      "summary": "timed out twice in this workspace window"
+      "summary": "timed out twice in this workspace window; GitHub dependency scan is authoritative"
     },
     {
       "name": "browser_sandbox_bootstrap",
@@ -206,7 +205,8 @@
     "artifact": "docs/P2_COVERAGE.json"
   },
   "findings": {
-    "PPA-0001": "OPEN",
+    "NFD-001": "CLOSED_LOCAL",
+    "PPA-0001": "CLOSED_LOCAL",
     "PPA-0002": "CLOSED_LOCAL",
     "PPA-0003": "CLOSED_LOCAL",
     "PPA-0004": "CLOSED_LOCAL",
@@ -230,7 +230,9 @@
     "human_release_gate": "CLOSED"
   },
   "notes": [
-    "Do not declare READY/PASS until the evidence reconciliation commit is pushed and verified on GitHub.",
-    "Browser feature remains disabled until an explicit human-approved upstream fix exists."
+    "PPA-0001 closed: non-self-referential provenance model adopted. Fields report_subject_commit/validated_subject_commit/containing_commit_resolution/provenance_model_version replace the deprecated observed_remote_head/implementation_commit/status_report_commit/remediation_commit fields.",
+    "NFD-001 closed: consume_event() now_utc parameter injection eliminates test time-sensitivity; deterministic boundary tests added.",
+    "Browser feature remains disabled until an explicit human-approved upstream fix exists.",
+    "Do not claim a commit's own containing SHA inside files within that same commit; resolve it with git log -1 --format=%H -- <file-path> after push."
   ]
 }

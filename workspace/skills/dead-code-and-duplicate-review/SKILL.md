@@ -1,7 +1,7 @@
 ---
 name: dead-code-and-duplicate-review
 description: Dead code and duplicate review skill.
-version: 1.2.13
+version: 1.2.14
 owner_agent: system-coder-auditor
 purpose: Detect dead code and duplicate implementations.
 allowed_inputs:

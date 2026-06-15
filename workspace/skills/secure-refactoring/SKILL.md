@@ -1,7 +1,7 @@
 ---
 name: secure-refactoring
 description: Remove secrets, block FORBIDDEN_SYMBOLS, and harden path and privilege boundaries.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Eliminate security findings flagged by scanning, pip_audit, or the security-compliance-agent.
 allowed_inputs:

@@ -942,3 +942,47 @@
   - `Browser sandbox bootstrap remains blocked upstream in Codex runtime.`
   - `Local pip_audit timed out again in this workspace window.`
 - Next action: `Commit and push the documentation/provenance correction, then verify the new workflow runs.`
+
+## Entry 0029
+
+- Timestamp UTC: `2026-06-15T13:00:00Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT`
+- Operation: `Closed NFD-001 (nondeterministic S05 expiry test) by adding now_utc clock-injection parameter to consume_event() and _is_expired(), added 21 deterministic boundary tests (test_event_consumer_clock.py), fixed all remaining time-sensitive consume_event() call sites in test_signal_pipeline_e2e.py, closed PPA-0001 by adopting a non-self-referential provenance model replacing observed_remote_head/implementation_commit/status_report_commit/remediation_commit with report_subject_commit/validated_subject_commit/containing_commit_resolution/provenance_model_version across all docs, and bumped version to 1.2.14.`
+- Files changed:
+  - `engine/src/openclaw_super_advisor/_version.py`
+  - `engine/src/openclaw_super_advisor/event_consumer.py`
+  - `engine/tests/integration/test_signal_pipeline_e2e.py`
+  - `engine/tests/unit/test_event_consumer_clock.py`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md`
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.json`
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.md`
+  - `docs/P2_4_REPORT_PROVENANCE.json`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/PROJECT_STATUS.md`
+- Tests run:
+  - `.venv-blueprint\Scripts\python.exe -m pip check` → PASS (no broken requirements)
+  - `python -m ruff check .` → PASS (all checks passed)
+  - `python -m mypy engine\src` → PASS (no issues found in 57 source files)
+  - `.venv-blueprint\Scripts\python.exe -m pytest -m "not live" -q --basetemp C:\Temp\audit_pytest_tmp` → PASS: 293 passed, 1 deselected
+  - `.venv-blueprint\Scripts\python.exe -m pytest -m "not live" --cov=openclaw_super_advisor --cov-branch --cov-fail-under=85` → PASS: 85.89%
+  - `.venv-blueprint\Scripts\openclaw-advisor.exe validate-skills --strict` → PASS: 74 skills, valid=true
+  - `.venv-blueprint\Scripts\openclaw-advisor.exe validate-agents --strict` → PASS: valid=true, v1.2.14
+  - `.venv-blueprint\Scripts\openclaw-advisor.exe validate-routing --strict` → PASS: valid=true
+  - `.venv-blueprint\Scripts\openclaw-advisor.exe render-config --validate --strict` → PASS: v1.2.14
+  - `.venv-blueprint\Scripts\openclaw-advisor.exe security-scan --include-history --strict` → active_source_violations=0; 5 false-positive working_tree hits in .venv-blueprint/ binary files (gitignored, absent from CI)
+  - PPA-0007 isolation proof: executable=.venv-blueprint\Scripts\python.exe, package_file=engine\src\openclaw_super_advisor\__init__.py (worktree source), version=1.2.14, PYTHONPATH=(not set)
+  - git rev-parse HEAD (worktree) → 938668f1cb14492f0d3236230e68513977c1faf3
+  - git status --short (worktree) → all changes are tracked modifications, no unexpected files
+- Result: `PASS`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `NOT_RUN`
+- Known defects:
+  - `Browser sandbox bootstrap remains blocked upstream in Codex runtime.`
+  - `Local pip_audit not run in this window; GitHub dependency scan is authoritative.`
+  - `Security scan local pass=false due to .venv-blueprint/ binary false positives; active_source_violations=0 (PASS for project source); CI scan authoritative.`
+- Next action: `Commit staged changes, push branch, open PR to main, verify CI and security workflow conclusions.`

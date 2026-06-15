@@ -1,7 +1,7 @@
 ---
 name: property-based-testing
 description: Write Hypothesis property-based tests for mathematical invariants of pure functions.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Assert invariants hold over the full input space, not just hand-picked examples.
 allowed_inputs:

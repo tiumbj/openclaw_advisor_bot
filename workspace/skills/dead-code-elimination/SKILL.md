@@ -1,7 +1,7 @@
 ---
 name: dead-code-elimination
 description: Remove confirmed-dead code paths supported by static analysis and coverage evidence.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Reduce cognitive load and security surface by eliminating unreachable symbols with evidence.
 allowed_inputs:

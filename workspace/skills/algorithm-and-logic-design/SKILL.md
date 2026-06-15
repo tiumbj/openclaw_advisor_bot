@@ -1,7 +1,7 @@
 ---
 name: algorithm-and-logic-design
 description: Design and verify pure deterministic algorithms for market feature computation.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Guarantee correctness, determinism, and formula_version traceability for all feature functions.
 allowed_inputs:

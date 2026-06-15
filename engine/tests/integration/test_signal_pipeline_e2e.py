@@ -163,7 +163,7 @@ def test_s01_valid_market_data_pipeline_produces_confirmed_event() -> None:
     score_prov = event["provenance"]["numeric_fields"]["score"]
     assert score_prov["formula_version"] == decision.threshold_version
 
-    decision2 = consume_event(event)
+    decision2 = consume_event(event, now_utc=now)
     assert decision2.action == "PUBLISH"
 
 
@@ -191,10 +191,11 @@ def test_s02_stale_data_blocked_by_quality_gate() -> None:
 # ---------------------------------------------------------------------------
 
 def test_s03_confirmed_event_produces_thai_market_delivery(tmp_path: Path) -> None:
+    now = _now()
     publisher = TelegramPublisher(MarketAlertDedupStore(tmp_path / "dedup.json"))
     payload = _confirmed_payload()
 
-    delivery = publisher.format_market(payload)
+    delivery = publisher.format_market(payload, now_utc=now)
 
     assert delivery.target_kind == "market"
     assert delivery.parse_mode == "HTML"
@@ -217,7 +218,7 @@ def test_s04_candidate_internal_is_held_not_published() -> None:
     event = build_signal_event(signal, decision)
     assert event["event_type"] == "SUPER_POTENTIAL_CANDIDATE_INTERNAL"
 
-    result = consume_event(event)
+    result = consume_event(event, now_utc=now)
     assert result.action == "HOLD"
     assert "candidate_internal" in result.reason
 
@@ -237,12 +238,16 @@ def test_s05_invalidated_event_is_published_once() -> None:
     assert event["event_type"] == "SUPER_POTENTIAL_INVALIDATED"
     assert event["event_type"] in ALLOWED_MARKET_PUBLISH
 
+    # Pass the same frozen clock into consume_event so the expiry check is
+    # deterministic regardless of when the test suite runs.  The event expires
+    # at now + invalidation_expiry_seconds (1800 s); using now_utc=now means the
+    # clock is strictly before the expiry boundary → not expired → PUBLISH.
     seen: set[str] = set()
-    result = consume_event(event, seen_event_ids=seen)
+    result = consume_event(event, seen_event_ids=seen, now_utc=now)
     assert result.action == "PUBLISH"
     assert event["event_id"] in seen
 
-    result2 = consume_event(event, seen_event_ids=seen)
+    result2 = consume_event(event, seen_event_ids=seen, now_utc=now)
     assert result2.action == "REJECT"
     assert "duplicate" in result2.reason
 
@@ -258,10 +263,10 @@ def test_s06_duplicate_event_id_rejected_by_consumer() -> None:
     event = build_signal_event(signal, decision)
 
     seen: set[str] = set()
-    r1 = consume_event(event, seen_event_ids=seen)
+    r1 = consume_event(event, seen_event_ids=seen, now_utc=now)
     assert r1.action == "PUBLISH"
 
-    r2 = consume_event(event, seen_event_ids=seen)
+    r2 = consume_event(event, seen_event_ids=seen, now_utc=now)
     assert r2.action == "REJECT"
     assert "duplicate" in r2.reason
 
@@ -347,6 +352,7 @@ def test_s09_market_bot_inbound_rejected() -> None:
 # ---------------------------------------------------------------------------
 
 def test_s10_operator_bot_cannot_send_market_alerts(tmp_path: Path) -> None:
+    now = _now()
     sent: list[Any] = []
     operator = TelegramOperatorTransport(
         token="op-token",
@@ -355,7 +361,7 @@ def test_s10_operator_bot_cannot_send_market_alerts(tmp_path: Path) -> None:
         http_post=lambda _tok, _payload: sent.append(_payload) or {"ok": True},
     )
     publisher = TelegramPublisher(MarketAlertDedupStore(tmp_path / "dedup.json"))
-    delivery = publisher.format_market(_confirmed_payload())
+    delivery = publisher.format_market(_confirmed_payload(), now_utc=now)
 
     with pytest.raises(TelegramPolicyError, match="operator bot cannot"):
         operator.send_market_alert(delivery)
@@ -400,16 +406,17 @@ def test_s11_agent_numeric_evidence_rejected() -> None:
 # ---------------------------------------------------------------------------
 
 def test_s12_dedup_store_persists_across_restart(tmp_path: Path) -> None:
+    now = _now()
     dedup_path = tmp_path / "dedup.json"
     publisher1 = TelegramPublisher(MarketAlertDedupStore(dedup_path))
 
-    delivery = publisher1.format_market(_confirmed_payload())
+    delivery = publisher1.format_market(_confirmed_payload(), now_utc=now)
     assert "XAUUSD" in delivery.formatted_thai_text
 
     # Simulate restart: new publisher instance reads same file
     publisher2 = TelegramPublisher(MarketAlertDedupStore(dedup_path))
     with pytest.raises(TelegramPolicyError, match="duplicate"):
-        publisher2.format_market(_confirmed_payload())
+        publisher2.format_market(_confirmed_payload(), now_utc=now)
 
 
 # ---------------------------------------------------------------------------
@@ -421,6 +428,7 @@ def test_s13_wrong_agent_id_fails_closed() -> None:
     consume_event fails closed when event_type is not in allowed publish set
     or schema is invalid.
     """
+    now = _now()
     event = build_event_envelope(
         "SUPER_POTENTIAL_CONFIRMED",
         {"score": 85.0},
@@ -448,7 +456,7 @@ def test_s13_wrong_agent_id_fails_closed() -> None:
     # event_type/schema/provenance, not trust of source_agent.
     # If the event is schema-valid and event_type is in the allowed set,
     # consume_event passes it for MAIN to verify source_agent at routing layer.
-    result = consume_event(event)
+    result = consume_event(event, now_utc=now)
     # consume_event is stateless w.r.t. agent topology — routing enforcement
     # is MAIN's responsibility. The important property is that agent numeric
     # source (source_system=python here) does NOT block this; the test confirms
@@ -517,6 +525,6 @@ def test_s14b_tampered_integrity_hash_rejected() -> None:
     tampered_payload["score"] = 99.9
     tampered["payload"] = tampered_payload
 
-    result = consume_event(tampered)
+    result = consume_event(tampered, now_utc=now)
     assert result.action == "REJECT"
     assert "schema_invalid" in result.reason

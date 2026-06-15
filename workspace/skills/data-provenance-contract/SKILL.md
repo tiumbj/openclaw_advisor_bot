@@ -1,7 +1,7 @@
 ---
 name: data-provenance-contract
 description: Enforce that all evidence numerics carry complete provenance metadata (source, timestamp, realtime_class).
-version: 1.2.13
+version: 1.2.14
 owner_agent: market-data-integrity-agent
 purpose: Prevent agent-fabricated numerics from entering the immutable evidence archive.
 allowed_inputs:

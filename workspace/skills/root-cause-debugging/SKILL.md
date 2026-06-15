@@ -1,7 +1,7 @@
 ---
 name: root-cause-debugging
 description: Identify root cause before patching; include a regression test that catches the bug.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Prevent symptom patching by requiring a root cause statement before any fix is applied.
 allowed_inputs:

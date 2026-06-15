@@ -2,14 +2,17 @@
 
 ## Status
 
-- Package version: `1.2.13`
+- Package version: `1.2.14`
 - Phase: `P2.4`
-- Work package: `WP-P2_4-BROWSER-SANDBOX-PROVENANCE-RECONCILIATION`
+- Work package: `WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT`
 - Phase status: `REMEDIATION_IN_PROGRESS`
 - Audit readiness: `NOT_READY`
-- Updated UTC: `2026-06-15T08:35:00Z`
+- Updated UTC: `2026-06-15T13:00:00Z`
 - Audit baseline commit: `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a`
-- Audit report commit: `b247db0e3e240e76f8ba754110287792fdb40a44`
+- Report subject commit: `938668f1cb14492f0d3236230e68513977c1faf3`
+- Validated subject commit: `938668f1cb14492f0d3236230e68513977c1faf3`
+- Containing commit: resolve with `git log -1 --format=%H -- docs/P2_4_PREPRODUCTION_READINESS_REPORT.md`
+- Provenance model: `non-self-referential-v1`
 
 ## Verdict
 
@@ -19,12 +22,12 @@ P2.4 remediation remains blocked from soak entry because the browser sandbox hel
 
 | Area | State | Evidence |
 | --- | --- | --- |
-| Non-live validation | PASS_LOCAL | `272 passed, 1 deselected` |
-| Coverage | PASS_LOCAL | `85.81%` total coverage |
+| Non-live validation | PASS_LOCAL | `293 passed, 1 deselected` (272 baseline + 21 new boundary tests; NFD-001 eliminated) |
+| Coverage | PASS_LOCAL | `85.89%` total (threshold 85.0%) |
 | Skills / agents / routing / config | PASS_LOCAL | `validate-skills --strict` (`74 skills`), `validate-agents --strict` (`13 agents`), `validate-routing --strict`, `render-config --validate --strict` |
 | Security scan | PASS_LOCAL | `security-scan --include-history --strict` |
-| GitHub remote validation | PASS_REMOTE | Validated commit `b247db0e3e240e76f8ba754110287792fdb40a44`; CI `27541180318` success; security `27541180341` success |
-| Dependency audit | TIMEOUT | `python -m pip_audit`; timed out twice in this workspace window |
+| GitHub remote validation | PASS_REMOTE | Validated subject commit `938668f1cb14492f0d3236230e68513977c1faf3`; CI `27544625989` success; security `27544625996` success |
+| Dependency audit | TIMEOUT | `python -m pip_audit`; timed out twice in this workspace window; GitHub dependency scan is authoritative |
 | Telegram operator E2E | PASS_LOCAL | operator flow verified |
 | Market bot outbound | PASS_LOCAL | outbound channel verified |
 | Browser plugin E2E | BLOCKED_UPSTREAM | Codex-launched `node_repl.exe` fails in Windows sandbox bootstrap with `helper_unknown_error: apply deny-read ACLs` |

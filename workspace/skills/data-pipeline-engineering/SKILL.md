@@ -1,7 +1,7 @@
 ---
 name: data-pipeline-engineering
 description: Implement MT5/FRED ingestion with quality scoring, timezone normalisation, and provenance.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Ensure all market data carries realtime_class, quality_status, and source_system before scoring.
 allowed_inputs:

@@ -1,7 +1,7 @@
 ---
 name: m1-m5-pattern-review
 description: Review M1 and M5 XAUUSD patterns for entry timing context within HTF structure.
-version: 1.2.13
+version: 1.2.14
 owner_agent: price-action-microstructure-agent
 purpose: Synthesize M1/M5 signals for entry confirmation in the alert evidence packet.
 allowed_inputs:

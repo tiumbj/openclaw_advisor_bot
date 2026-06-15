@@ -147,8 +147,13 @@ class TelegramPublisher:
         self.dedup_store = dedup_store
         self.cooldown_seconds = cooldown_seconds
 
-    def format_market(self, payload: ApprovedPublicationPayload) -> TelegramDeliveryRequest:
-        self._validate_payload(payload)
+    def format_market(
+        self,
+        payload: ApprovedPublicationPayload,
+        *,
+        now_utc: datetime | None = None,
+    ) -> TelegramDeliveryRequest:
+        self._validate_payload(payload, now_utc=now_utc)
         if self.dedup_store.seen(payload.dedup_key):
             raise TelegramPolicyError("duplicate market publication rejected")
         status_text = {
@@ -185,12 +190,18 @@ class TelegramPublisher:
             correlation_id=payload.correlation_id,
         )
 
-    def _validate_payload(self, payload: ApprovedPublicationPayload) -> None:
+    def _validate_payload(
+        self,
+        payload: ApprovedPublicationPayload,
+        *,
+        now_utc: datetime | None = None,
+    ) -> None:
         if payload.event_type in FORBIDDEN_MARKET_PUBLICATION_EVENTS:
             raise TelegramPolicyError(f"event type {payload.event_type} must not be published")
         if payload.event_type not in ALLOWED_MARKET_PUBLICATION_EVENTS:
             raise TelegramPolicyError(f"unsupported publication event type {payload.event_type}")
-        if parse_utc(payload.expires_at_utc) <= datetime.now(tz=UTC):
+        effective_now = now_utc.astimezone(UTC) if now_utc is not None else datetime.now(tz=UTC)
+        if parse_utc(payload.expires_at_utc) <= effective_now:
             raise TelegramPolicyError("expired publication payload rejected")
         if not payload.evidence_ids:
             raise TelegramPolicyError("publication requires evidence_ids")

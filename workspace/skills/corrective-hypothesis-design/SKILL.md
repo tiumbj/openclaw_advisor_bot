@@ -1,7 +1,7 @@
 ---
 name: corrective-hypothesis-design
 description: Design structured hypotheses for corrective experiments based on root cause analysis.
-version: 1.2.13
+version: 1.2.14
 owner_agent: failure-root-cause-agent
 purpose: Translate root cause findings into testable experiment specifications for the 16-state lifecycle.
 allowed_inputs:

@@ -1,7 +1,7 @@
 ---
 name: runtime-pipeline-wiring
 description: Wire agents, routes, skills, and constants into the runtime topology.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Ensure RUNTIME_AGENT_IDS, allowlists, and config template remain consistent after wiring changes.
 allowed_inputs:

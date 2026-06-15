@@ -1,7 +1,7 @@
 ---
 name: software-architecture-design
 description: Design layered module architecture with enforced dependency direction.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Maintain separation of concerns and prevent circular imports across the codebase.
 allowed_inputs:

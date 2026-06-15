@@ -1,7 +1,7 @@
 ---
 name: state-machine-engineering
 description: Design typed finite-state machines with transition guards and invariant tests.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Enforce legal state transitions for signal lifecycle, task state, and CodeWorkOrder lifecycle.
 allowed_inputs:

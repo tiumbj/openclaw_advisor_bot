@@ -1,10 +1,14 @@
 # P2.4 Blueprint Compliance Matrix
 
-**Version**: 1.2.13
+**Version**: 1.2.14
 **Phase**: P2.4
-**Work Package**: WP-P2_4-BROWSER-SANDBOX-PROVENANCE-RECONCILIATION
-**Generated**: 2026-06-15T08:35:00Z
+**Work Package**: WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT
+**Generated**: 2026-06-15T13:00:00Z
 **Baseline HEAD**: `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a`
+**Report subject commit**: `938668f1cb14492f0d3236230e68513977c1faf3`
+**Validated subject commit**: `938668f1cb14492f0d3236230e68513977c1faf3`
+**Containing commit**: resolve with `git log -1 --format=%H -- docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md`
+**Provenance model**: `non-self-referential-v1`
 
 ## Summary
 
@@ -50,9 +54,9 @@
 | BC-25 | Windows | Auto-start scripts | PASS_LOCAL | existing script checks remain in suite |
 | BC-26 | Security | No unsupported provider leakage | PASS_LOCAL | provider policy and scanner |
 | BC-27 | Security | Secret non-exposure | PASS_LOCAL | strict security scan |
-| BC-28 | Verification | Full non-live suite | PASS_LOCAL | `272 passed, 1 deselected` |
+| BC-28 | Verification | Full non-live suite | PASS_LOCAL | `293 passed, 1 deselected` (272 baseline + 21 new boundary tests; NFD-001 eliminated); coverage `85.89%` |
 | BC-29 | Verification | Browser/control UI E2E | BLOCKED_UPSTREAM | Codex helper bootstrap fails before user JavaScript; see escalation bundle |
-| BC-30 | Verification | Push and remote gates | PASS_REMOTE | validated commit `b247db0e3e240e76f8ba754110287792fdb40a44`; CI `27541180318` success; security `27541180341` success |
+| BC-30 | Verification | Push and remote gates | PASS_REMOTE | validated subject commit `938668f1cb14492f0d3236230e68513977c1faf3`; CI `27544625989` success; security `27544625996` success |
 
 ## Remaining Risk Register
 

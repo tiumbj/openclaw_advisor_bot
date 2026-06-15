@@ -1,7 +1,7 @@
 ---
 name: test-and-regression-engineering
 description: Write pytest unit and integration tests with mocked I/O and coverage >= 85%.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Produce tests that are deterministic, isolated, and express intended behaviour, not implementation.
 allowed_inputs:

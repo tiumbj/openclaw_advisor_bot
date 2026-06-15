@@ -1,7 +1,7 @@
 ---
 name: blueprint-compliance-engineering
 description: Verify code changes conform to agent topology, routing, and advisor-only constraints.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Block any work order result that violates the Blueprint before forwarding to auditor.
 allowed_inputs:

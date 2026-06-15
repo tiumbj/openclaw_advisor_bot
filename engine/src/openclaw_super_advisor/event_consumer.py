@@ -34,6 +34,23 @@ class EventConsumerError(RuntimeError):
     pass
 
 
+def _resolve_now_utc(now_utc: datetime | None) -> datetime:
+    """Return a UTC-normalised reference clock for expiry checks.
+
+    Production callers pass ``None`` → real wall clock.
+    Test callers supply a frozen ``datetime`` → deterministic behaviour.
+    A naive ``datetime`` is rejected immediately so tests cannot silently
+    pass a wall-clock value disguised as a controlled clock.
+    """
+    if now_utc is None:
+        return datetime.now(tz=UTC)
+    if now_utc.tzinfo is None:
+        raise EventConsumerError(
+            "now_utc must be timezone-aware; received a naive datetime"
+        )
+    return now_utc.astimezone(UTC)
+
+
 @dataclass(frozen=True)
 class ConsumptionDecision:
     event_id: str
@@ -42,14 +59,20 @@ class ConsumptionDecision:
     reason: str
 
 
-def _is_expired(event: dict[str, Any]) -> bool:
+def _is_expired(event: dict[str, Any], now_utc: datetime) -> bool:
+    """Return True if the event's expiry timestamp is at or before ``now_utc``.
+
+    Fail-closed on malformed or missing timestamps:
+    - missing field → not expired (treat as non-expiring)
+    - unparseable string → expired (fail closed)
+    """
     payload = event.get("payload", {})
     expires_raw = payload.get("expires_at_utc")
     if not isinstance(expires_raw, str):
         return False
     try:
         expires = datetime.fromisoformat(expires_raw.replace("Z", "+00:00")).astimezone(UTC)
-        return expires <= datetime.now(tz=UTC)
+        return expires <= now_utc
     except ValueError:
         return True
 
@@ -70,8 +93,23 @@ def consume_event(
     event: dict[str, Any],
     *,
     seen_event_ids: set[str] | None = None,
+    now_utc: datetime | None = None,
 ) -> ConsumptionDecision:
     """Validate a signal event and decide whether to publish, hold, or reject.
+
+    Parameters
+    ----------
+    event:
+        The event envelope dict to evaluate.
+    seen_event_ids:
+        Mutable set used for deduplication.  Pass an empty set on first call
+        and the same set on subsequent calls within the same session.
+    now_utc:
+        Reference clock for expiry checks.  ``None`` (default) uses the real
+        UTC wall clock, preserving production behaviour.  Supply a
+        timezone-aware ``datetime`` in tests to make expiry checks
+        deterministic regardless of when the test suite runs.
+        A naive ``datetime`` raises ``EventConsumerError``.
 
     Rules (applied in order, fail-closed):
     1. Schema invalid → REJECT
@@ -84,6 +122,8 @@ def consume_event(
     8. Event type not in allowed publish set → HOLD
     9. CONFIRMED / INVALIDATED / DATA_QUALITY_WARNING / SYSTEM_INCIDENT → PUBLISH
     """
+    effective_now = _resolve_now_utc(now_utc)
+
     report = validate_event_envelope(event)
     if not report.valid:
         issues_text = "; ".join(f"{i.path}: {i.message}" for i in report.issues)
@@ -122,7 +162,7 @@ def consume_event(
             action="HOLD", reason="candidate_internal_not_published",
         )
 
-    if _is_expired(event):
+    if _is_expired(event, effective_now):
         return ConsumptionDecision(
             event_id=event_id, event_type=event_type,
             action="REJECT", reason="event_expired",

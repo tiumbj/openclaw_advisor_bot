@@ -1,14 +1,16 @@
 {
-  "schema_version": "p2-4-report-provenance-v3",
-  "package_version": "1.2.13",
+  "schema_version": "p2-4-report-provenance-v4",
+  "package_version": "1.2.14",
   "phase": "P2.4",
-  "work_package": "WP-P2_4-BROWSER-SANDBOX-PROVENANCE-RECONCILIATION",
+  "work_package": "WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT",
   "generated_from_worktree": true,
-  "generated_at_utc": "2026-06-15T08:35:00Z",
+  "generated_at_utc": "2026-06-15T13:00:00Z",
+  "provenance_model_version": "non-self-referential-v1",
+  "provenance_model_note": "This document describes report_subject_commit. It cannot embed its own containing commit SHA because the SHA is unknown until after the commit is created. Resolve the containing commit externally with git log -1 --format=%H -- <file-path>.",
   "baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "reconciliation_baseline_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
-  "observed_remote_head_before_reconciliation": "b247db0e3e240e76f8ba754110287792fdb40a44",
-  "containing_commit_resolution": "Resolve externally using git log -1 --format=%H -- <file-path>",
+  "report_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
+  "validated_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
+  "containing_commit_resolution": "git log -1 --format=%H -- docs/P2_4_REPORT_PROVENANCE.json",
   "audit_gate": "BROWSER_SANDBOX_BLOCKED_UPSTREAM - NOT READY FOR SOAK",
   "phase_status": "REMEDIATION_IN_PROGRESS",
   "audit_readiness": "NOT_READY",
@@ -29,14 +31,14 @@
   ],
   "browser_evidence_bundle": "artifacts/p2_4_browser_sandbox_escalation_bundle/evidence.json",
   "remote_validation": {
-    "validated_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
+    "validated_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
     "ci": {
-      "run_id": 27541180318,
+      "run_id": 27544625989,
       "status": "completed",
       "conclusion": "success"
     },
     "security": {
-      "run_id": 27541180341,
+      "run_id": 27544625996,
       "status": "completed",
       "conclusion": "success",
       "dependency_vulnerability_scan": "success"
@@ -47,10 +49,23 @@
     "root_cause": "UPSTREAM_CODEX_RUNTIME_DEFECT",
     "subclass": "HELPER_ERROR_PROPAGATION_BUG"
   },
+  "nfd_001_remediation": {
+    "defect": "NFD-001",
+    "status": "CLOSED_LOCAL",
+    "description": "consume_event() expiry check used real wall clock; tests used a hardcoded frozen clock. CI passed before 12:30 UTC; local audit at 12:40 UTC triggered a spurious REJECT.",
+    "fix": "now_utc parameter added to consume_event() and _is_expired(). None uses real wall clock (production). Timezone-aware datetime is normalised to UTC. Naive datetime raises EventConsumerError. 21 deterministic boundary tests added in engine/tests/unit/test_event_consumer_clock.py."
+  },
+  "ppa_0001_remediation": {
+    "finding": "PPA-0001",
+    "status": "CLOSED_LOCAL",
+    "description": "Provenance model was self-referential: observed_remote_head, implementation_commit, status_report_commit, remediation_commit all attempted to track the latest commit SHA inside files contained in that same commit.",
+    "fix": "Replaced with non-self-referential model: report_subject_commit (what this document describes), validated_subject_commit (what has CI workflow evidence), containing_commit_resolution (how to find the containing commit after push), provenance_model_version. provenance_model_version = non-self-referential-v1."
+  },
   "redaction_status": "no_tokens_or_passwords_written",
   "notes": [
     "Latest verified browser helper failure occurs before user JavaScript executes.",
     "Native Windows ACL tests passed on the disposable path classes used for comparison.",
-    "Full soak remains not ready because the browser E2E gate is still blocked upstream."
+    "Full soak remains not ready because the browser E2E gate is still blocked upstream.",
+    "This document describes 938668f1cb14492f0d3236230e68513977c1faf3. Its own containing commit SHA must be resolved externally after push."
   ]
 }

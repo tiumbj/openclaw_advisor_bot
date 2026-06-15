@@ -1,10 +1,14 @@
 {
   "schema_version": "p2-4-blueprint-compliance-v3",
-  "version": "1.2.13",
+  "version": "1.2.14",
   "phase": "P2.4",
-  "work_package": "WP-P2_4-BROWSER-SANDBOX-PROVENANCE-RECONCILIATION",
-  "generated_at_utc": "2026-06-15T08:35:00Z",
+  "work_package": "WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT",
+  "generated_at_utc": "2026-06-15T13:00:00Z",
   "baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
+  "report_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
+  "validated_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
+  "containing_commit_resolution": "git log -1 --format=%H -- docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json",
+  "provenance_model_version": "non-self-referential-v1",
   "audit_gate": "BROWSER_SANDBOX_BLOCKED_UPSTREAM",
   "phase_status": "REMEDIATION_IN_PROGRESS",
   "audit_readiness": "NOT_READY",
@@ -18,14 +22,14 @@
     "total": 30
   },
   "remote_gates": {
-    "validated_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
+    "validated_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
     "ci": {
-      "run_id": 27541180318,
+      "run_id": 27544625989,
       "status": "completed",
       "conclusion": "success"
     },
     "security": {
-      "run_id": 27541180341,
+      "run_id": 27544625996,
       "status": "completed",
       "conclusion": "success",
       "dependency_vulnerability_scan": "success"
@@ -59,8 +63,8 @@
     {"id": "BC-25", "section": "Windows", "requirement": "Auto-start scripts", "status": "PASS_LOCAL"},
     {"id": "BC-26", "section": "Security", "requirement": "No unsupported provider leakage", "status": "PASS_LOCAL"},
     {"id": "BC-27", "section": "Security", "requirement": "Secret non-exposure", "status": "PASS_LOCAL"},
-    {"id": "BC-28", "section": "Verification", "requirement": "Full non-live suite", "status": "PASS_LOCAL", "summary": "272 passed, 1 deselected"},
+    {"id": "BC-28", "section": "Verification", "requirement": "Full non-live suite", "status": "PASS_LOCAL", "summary": "293 passed, 1 deselected (272 baseline + 21 new boundary tests in 1.2.14; NFD-001 eliminated); coverage 85.89%"},
     {"id": "BC-29", "section": "Verification", "requirement": "Browser/control UI E2E", "status": "BLOCKED_UPSTREAM", "summary": "Codex sandbox bootstrap fails before browser session"},
-    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PASS_REMOTE", "summary": "Validated commit b247db0e3e240e76f8ba754110287792fdb40a44; CI 27541180318 success; security 27541180341 success"}
+    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PASS_REMOTE", "summary": "Validated subject commit 938668f1cb14492f0d3236230e68513977c1faf3; CI 27544625989 success; security 27544625996 success"}
   ]
 }

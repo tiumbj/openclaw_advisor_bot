@@ -1,7 +1,7 @@
 ---
 name: publication-policy
 description: Gate MAIN approved Telegram publication payloads; reject forbidden event types and dedup violations.
-version: 1.2.13
+version: 1.2.14
 owner_agent: super-advisor
 purpose: Final MAIN gate before sending APPROVED_PUBLICATION to telegram-publisher.
 allowed_inputs:

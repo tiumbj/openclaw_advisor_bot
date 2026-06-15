@@ -1,7 +1,7 @@
 ---
 name: isolated-worktree-patching
 description: Manage the Git worktree lifecycle for patch application, testing, result capture, and clean-up.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Guarantee patches are applied and tested in complete isolation from the main working tree.
 allowed_inputs:

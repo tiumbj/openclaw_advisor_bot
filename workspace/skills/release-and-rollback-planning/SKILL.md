@@ -1,7 +1,7 @@
 ---
 name: release-and-rollback-planning
 description: Produce release checklist and rollback plan for human review; never open the release gate.
-version: 1.2.13
+version: 1.2.14
 owner_agent: blueprint-coder
 purpose: Document all quality gates and rollback steps so a human reviewer can safely execute the release.
 allowed_inputs:

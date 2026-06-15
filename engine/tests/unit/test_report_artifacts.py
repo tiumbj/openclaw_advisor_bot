@@ -32,9 +32,10 @@ REQUIRED_STATUS_FIELDS = {
     "current_phase",
     "current_work_package",
     "phase_status",
-    "implementation_commit",
-    "status_report_commit",
-    "observed_remote_head",
+    "report_subject_commit",
+    "validated_subject_commit",
+    "containing_commit_resolution",
+    "provenance_model_version",
     "working_tree_status",
     "ci_status",
     "security_status",
@@ -91,13 +92,22 @@ def test_status_file_contains_required_fields() -> None:
     assert not missing, missing
 
 
-def test_project_status_avoids_self_referential_commit_hash() -> None:
+def test_project_status_uses_non_self_referential_provenance_model() -> None:
     status = json.loads((REPO_ROOT / "docs" / "PROJECT_STATUS.json").read_text(encoding="utf-8"))
-    implementation_commit = status.get("implementation_commit")
-    observed_remote_head = status.get("observed_remote_head")
-    assert implementation_commit
-    assert observed_remote_head
-    assert implementation_commit != observed_remote_head or status.get("phase_status") != "PASS"
+    # Must use the non-self-referential provenance model (PPA-0001 fix)
+    assert status.get("provenance_model_version") == "non-self-referential-v1"
+    assert status.get("report_subject_commit"), "report_subject_commit must be set"
+    assert status.get("validated_subject_commit"), "validated_subject_commit must be set"
+    assert status.get("containing_commit_resolution"), "containing_commit_resolution must be set"
+    # Deprecated self-referential fields must be absent
+    deprecated = {
+        "observed_remote_head",
+        "implementation_commit",
+        "status_report_commit",
+        "remediation_commit",
+    }
+    for field in deprecated:
+        assert field not in status, f"deprecated field {field!r} must be removed"
 
 
 def test_reports_do_not_contain_secrets() -> None:
