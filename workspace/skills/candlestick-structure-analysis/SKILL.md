@@ -1,7 +1,7 @@
 ---
 name: candlestick-structure-analysis
 description: Classify XAUUSD candlestick formations on M1/M5/H1 timeframes from MT5 OHLC data.
-version: 1.2.11
+version: 1.2.12
 owner_agent: price-action-microstructure-agent
 purpose: Provide deterministic candle pattern labels used in evidence scoring.
 allowed_inputs:

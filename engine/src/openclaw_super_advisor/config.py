@@ -224,6 +224,7 @@ def validate_rendered_config(
                 _as_object(agent.get("tools"), f"agents.list[{index}].tools"),
                 f"agents.list[{index}].tools",
                 issues,
+                is_super_advisor=agent_id == "super-advisor",
             )
             secret_access = _as_object(
                 agent.get("secretAccess"), f"agents.list[{index}].secretAccess"
@@ -350,8 +351,12 @@ def _validate_tools(
     tools: dict[str, object],
     prefix: str,
     issues: list[ConfigValidationIssue],
+    *,
+    is_super_advisor: bool = False,
 ) -> None:
     _require_equal(issues, tools.get("allow"), ["read", "session_status"], f"{prefix}.allow")
+    expected_also_allow = ["message"] if is_super_advisor else None
+    _require_equal(issues, tools.get("alsoAllow"), expected_also_allow, f"{prefix}.alsoAllow")
     deny = tools.get("deny")
     deny_values = set(cast(list[str], deny)) if isinstance(deny, list) else set()
     required_denies = {
@@ -359,7 +364,6 @@ def _validate_tools(
         "group:web",
         "group:ui",
         "group:automation",
-        "group:messaging",
         "group:plugins",
         "group:memory",
         "group:sessions",
@@ -372,9 +376,13 @@ def _validate_tools(
         "browser",
         "canvas",
         "gateway",
-        "message",
         "subagents",
     }
+    # group:messaging and message are only required in non-root, non-super-advisor scopes.
+    # Root tools omits them so super-advisor (which inherits root) can use reply-scoped messaging.
+    # Super-advisor uses alsoAllow:["message"] + actions.allow:["reply"] instead of deny.
+    if prefix != "tools" and not is_super_advisor:
+        required_denies.update({"group:messaging", "message"})
     missing = sorted(required_denies.difference(deny_values))
     if missing:
         issues.append(
@@ -392,7 +400,10 @@ def _validate_tools(
         f"{prefix}.message.allowCrossContextSend",
     )
     actions = _as_object(message.get("actions"), f"{prefix}.message.actions")
-    _require_equal(issues, actions.get("allow"), [], f"{prefix}.message.actions.allow")
+    expected_actions_allow = ["reply"] if is_super_advisor else []
+    _require_equal(
+        issues, actions.get("allow"), expected_actions_allow, f"{prefix}.message.actions.allow"
+    )
     agent_to_agent = _as_object(tools.get("agentToAgent"), f"{prefix}.agentToAgent")
     _require_equal(issues, agent_to_agent.get("enabled"), False, f"{prefix}.agentToAgent.enabled")
     elevated = _as_object(tools.get("elevated"), f"{prefix}.elevated")
@@ -404,4 +415,10 @@ def _validate_tools(
         sandbox_tools.get("allow"),
         ["read", "session_status"],
         f"{prefix}.sandbox.tools.allow",
+    )
+    _require_equal(
+        issues,
+        sandbox_tools.get("alsoAllow"),
+        expected_also_allow,
+        f"{prefix}.sandbox.tools.alsoAllow",
     )

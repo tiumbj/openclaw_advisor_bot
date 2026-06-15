@@ -5,7 +5,7 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
-$scriptVersion = '1.2.7'
+$scriptVersion = '1.2.12'
 $warnings = [System.Collections.Generic.List[string]]::new()
 $failures = [System.Collections.Generic.List[string]]::new()
 
@@ -125,9 +125,23 @@ $processFingerprint = Get-TokenFingerprint $env:OPENCLAW_GATEWAY_TOKEN
 
 $renderedConfig = $null
 $serviceTokenFingerprint = $null
+$runtimeTokenSource = 'unknown'
+$runtimeTokenVariable = $null
 try {
     $renderedConfig = Get-Content -LiteralPath (Join-Path $ProjectRoot 'state\openclaw.json') -Raw | ConvertFrom-Json
-    $serviceTokenFingerprint = (Get-TokenFingerprint ([string]$renderedConfig.gateway.auth.token)).fingerprint
+    $tokenRef = $renderedConfig.gateway.auth.token
+    if ($tokenRef -is [string]) {
+        $runtimeTokenSource = 'literal'
+        $serviceTokenFingerprint = (Get-TokenFingerprint $tokenRef).fingerprint
+    }
+    elseif ($tokenRef.source -eq 'env' -and -not [string]::IsNullOrWhiteSpace([string]$tokenRef.id)) {
+        $runtimeTokenSource = 'env'
+        $runtimeTokenVariable = [string]$tokenRef.id
+        $serviceTokenFingerprint = (Get-TokenFingerprint ([string]$envValues[$runtimeTokenVariable])).fingerprint
+    }
+    else {
+        $warnings.Add('rendered config token SecretRef is unsupported or missing an env id')
+    }
 }
 catch {
     $warnings.Add("rendered config token could not be read: $($_.Exception.Message)")
@@ -224,12 +238,29 @@ try {
     if ($dashboardAuthToken) {
         $headers['Authorization'] = "Bearer $dashboardAuthToken"
     }
+    elseif ($canonicalToken) {
+        $headers['Authorization'] = "Bearer $canonicalToken"
+    }
     $configAuthenticated = Invoke-WebRequest -Uri 'http://127.0.0.1:18789/control-ui-config.json' -UseBasicParsing -TimeoutSec 10 -WebSession $session -Headers $headers
     $configAuthenticatedStatus = [int]$configAuthenticated.StatusCode
 }
 catch {
     if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
         $configAuthenticatedStatus = [int]$_.Exception.Response.StatusCode
+        if ($configAuthenticatedStatus -ne 200 -and $canonicalToken) {
+            try {
+                $configAuthenticated = Invoke-WebRequest -Uri 'http://127.0.0.1:18789/control-ui-config.json' -UseBasicParsing -TimeoutSec 10 -WebSession $session -Headers @{ Authorization = "Bearer $canonicalToken" }
+                $configAuthenticatedStatus = [int]$configAuthenticated.StatusCode
+            }
+            catch {
+                if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+                    $configAuthenticatedStatus = [int]$_.Exception.Response.StatusCode
+                }
+                else {
+                    $warnings.Add("canonical authenticated config request failed: $($_.Exception.Message)")
+                }
+            }
+        }
     }
     else {
         $warnings.Add("authenticated config request failed: $($_.Exception.Message)")
@@ -279,15 +310,21 @@ if ($statusJson) {
     }
 }
 
-$overallPass = $gatewayProbe.text -match 'Connect:\s+ok' -and
-    $gatewayProbe.text -match 'Read probe:\s+ok' -and
+$probeConnectOk   = $gatewayProbe.text -match 'Connect:\s+ok'
+$probeReadOk      = $gatewayProbe.text -match 'Read probe:\s+ok'
+$noTokenMismatch  = $failures.Count -eq 0 -or -not ($failures -match 'token mismatch|unauthorized')
+
+$gatewayAuthPass  = $probeConnectOk -and $tokenConsistent -and ($configAuthenticatedStatus -eq 200)
+$statusProbePass  = $probeConnectOk -and $probeReadOk -and $noTokenMismatch
+$uiBootstrapPass  = ($rootStatus -eq 200) -and $rootHasHtml -and $agentTurnPass -and $agentMarkerFound
+
+$overallPass = $statusProbePass -and
+    $gatewayAuthPass -and
+    $uiBootstrapPass -and
     $tokenConsistent -and
     $controlUiEnabled -and
-    ($rootStatus -eq 200) -and
     $websocketAuthenticated -and
     $sessionReadPass -and
-    $agentTurnPass -and
-    $agentMarkerFound -and
     ($configUnauthenticatedStatus -in 401, 403) -and
     ($configAuthenticatedStatus -eq 200)
 
@@ -297,14 +334,19 @@ $summary = [ordered]@{
     openclaw_version              = (Invoke-OpenClawText -Arguments @('--version')).text.Trim()
     config_path                   = $envValues['OPENCLAW_CONFIG_PATH']
     gateway_port                  = [int]$envValues['OPENCLAW_GATEWAY_PORT']
-    gateway_process_running       = $gatewayProbe.text -match 'Connect:\s+ok'
-    gateway_rpc_ready             = $gatewayProbe.text -match 'Read probe:\s+ok'
+    gateway_process_running       = $probeConnectOk
+    gateway_rpc_ready             = $probeReadOk
     gateway_auth_mode             = $gatewayAuthMode
+    runtime_token_source          = $runtimeTokenSource
+    runtime_token_variable        = $runtimeTokenVariable
     canonical_token_status        = $canonicalFingerprint.status
     canonical_token_fingerprint   = $canonicalFingerprint.fingerprint
     process_token_fingerprint     = $processFingerprint.fingerprint
     service_token_fingerprint     = $serviceTokenFingerprint
     token_consistent              = $tokenConsistent
+    gateway_auth_pass             = $gatewayAuthPass
+    status_probe_pass             = $statusProbePass
+    ui_bootstrap_pass             = $uiBootstrapPass
     control_ui_enabled            = $controlUiEnabled
     root_status                   = $rootStatus
     root_has_html                 = $rootHasHtml

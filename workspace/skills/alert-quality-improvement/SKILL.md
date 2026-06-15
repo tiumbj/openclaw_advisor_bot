@@ -1,7 +1,7 @@
 ---
 name: alert-quality-improvement
 description: Alert quality improvement skill.
-version: 1.2.11
+version: 1.2.12
 owner_agent: xau-strategy-auditor
 purpose: Improve alert quality using approved evidence.
 allowed_inputs:

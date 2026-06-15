@@ -178,12 +178,14 @@
             "read",
             "session_status"
           ],
+          "alsoAllow": [
+            "message"
+          ],
           "deny": [
             "group:runtime",
             "group:web",
             "group:ui",
             "group:automation",
-            "group:messaging",
             "group:plugins",
             "group:memory",
             "group:sessions",
@@ -196,7 +198,6 @@
             "browser",
             "canvas",
             "gateway",
-            "message",
             "subagents",
             "memory_search",
             "memory_get",
@@ -223,7 +224,9 @@
               "allowAcrossProviders": false
             },
             "actions": {
-              "allow": []
+              "allow": [
+                "reply"
+              ]
             },
             "broadcast": {
               "enabled": false
@@ -241,12 +244,14 @@
                 "read",
                 "session_status"
               ],
+              "alsoAllow": [
+                "message"
+              ],
               "deny": [
                 "group:runtime",
                 "group:web",
                 "group:ui",
                 "group:automation",
-                "group:messaging",
                 "group:plugins",
                 "group:memory",
                 "group:sessions",
@@ -259,7 +264,6 @@
                 "browser",
                 "canvas",
                 "gateway",
-                "message",
                 "subagents",
                 "memory_search",
                 "memory_get",
@@ -984,7 +988,6 @@
       "group:web",
       "group:ui",
       "group:automation",
-      "group:messaging",
       "group:plugins",
       "group:memory",
       "group:sessions",
@@ -997,7 +1000,6 @@
       "browser",
       "canvas",
       "gateway",
-      "message",
       "subagents",
       "memory_search",
       "memory_get",
@@ -1047,7 +1049,6 @@
           "group:web",
           "group:ui",
           "group:automation",
-          "group:messaging",
           "group:plugins",
           "group:memory",
           "group:sessions",
@@ -1060,7 +1061,6 @@
           "browser",
           "canvas",
           "gateway",
-          "message",
           "subagents",
           "memory_search",
           "memory_get",

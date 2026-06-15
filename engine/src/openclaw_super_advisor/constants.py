@@ -153,6 +153,9 @@ _STANDARD_DENY = (
     "sessions_spawn",
     "sessions_yield",
 )
+_SUPER_ADVISOR_DENY = tuple(
+    item for item in _STANDARD_DENY if item not in {"group:messaging", "message"}
+)
 
 AGENT_ALLOWED_TOOLS: dict[str, tuple[str, ...]] = {
     "super-advisor": ("read", "session_status"),
@@ -170,7 +173,8 @@ AGENT_ALLOWED_TOOLS: dict[str, tuple[str, ...]] = {
 }
 
 AGENT_DENIED_TOOLS: dict[str, tuple[str, ...]] = {
-    agent_id: _STANDARD_DENY for agent_id in RUNTIME_AGENT_IDS
+    agent_id: (_SUPER_ADVISOR_DENY if agent_id == "super-advisor" else _STANDARD_DENY)
+    for agent_id in RUNTIME_AGENT_IDS
 }
 
 FORBIDDEN_SYMBOLS = (

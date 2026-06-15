@@ -1,7 +1,7 @@
 ---
 name: root-cause-tree-builder
 description: Build structured 5-Why root cause trees for evidence pipeline failures and alert misses.
-version: 1.2.11
+version: 1.2.12
 owner_agent: failure-root-cause-agent
 purpose: Produce machine-readable root cause trees that drive corrective experiment hypotheses.
 allowed_inputs:

@@ -59,6 +59,53 @@ def test_realtime_route_happy_path(sample_project: Path) -> None:
     assert route_report.valid
 
 
+def test_telegram_command_channel_reply_scope_is_limited(sample_project: Path) -> None:
+    paths = build_paths(sample_project)
+    rendered = render_config(paths, env_path=paths.canonical_env_example_path)
+
+    root_tools = rendered["tools"]  # type: ignore[index]
+    super_advisor = next(
+        agent
+        for agent in rendered["agents"]["list"]  # type: ignore[index]
+        if agent["id"] == "super-advisor"
+    )
+    tools = super_advisor["tools"]
+
+    assert "message" not in root_tools["deny"]
+    assert "group:messaging" not in root_tools["deny"]
+    assert tools["alsoAllow"] == ["message"]
+    assert "message" not in tools["deny"]
+    assert "group:messaging" not in tools["deny"]
+    assert tools["message"]["actions"]["allow"] == ["reply"]
+    assert tools["message"]["broadcast"]["enabled"] is False
+    assert tools["sandbox"]["tools"]["alsoAllow"] == ["message"]
+    assert "message" not in tools["sandbox"]["tools"]["deny"]
+    assert "group:messaging" not in tools["sandbox"]["tools"]["deny"]
+
+
+def test_non_publisher_agents_cannot_send_telegram_directly(sample_project: Path) -> None:
+    paths = build_paths(sample_project)
+    rendered = render_config(paths, env_path=paths.canonical_env_example_path)
+
+    agent_list = rendered["agents"]["list"]  # type: ignore[index]
+    for agent in agent_list:
+        agent_id = agent["id"]
+        tools = agent["tools"]
+        message_policy = tools["message"]
+        assert tools["allow"] == ["read", "session_status"]
+        assert message_policy["broadcast"]["enabled"] is False
+        if agent_id != "telegram-publisher":
+            assert agent["secretAccess"]["mode"] == "none"
+        if agent_id == "super-advisor":
+            assert message_policy["actions"]["allow"] == ["reply"]
+        else:
+            assert message_policy["actions"]["allow"] == []
+            assert "message" in tools["deny"]
+            assert "group:messaging" in tools["deny"]
+            assert "message" in tools["sandbox"]["tools"]["deny"]
+            assert "group:messaging" in tools["sandbox"]["tools"]["deny"]
+
+
 def test_circular_route_rejected() -> None:
     report = validate_routing(
         {
