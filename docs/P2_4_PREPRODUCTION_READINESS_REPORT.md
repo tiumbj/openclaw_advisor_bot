@@ -2,38 +2,39 @@
 
 ## Status
 
-- Package version: `1.2.11`
+- Package version: `1.2.13`
 - Phase: `P2.4`
-- Work package: `WP-P2_4-PPA-0001-0010-REMEDIATION`
+- Work package: `WP-P2_4-BROWSER-SANDBOX-PROVENANCE-RECONCILIATION`
 - Phase status: `REMEDIATION_IN_PROGRESS`
 - Audit readiness: `NOT_READY`
-- Updated UTC: `2026-06-15T02:00:00Z`
-- Audit baseline commit: `d44da0983b38408575ceedfccb00b909862ff9f0`
-- Audit report commit: `e725e25cffa0d497920e9dad72521ece5b7ae4f2`
+- Updated UTC: `2026-06-15T08:35:00Z`
+- Audit baseline commit: `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a`
+- Audit report commit: `SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD`
 
 ## Verdict
 
-P2.4 remediation is partially complete locally, but it is not ready for PASS or release. Independent re-audit is still required, Browser plugin E2E is blocked, and `HUMAN_RELEASE_GATE` remains closed.
+P2.4 remediation remains blocked from soak entry because the browser sandbox helper fails before a usable browser session starts. Telegram operator E2E and market outbound are verified PASS, but they do not satisfy the browser gate.
 
 ## Evidence
 
 | Area | State | Evidence |
 | --- | --- | --- |
-| MAIN runtime manager | CLOSED_LOCAL | Unit/integration tests cover graph validation, dispatch, conflict, recovery, pause/resume, duplicate dispatch, and human gate |
-| Market provenance | CLOSED_LOCAL | Tick/bar/event validation enforces realtime class and computed `formula_version` |
-| Pytest temp path | CLOSED_LOCAL | Exact `--basetemp ._tmp\audit-pytest` command passes |
-| Coverage split | CLOSED_LOCAL | Subset tests pass without global coverage gate; full-suite explicit gate remains strict |
-| Root isolation | CLOSED_LOCAL | Validators emit `resolved_project_root`; temp root tests pass |
-| Runtime secret | PARTIAL | Gateway token paths migrated to SecretRef; unrelated local provider key remains in ignored state |
-| OpenClaw doctor | PARTIAL | Command owner/session warnings remediated; Telegram message warning remains |
-| FRED live | PASS_LOCAL | `DGS10` valid and `DTWEXBGS` stale daily macro, credential masked |
-| Browser plugin E2E | BLOCKED | Browser bootstrap fails with Windows sandbox ACL |
-| Production gate | BLOCKED | `HUMAN_RELEASE_GATE_CLOSED` |
+| Non-live validation | PASS_LOCAL | `272 passed, 1 deselected` |
+| Coverage | PASS_LOCAL | `85.81%` total coverage |
+| Skills / agents / routing / config | PASS_LOCAL | `validate-skills --strict`, `validate-agents --strict`, `validate-routing --strict`, `render-config --validate --strict` |
+| Security scan | PASS_LOCAL | `security-scan --include-history --strict` |
+| Dependency audit | TIMEOUT | `python -m pip_audit`; timed out twice in this workspace window |
+| Telegram operator E2E | PASS_LOCAL | operator flow verified |
+| Market bot outbound | PASS_LOCAL | outbound channel verified |
+| Browser plugin E2E | BLOCKED_UPSTREAM | Codex-launched `node_repl.exe` fails in Windows sandbox bootstrap with `helper_unknown_error: apply deny-read ACLs` |
+| Browser root cause | UPSTREAM_CODEX_RUNTIME_DEFECT | Failure is upstream to repository code |
+| Browser failure subclass | HELPER_ERROR_PROPAGATION_BUG | Native failure is translated to a generic helper error |
+| Full soak | NOT_READY_FOR_SOAK | Required browser E2E remains blocked |
+| Production gate | CLOSED | `HUMAN_RELEASE_GATE_CLOSED` |
 
 ## Required Closure
 
-1. Push remediation commit and wait for GitHub CI/security.
-2. Resolve Browser plugin sandbox ACL or document externally reproducible blocker.
-3. Resolve or formally accept OpenClaw Telegram message warning with owner/compensating control.
-4. Publish post-push provenance/attestation for PPA-0001.
-5. Run independent re-audit from a clean clone.
+1. Reconcile browser sandbox escalation evidence in the repository.
+2. Push the documentation/evidence commit and verify the GitHub workflow conclusions.
+3. Keep browser disabled for production until a human-approved upstream fix exists.
+4. Do not start the 24-hour soak.

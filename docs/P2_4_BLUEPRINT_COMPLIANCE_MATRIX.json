@@ -1,24 +1,25 @@
 {
   "schema_version": "p2-4-blueprint-compliance-v3",
-  "version": "1.2.10",
+  "version": "1.2.13",
   "phase": "P2.4",
-  "work_package": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION",
-  "generated_at_utc": "2026-06-15T00:06:00Z",
-  "baseline_commit": "a996540297e43cd0cb540379575ab636f0986b5e",
-  "audit_gate": "P2.4 COMPLETE - READY FOR PRE-PRODUCTION AUDIT",
-  "phase_status": "COMPLETE",
-  "audit_readiness": "READY",
+  "work_package": "WP-P2_4-BROWSER-SANDBOX-PROVENANCE-RECONCILIATION",
+  "generated_at_utc": "2026-06-15T08:35:00Z",
+  "baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
+  "audit_gate": "BROWSER_SANDBOX_BLOCKED_UPSTREAM",
+  "phase_status": "REMEDIATION_IN_PROGRESS",
+  "audit_readiness": "NOT_READY",
   "production_gate": "BLOCKED - HUMAN_RELEASE_GATE not passed",
   "summary": {
-    "PASS_LOCAL": 29,
+    "PASS_LOCAL": 28,
     "PASS_REMOTE": 1,
+    "BLOCKED_UPSTREAM": 1,
     "PENDING": 0,
     "FAIL": 0,
     "total": 30
   },
   "remote_gates": {
-    "ci": "PASS: 27516318293",
-    "security": "PASS: 27516318322"
+    "ci": "PASS: baseline verified on 4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
+    "security": "PASS: baseline verified on 4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a"
   },
   "items": [
     {"id": "BC-01", "section": "Architecture", "requirement": "Advisor-only, no execution", "status": "PASS_LOCAL"},
@@ -48,8 +49,8 @@
     {"id": "BC-25", "section": "Windows", "requirement": "Auto-start scripts", "status": "PASS_LOCAL"},
     {"id": "BC-26", "section": "Security", "requirement": "No unsupported provider leakage", "status": "PASS_LOCAL"},
     {"id": "BC-27", "section": "Security", "requirement": "Secret non-exposure", "status": "PASS_LOCAL"},
-    {"id": "BC-28", "section": "Verification", "requirement": "Full non-live suite", "status": "PASS_LOCAL", "summary": "197 passed, 1 deselected"},
-    {"id": "BC-29", "section": "Verification", "requirement": "Browser/control UI E2E", "status": "PASS_LOCAL"},
+    {"id": "BC-28", "section": "Verification", "requirement": "Full non-live suite", "status": "PASS_LOCAL", "summary": "272 passed, 1 deselected"},
+    {"id": "BC-29", "section": "Verification", "requirement": "Browser/control UI E2E", "status": "BLOCKED_UPSTREAM", "summary": "Codex sandbox bootstrap fails before browser session"},
     {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PASS_REMOTE"}
   ]
 }

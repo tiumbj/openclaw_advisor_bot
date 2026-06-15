@@ -1,0 +1,188 @@
+{
+  "schema_version": "p2-4-browser-sandbox-escalation-v1",
+  "captured_at_utc": "2026-06-15T08:35:00Z",
+  "baseline_sha": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
+  "final_sha": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
+  "package_version": "1.2.13",
+  "phase": "P2.4",
+  "classification": {
+    "browser_sandbox": "BLOCKED_UPSTREAM",
+    "root_cause": "UPSTREAM_CODEX_RUNTIME_DEFECT",
+    "subclass": "HELPER_ERROR_PROPAGATION_BUG"
+  },
+  "ownership_matrix": [
+    {
+      "component": "project config renderer",
+      "path_or_package": "config/openclaw.template.json",
+      "owner": "project"
+    },
+    {
+      "component": "generated OpenClaw config",
+      "path_or_package": "docs/PROJECT_STATUS.json and related rendered artifacts",
+      "owner": "project"
+    },
+    {
+      "component": "OpenClaw browser adapter",
+      "path_or_package": "installed OpenClaw runtime; no repository source error string found",
+      "owner": "OpenClaw"
+    },
+    {
+      "component": "Codex launcher",
+      "path_or_package": "C:\\Users\\Teera\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\node_modules\\@openai\\codex-win32-x64\\vendor\\x86_64-pc-windows-msvc\\bin\\codex.exe",
+      "owner": "Codex runtime"
+    },
+    {
+      "component": "codex.exe",
+      "path_or_package": "C:\\Users\\Teera\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\node_modules\\@openai\\codex-win32-x64\\vendor\\x86_64-pc-windows-msvc\\bin\\codex.exe",
+      "owner": "Codex runtime"
+    },
+    {
+      "component": "node_repl.exe",
+      "path_or_package": "C:\\Users\\Teera\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\789504f803e82e2b\\bin\\node_repl.exe",
+      "owner": "Codex runtime"
+    },
+    {
+      "component": "browser binary",
+      "path_or_package": "Microsoft Edge / Chrome family processes observed in host session",
+      "owner": "external/browser runtime"
+    },
+    {
+      "component": "sandbox root",
+      "path_or_package": "Codex runtime-managed sandbox path, not exposed by helper diagnostics",
+      "owner": "Codex runtime"
+    },
+    {
+      "component": "ACL helper implementation",
+      "path_or_package": "Codex runtime sandbox bootstrap",
+      "owner": "Codex runtime"
+    },
+    {
+      "component": "cleanup implementation",
+      "path_or_package": "Codex runtime sandbox bootstrap",
+      "owner": "Codex runtime"
+    },
+    {
+      "component": "error translation layer",
+      "path_or_package": "Codex runtime sandbox bootstrap",
+      "owner": "Codex runtime"
+    }
+  ],
+  "node_repl": {
+    "path": "C:\\Users\\Teera\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\789504f803e82e2b\\bin\\node_repl.exe",
+    "sha256": "6FF2F4D43267D1E61E89AA921DEFAC43464045FCD8B2B4546A7F938AE8C05CAA",
+    "signature": "NotSigned",
+    "manifest": {
+      "platform": "win32",
+      "arch": "x64",
+      "target": "win32-x64",
+      "node_version": "24.14.0",
+      "node_archive_path": "v24.14.0/node-v24.14.0-win-x64.zip",
+      "node_repl_archive_path": "20260605.1/node_repl-20260605.1-x86_64-pc-windows-msvc.zip",
+      "runtime_archive_name": "cua-node-0.0.1-20260609000952-8714bea94049-win32-x64.zip",
+      "runtime_archive_version": "0.0.1/20260609000952-8714bea94049",
+      "node_path": "bin/node.exe",
+      "node_modules": "bin/node_modules",
+      "node_repl_path": "bin/node_repl.exe"
+    }
+  },
+  "codex": {
+    "path": "C:\\Users\\Teera\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\node_modules\\@openai\\codex-win32-x64\\vendor\\x86_64-pc-windows-msvc\\bin\\codex.exe",
+    "version": "codex-cli 0.139.0",
+    "sha256": "77A84F8078400467ADE4301D827B8BCEA2D29B6838C9CD162BF3573B7EF97E10",
+    "signature": "Valid"
+  },
+  "process_chain": [
+    {
+      "name": "codex.exe",
+      "pid": 21280,
+      "parent_pid": 21228,
+      "user_sid": "S-1-5-21-100770358-1620492237-1148015479-1001",
+      "integrity_sid": "S-1-16-8192"
+    },
+    {
+      "name": "node_repl.exe",
+      "pid": 23840,
+      "parent_pid": 21280,
+      "user_sid": "S-1-5-21-100770358-1620492237-1148015479-1001",
+      "integrity_sid": "S-1-16-8192"
+    }
+  ],
+  "mcp_protocol": {
+    "transport_type": "stdio",
+    "endpoint_or_handle_type": "stdin/stdout",
+    "parent_writer": "codex.exe",
+    "child_reader": "node_repl.exe",
+    "request_encoding": "MCP initialize over stdio; no user JavaScript executed before failure",
+    "response_encoding": "stderr text plus process exit",
+    "framing": "stdio MCP server",
+    "request_operation_name": "browser bootstrap",
+    "response_error_shape": "Error: failed to start stdio MCP server; Caused by: connection closed: initialize request"
+  },
+  "sandbox_failure": {
+    "exact_text": "windows sandbox failed: helper_unknown_error: apply deny-read ACLs",
+    "raw_response_category": "helper_unknown_error",
+    "before_user_js": true,
+    "kernel_exited_before_js": true
+  },
+  "integrity_observations_latest_run": {
+    "codex.exe": "Medium Mandatory Level (S-1-16-8192)",
+    "node_repl.exe": "Medium Mandatory Level (S-1-16-8192)",
+    "diagnostic_shell": "Medium Mandatory Level (S-1-16-8192)"
+  },
+  "privileges": {
+    "SeBackupPrivilege": "not_present",
+    "SeRestorePrivilege": "not_present",
+    "SeTakeOwnershipPrivilege": "not_present",
+    "SeSecurityPrivilege": "not_present",
+    "SeImpersonatePrivilege": "not_present",
+    "SeChangeNotifyPrivilege": "enabled"
+  },
+  "sid_ace_semantics": {
+    "sid_type": "Windows user SID",
+    "sid_resolution": "resolves to current user",
+    "ace_type": "Deny",
+    "rights": "ReadAndExecute",
+    "inheritance": "ContainerInherit,ObjectInherit",
+    "propagation": "None",
+    "canonical_order": "not independently validated in helper path; native equivalent applied successfully"
+  },
+  "native_acl_comparison": {
+    "test_roots": [
+      "C:\\OpenClawSandboxTest\\<run-id>",
+      "%TEMP%\\OpenClawSandboxTest\\<run-id>",
+      "%LOCALAPPDATA%\\OpenClawSandboxTest\\<run-id>",
+      "C:\\Data\\OpenClawSuperAdvisor\\_tmp\\OpenClawSandboxTest\\<run-id>",
+      "%TEMP%\\OpenClawSandboxTest\\<run-id>-unicode-ทดสอบ",
+      "%TEMP%\\OpenClawSandboxTest\\<run-id>-long-path"
+    ],
+    "results": [
+      {"case": "T1", "path_class": "short NTFS", "inheritance": "enabled", "native_equivalent": "PASS", "cleanup": "PASS"},
+      {"case": "T2", "path_class": "short NTFS", "inheritance": "disabled", "native_equivalent": "PASS", "cleanup": "PASS"},
+      {"case": "T3", "path_class": "TEMP", "inheritance": "enabled", "native_equivalent": "PASS", "cleanup": "PASS"},
+      {"case": "T4", "path_class": "LOCALAPPDATA", "inheritance": "enabled", "native_equivalent": "PASS", "cleanup": "PASS"},
+      {"case": "T5", "path_class": "original parent", "inheritance": "current", "native_equivalent": "PASS", "cleanup": "PASS"},
+      {"case": "T6", "path_class": "Unicode path", "inheritance": "enabled", "native_equivalent": "PASS", "cleanup": "PASS"},
+      {"case": "T7", "path_class": "long path", "inheritance": "enabled", "native_equivalent": "PASS", "cleanup": "PASS"}
+    ],
+    "summary": "Native Windows deny-read ACL application and cleanup succeeded on all tested path classes."
+  },
+  "error_propagation": {
+    "native_error_available_at_layer": "not exposed by Codex runtime",
+    "native_error_dropped_at_layer": "Codex sandbox bootstrap / helper",
+    "generic_error_created_at_layer": "Codex helper translated failure to helper_unknown_error",
+    "resulting_subclass": "HELPER_ERROR_PROPAGATION_BUG"
+  },
+  "required_status": {
+    "browser_sandbox": "BLOCKED_UPSTREAM",
+    "upstream_defect": "UPSTREAM_CODEX_RUNTIME_DEFECT",
+    "full_soak_readiness": "NOT_READY_FOR_SOAK",
+    "human_release_gate": "CLOSED"
+  },
+  "recommended_upstream_reproduction_procedure": [
+    "Launch the Codex-launched node_repl path on the same Windows host and keep sandbox enabled.",
+    "Invoke the browser helper boundary through the MCP stdio server path, not a direct helper binary smoke test.",
+    "Capture stderr before user JavaScript executes and confirm the failure text: helper_unknown_error: apply deny-read ACLs.",
+    "Verify that native deny-read ACL creation on disposable NTFS directories still passes for the same user SID and inheritance settings.",
+    "Do not disable the Windows sandbox in the reproduction; the blocker is specifically in the sandbox bootstrap path."
+  ]
+}

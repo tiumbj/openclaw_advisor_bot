@@ -1,31 +1,37 @@
 {
   "schema_version": "project-status-v5",
   "project": "openclaw_advisor_bot",
-  "package_version": "1.2.12",
+  "package_version": "1.2.13",
   "current_phase": "P2.4",
   "phase": "P2.4",
   "phase_status": "REMEDIATION_IN_PROGRESS",
   "audit_readiness": "NOT_READY",
-  "audit_gate": "REMEDIATION_REQUIRED",
-  "current_work_package": "WP-P2_4-PPA-0001-0010-REMEDIATION",
-  "updated_at_utc": "2026-06-15T11:40:00Z",
-  "audit_baseline_commit": "d44da0983b38408575ceedfccb00b909862ff9f0",
-  "audit_report_commit": "e725e25cffa0d497920e9dad72521ece5b7ae4f2",
-  "baseline_commit": "d44da0983b38408575ceedfccb00b909862ff9f0",
-  "observed_remote_head": "cfb9dd01b6bdf0e904b99897354abc0c9ecf25d7",
-  "implementation_commit": "PENDING_REMEDIATION_COMMIT",
-  "status_report_commit": "PENDING_REMEDIATION_COMMIT",
-  "remediation_commit": "PENDING_COMMIT",
+  "audit_gate": "BROWSER_SANDBOX_BLOCKED_UPSTREAM",
+  "current_work_package": "WP-P2_4-BROWSER-SANDBOX-PROVENANCE-RECONCILIATION",
+  "updated_at_utc": "2026-06-15T08:35:00Z",
+  "audit_baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
+  "audit_report_commit": "SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD",
+  "baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
+  "observed_remote_head": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
+  "implementation_commit": "SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD",
+  "status_report_commit": "SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD",
+  "remediation_commit": "SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD",
   "production_gate": "HUMAN_RELEASE_GATE_CLOSED",
   "next_phase": "PRE_PRODUCTION_AUDIT",
   "next_phase_started": false,
-  "ci_status": "NOT_RUN_FOR_REMEDIATION",
-  "security_status": "NOT_RUN_FOR_REMEDIATION",
+  "ci_status": "PASS",
+  "security_status": "PASS",
+  "pip_audit_status": "TIMEOUT",
   "unsupported_provider_removal_status": "PASS",
-  "supported_providers": ["openai", "claude", "gemini", "deepseek"],
+  "supported_providers": [
+    "openai",
+    "claude",
+    "gemini",
+    "deepseek"
+  ],
   "selected_provider": "claude",
   "credit_blocker": "NONE",
-  "next_action": "push remediation commit, wait for CI/security, then run independent re-audit",
+  "next_action": "push evidence reconciliation commit, verify GitHub workflow conclusions, then run independent re-audit",
   "provider_static_validation": {
     "status": "PASS",
     "provider_policy": "BLOCKED",
@@ -50,25 +56,43 @@
     "status_probe_pass": true,
     "ui_bootstrap_pass": true,
     "overall_pass": true,
-    "script_version": "1.2.12",
+    "script_version": "1.2.13",
     "runtime_token_source": "env",
     "runtime_token_variable": "OPENCLAW_GATEWAY_TOKEN",
-    "warnings": [
-      "openclaw status --json could not be parsed (non-blocking; text format returned when gateway reports warnings)"
-    ]
+    "warnings": []
+  },
+  "runtime_verification": {
+    "telegram_operator_e2e": "PASS",
+    "market_bot_outbound": "PASS",
+    "browser_sandbox": "BLOCKED_UPSTREAM",
+    "browser_root_cause": "UPSTREAM_CODEX_RUNTIME_DEFECT",
+    "browser_failure_subclass": "HELPER_ERROR_PROPAGATION_BUG",
+    "full_soak_readiness": "NOT_READY_FOR_SOAK"
+  },
+  "browser_status": {
+    "status": "BLOCKED_UPSTREAM",
+    "root_cause": "UPSTREAM_CODEX_RUNTIME_DEFECT",
+    "failure_subclass": "HELPER_ERROR_PROPAGATION_BUG",
+    "bootstrap_before_user_js": true,
+    "evidence_bundle": "artifacts/p2_4_browser_sandbox_escalation_bundle/evidence.json"
   },
   "telegram_status": {
-    "status": "PARTIAL",
+    "status": "PASS_LOCAL",
     "bot": "@xauusd_ai_v4_bot",
     "mode": "polling",
     "channel_state": "OK",
-    "outbound": "works",
-    "inbound_blocker": "TELEGRAM_ALLOWED_USER_ID=BLANK in state/.env; dmPolicy=pairing means unknown senders get a pairing code",
+    "operator_e2e": "PASS",
+    "outbound": "PASS",
+    "inbound_blocker": "NONE",
     "config_correct": true,
-    "super_advisor_alsoAllow": ["message"],
-    "super_advisor_actions_allow": ["reply"],
+    "super_advisor_alsoAllow": [
+      "message"
+    ],
+    "super_advisor_actions_allow": [
+      "reply"
+    ],
     "super_advisor_broadcast_enabled": false,
-    "fix_required": "Set TELEGRAM_ALLOWED_USER_ID=<your_telegram_user_id> in state/.env, or run pairing flow: openclaw pairing approve telegram <code>"
+    "fix_required": "NONE"
   },
   "agent_status": {
     "status": "PASS_LOCAL",
@@ -78,27 +102,84 @@
   },
   "working_tree_status": {
     "clean": false,
-    "tracked_changes": ["PPA remediation source, tests, docs, skills, and config"],
-    "untracked_changes": [],
-    "ignored_runtime_updates": ["state/openclaw.json", "state/.env", "state/remediation-backups/"]
+    "tracked_changes": [],
+    "untracked_changes": [
+      ".openclaw/"
+    ],
+    "ignored_runtime_updates": [
+      "state/openclaw.json",
+      "state/.env",
+      "state/remediation-backups/"
+    ]
   },
   "local_gates": [
-    {"name": "pip_check", "command": "python -m pip check", "status": "PASS"},
-    {"name": "ruff", "command": "python -m ruff check .", "status": "PASS"},
-    {"name": "mypy", "command": "python -m mypy engine\\src", "status": "PASS"},
-    {"name": "pytest_non_live_clean_venv", "command": ".venv-audit\\Scripts\\python.exe -m pytest -m \"not live\" -q --basetemp ._tmp\\audit-venv-pytest (PYTHONNOUSERSITE=1, no PYTHONPATH)", "status": "PASS", "summary": "220 passed, 1 deselected"},
-    {"name": "coverage_gate_clean_venv", "command": ".venv-audit\\Scripts\\python.exe -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-branch --cov-fail-under=85", "status": "PASS", "summary": "coverage 87.82%"},
-    {"name": "validate_skills", "command": "openclaw-advisor validate-skills --strict", "status": "PASS"},
-    {"name": "validate_agents", "command": "openclaw-advisor validate-agents --strict", "status": "PASS"},
-    {"name": "validate_routing", "command": "openclaw-advisor validate-routing --strict", "status": "PASS"},
-    {"name": "render_config", "command": "openclaw-advisor render-config --validate --strict", "status": "PASS", "summary": "valid=true, issues=[]"},
-    {"name": "ui_e2e", "command": "pwsh -NonInteractive -File scripts\\Test-OpenClawUI.ps1", "status": "PASS", "summary": "overall_pass=true; token_consistent=true; fingerprint=660c621820d9; gateway_auth_pass=true; ui_bootstrap_pass=true"},
-    {"name": "security_scan", "command": "openclaw-advisor security-scan --include-history --strict", "status": "BLOCKED", "summary": "Pre-existing ACL deny on dist/1.2.11-py3 WHL (applied by previous --strict run); source active_source_violations=0 confirmed in prior gate run; no secrets in 1.2.12 changes"},
-    {"name": "package_build", "command": "python -m build", "status": "PASS", "summary": "1.2.12 WHL and tarball built"},
-    {"name": "fred_live_check", "command": "python scripts\\audit\\fred_live_check.py", "status": "PASS", "summary": "credential masked; DGS10 VALID; DTWEXBGS STALE; both DAILY_MACRO"}
+    {
+      "name": "pip_check",
+      "command": "python -m pip check",
+      "status": "PASS"
+    },
+    {
+      "name": "ruff",
+      "command": "python -m ruff check .",
+      "status": "PASS"
+    },
+    {
+      "name": "mypy",
+      "command": "python -m mypy engine\\src",
+      "status": "PASS"
+    },
+    {
+      "name": "pytest_non_live_clean_venv",
+      "command": ".venv-audit\\Scripts\\python.exe -m pytest -m \"not live\" -q --basetemp ._tmp\\audit-venv-pytest (PYTHONNOUSERSITE=1, no PYTHONPATH)",
+      "status": "PASS",
+      "summary": "272 passed, 1 deselected"
+    },
+    {
+      "name": "coverage_gate_clean_venv",
+      "command": ".venv-audit\\Scripts\\python.exe -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-branch --cov-fail-under=85",
+      "status": "PASS",
+      "summary": "coverage 85.81%"
+    },
+    {
+      "name": "validate_skills",
+      "command": "openclaw-advisor validate-skills --strict",
+      "status": "PASS"
+    },
+    {
+      "name": "validate_agents",
+      "command": "openclaw-advisor validate-agents --strict",
+      "status": "PASS"
+    },
+    {
+      "name": "validate_routing",
+      "command": "openclaw-advisor validate-routing --strict",
+      "status": "PASS"
+    },
+    {
+      "name": "render_config",
+      "command": "openclaw-advisor render-config --validate --strict",
+      "status": "PASS"
+    },
+    {
+      "name": "security_scan",
+      "command": "openclaw-advisor security-scan --include-history --strict",
+      "status": "PASS"
+    },
+    {
+      "name": "pip_audit",
+      "command": "python -m pip_audit",
+      "status": "TIMEOUT",
+      "summary": "timed out twice in this workspace window"
+    },
+    {
+      "name": "browser_sandbox_bootstrap",
+      "command": "Codex-launched node_repl browser bootstrap",
+      "status": "BLOCKED_UPSTREAM",
+      "summary": "helper_unknown_error: apply deny-read ACLs"
+    }
   ],
   "coverage": {
-    "total_percent": 87.82,
+    "total_percent": 85.81,
     "threshold_percent": 85.0,
     "artifact": "docs/P2_COVERAGE.json"
   },
@@ -111,15 +192,13 @@
     "PPA-0006": "CLOSED_LOCAL",
     "PPA-0007": "CLOSED_LOCAL",
     "PPA-0008": "CLOSED_LOCAL",
-    "PPA-0009": "PARTIAL",
+    "PPA-0009": "BLOCKED_UPSTREAM",
     "PPA-0010": "CLOSED_LOCAL"
   },
   "remaining_gaps": [
-    "Browser plugin E2E blocked by Windows sandbox ACL (apply deny-read ACLs on helper process); browser.enabled=false in config per design; cannot resolve without disabling Windows sandbox.",
-    "Telegram inbound DM routing blocked by TELEGRAM_ALLOWED_USER_ID=BLANK in state/.env (operational config, not code); dmPolicy=pairing; bot polling active; outbound works; config/code correct.",
-    "Security scan dist/1.2.11 WHL has ACL deny (applied by previous --strict run); active_source_violations=0 confirmed; 1.2.12 changes introduce no secrets.",
-    "Report provenance PPA-0001 requires post-push workflow attestation and independent re-audit.",
-    "Real 24-hour soak is NOT_RUN."
+    "Browser sandbox bootstrap is blocked upstream in Codex node_repl; see artifacts/p2_4_browser_sandbox_escalation_bundle/evidence.json.",
+    "Full 24-hour soak is not ready because the browser E2E gate is blocked upstream.",
+    "HUMAN_RELEASE_GATE remains closed."
   ],
   "safety_boundaries": {
     "advisor_only": true,
@@ -129,7 +208,7 @@
     "human_release_gate": "CLOSED"
   },
   "notes": [
-    "Do not declare READY/PASS until independent re-audit validates remediation.",
-    "Production remains blocked by HUMAN_RELEASE_GATE_CLOSED."
+    "Do not declare READY/PASS until the evidence reconciliation commit is pushed and verified on GitHub.",
+    "Browser feature remains disabled until an explicit human-approved upstream fix exists."
   ]
 }

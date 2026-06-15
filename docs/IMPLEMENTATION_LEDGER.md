@@ -862,3 +862,45 @@
   - `state/.env missing 6 new vars (MT5_GBPUSD_SYMBOL, MT5_NZDUSD_SYMBOL, MT5_USDJPY_SYMBOL, MT5_USDCHF_SYMBOL, MT5_USDCAD_SYMBOL, FRED_CACHE_TTL_SECONDS)`
   - `HUMAN_RELEASE_GATE not passed — PRE-PRODUCTION audit only`
 - Next action: `Add unit tests for fred_adapter.py and fx_basket.py; add missing env vars to state/.env; run browser E2E; pass HUMAN_RELEASE_GATE before production promotion.`
+
+## Entry 0027
+
+- Timestamp UTC: `2026-06-15T08:35:00Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-BROWSER-SANDBOX-PROVENANCE-RECONCILIATION`
+- Operation: `Reconciled authoritative P2.4 runtime evidence into the repository, created a redacted browser sandbox escalation bundle, and aligned project status, readiness, compliance, and provenance documents to the latest verified runtime findings without changing executable behavior or re-enabling the browser sandbox.`
+- Files changed:
+  - `artifacts/p2_4_browser_sandbox_escalation_bundle/README.md`
+  - `artifacts/p2_4_browser_sandbox_escalation_bundle/evidence.json`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md`
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.json`
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.md`
+  - `docs/P2_4_REPORT_PROVENANCE.json`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/PROJECT_STATUS.md`
+- Tests run:
+  - `git rev-parse HEAD`
+  - `git rev-parse origin/main`
+  - `git status --short`
+  - `git diff --check`
+  - `python -m pip check`
+  - `python -m ruff check .`
+  - `python -m mypy engine\\src`
+  - `python -m pytest -m "not live" -q --basetemp ._tmp\\audit-venv-pytest`
+  - `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-branch --cov-fail-under=85 --basetemp ._tmp\\audit-venv-cov`
+  - `python -m build`
+  - `openclaw-advisor validate-skills --strict`
+  - `openclaw-advisor validate-agents --strict`
+  - `openclaw-advisor validate-routing --strict`
+  - `openclaw-advisor render-config --validate --strict`
+- Result: `PARTIAL`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `NOT_RUN`
+- Security result: `PASS_LOCAL`
+- Known defects:
+  - `Browser sandbox bootstrap remains blocked upstream in Codex runtime.`
+  - `Dependency audit (python -m pip_audit) timed out twice in this workspace window.`
+- Next action: `Commit and push the reconciliation bundle, then verify remote alignment and workflow status.`
