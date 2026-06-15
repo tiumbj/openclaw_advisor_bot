@@ -55,9 +55,6 @@ def ema(values: list[float], period: int) -> list[float]:
 
 def compute_ema_features(
     closes: list[float],
-    *,
-    evidence_ids: tuple[str, ...],
-    fetched_at_utc: str,
 ) -> dict[str, FeatureResult]:
     results: dict[str, FeatureResult] = {}
     for period in (10, 50, 200):
@@ -137,7 +134,7 @@ def compute_macd(
             quality_status="INSUFFICIENT_DATA", formula_version=FORMULA_VERSION,
         )
         return {"macd_line": stub, "macd_signal": stub, "macd_histogram": stub}
-    macd_line = [f - s for f, s in zip(ema_fast[-min_len:], ema_slow[-min_len:])]
+    macd_line = [f - s for f, s in zip(ema_fast[-min_len:], ema_slow[-min_len:], strict=False)]
     signal_line = ema(macd_line, signal_period)
     if not signal_line:
         stub = FeatureResult(
@@ -353,7 +350,7 @@ def rolling_correlation(series_a: list[float], series_b: list[float], window: in
     b = series_b[-window:]
     mean_a = sum(a) / window
     mean_b = sum(b) / window
-    cov = sum((x - mean_a) * (y - mean_b) for x, y in zip(a, b)) / window
+    cov = sum((x - mean_a) * (y - mean_b) for x, y in zip(a, b, strict=False)) / window
     std_a = math.sqrt(sum((x - mean_a) ** 2 for x in a) / window)
     std_b = math.sqrt(sum((x - mean_b) ** 2 for x in b) / window)
     if std_a == 0 or std_b == 0:

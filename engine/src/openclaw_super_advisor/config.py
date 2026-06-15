@@ -225,6 +225,7 @@ def validate_rendered_config(
                 f"agents.list[{index}].tools",
                 issues,
                 is_super_advisor=agent_id == "super-advisor",
+                is_blueprint_coder=agent_id == "blueprint-coder",
             )
             secret_access = _as_object(
                 agent.get("secretAccess"), f"agents.list[{index}].secretAccess"
@@ -247,6 +248,7 @@ def validate_rendered_config(
             {
                 "realtime": cast(list[list[str]], routing.get("realtime", [])),
                 "code-audit": cast(list[list[str]], routing.get("code-audit", [])),
+                "code-work-order": cast(list[list[str]], routing.get("code-work-order", [])),
             }
         )
         if not route_report.valid:
@@ -353,8 +355,14 @@ def _validate_tools(
     issues: list[ConfigValidationIssue],
     *,
     is_super_advisor: bool = False,
+    is_blueprint_coder: bool = False,
 ) -> None:
-    _require_equal(issues, tools.get("allow"), ["read", "session_status"], f"{prefix}.allow")
+    expected_allow = (
+        ["read", "session_status", "write", "edit", "apply_patch"]
+        if is_blueprint_coder
+        else ["read", "session_status"]
+    )
+    _require_equal(issues, tools.get("allow"), expected_allow, f"{prefix}.allow")
     expected_also_allow = ["message"] if is_super_advisor else None
     _require_equal(issues, tools.get("alsoAllow"), expected_also_allow, f"{prefix}.alsoAllow")
     deny = tools.get("deny")
@@ -367,10 +375,6 @@ def _validate_tools(
         "group:plugins",
         "group:memory",
         "group:sessions",
-        "write",
-        "edit",
-        "apply_patch",
-        "exec",
         "process",
         "code_execution",
         "browser",
@@ -378,6 +382,9 @@ def _validate_tools(
         "gateway",
         "subagents",
     }
+    if not is_blueprint_coder:
+        # blueprint-coder manages these through exec.mode=allowlist and allowed_tools instead
+        required_denies.update({"write", "edit", "apply_patch", "exec"})
     # group:messaging and message are only required in non-root, non-super-advisor scopes.
     # Root tools omits them so super-advisor (which inherits root) can use reply-scoped messaging.
     # Super-advisor uses alsoAllow:["message"] + actions.allow:["reply"] instead of deny.
@@ -391,7 +398,8 @@ def _validate_tools(
             )
         )
     exec_section = _as_object(tools.get("exec"), f"{prefix}.exec")
-    _require_equal(issues, exec_section.get("mode"), "deny", f"{prefix}.exec.mode")
+    expected_exec_mode = "allowlist" if is_blueprint_coder else "deny"
+    _require_equal(issues, exec_section.get("mode"), expected_exec_mode, f"{prefix}.exec.mode")
     message = _as_object(tools.get("message"), f"{prefix}.message")
     _require_equal(
         issues,

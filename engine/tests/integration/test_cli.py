@@ -135,7 +135,7 @@ def test_cli_validation_commands(sample_project: Path) -> None:
     )
 
     assert health["runtime_agent_id"] == "super-advisor"
-    assert len(health["runtime_agent_ids"]) == 12
+    assert len(health["runtime_agent_ids"]) == 13
     assert env["valid"] is True
     assert skills["valid"] is True
     assert agents["valid"] is True

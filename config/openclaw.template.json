@@ -85,7 +85,25 @@
     "incident-escalation-contract",
     "research-knowledge-lifecycle",
     "skill-candidate-lifecycle",
-    "experiment-outcome-recording"
+    "experiment-outcome-recording",
+    "advanced-python-engineering",
+    "software-architecture-design",
+    "algorithm-and-logic-design",
+    "blueprint-compliance-engineering",
+    "runtime-pipeline-wiring",
+    "event-driven-system-design",
+    "state-machine-engineering",
+    "data-pipeline-engineering",
+    "secure-refactoring",
+    "root-cause-debugging",
+    "logic-conflict-remediation",
+    "dead-code-elimination",
+    "test-and-regression-engineering",
+    "property-based-testing",
+    "performance-and-reliability-engineering",
+    "migration-and-backward-compatibility",
+    "isolated-worktree-patching",
+    "release-and-rollback-planning"
   ],
   "agents": {
     "defaults": {
@@ -146,7 +164,25 @@
         "incident-escalation-contract",
         "research-knowledge-lifecycle",
         "skill-candidate-lifecycle",
-        "experiment-outcome-recording"
+        "experiment-outcome-recording",
+        "advanced-python-engineering",
+        "software-architecture-design",
+        "algorithm-and-logic-design",
+        "blueprint-compliance-engineering",
+        "runtime-pipeline-wiring",
+        "event-driven-system-design",
+        "state-machine-engineering",
+        "data-pipeline-engineering",
+        "secure-refactoring",
+        "root-cause-debugging",
+        "logic-conflict-remediation",
+        "dead-code-elimination",
+        "test-and-regression-engineering",
+        "property-based-testing",
+        "performance-and-reliability-engineering",
+        "migration-and-backward-compatibility",
+        "isolated-worktree-patching",
+        "release-and-rollback-planning"
       ],
       "contextInjection": "always",
       "memorySearch": {
@@ -879,6 +915,52 @@
         "secretAccess": {"mode": "none"},
         "timeoutSeconds": 120,
         "retry": {"maxAttempts": 2, "backoffSeconds": 2}
+      },
+      {
+        "id": "blueprint-coder",
+        "name": "Blueprint Coder",
+        "description": "Isolated code-creation agent; patches source in isolated Git worktree on explicit APPLY_IMPROVEMENT command only.",
+        "workspace": "{{OPENCLAW_BLUEPRINT_CODER_WORKSPACE_DIR}}",
+        "agentDir": "{{OPENCLAW_BLUEPRINT_CODER_AGENT_DIR}}",
+        "sessionStore": "{{OPENCLAW_BLUEPRINT_CODER_SESSION_STORE}}",
+        "memoryDir": "{{OPENCLAW_BLUEPRINT_CODER_MEMORY_DIR}}",
+        "skills": [
+          "advanced-python-engineering",
+          "software-architecture-design",
+          "algorithm-and-logic-design",
+          "blueprint-compliance-engineering",
+          "runtime-pipeline-wiring",
+          "event-driven-system-design",
+          "state-machine-engineering",
+          "data-pipeline-engineering",
+          "secure-refactoring",
+          "root-cause-debugging",
+          "logic-conflict-remediation",
+          "dead-code-elimination",
+          "test-and-regression-engineering",
+          "property-based-testing",
+          "performance-and-reliability-engineering",
+          "migration-and-backward-compatibility",
+          "isolated-worktree-patching",
+          "release-and-rollback-planning"
+        ],
+        "tools": {
+          "allow": ["read", "session_status", "write", "edit", "apply_patch"],
+          "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"],
+          "exec": {
+            "mode": "allowlist",
+            "allowlist": ["git diff","git status","git log","git add","git commit","git checkout","git worktree","python -m pytest","python -m ruff","python -m mypy","python -m pip_audit"],
+            "applyPatch": {"enabled": true, "workspaceOnly": true}
+          },
+          "fs": {"workspaceOnly": true},
+          "message": {"allowCrossContextSend": false, "crossContext": {"allowWithinProvider": false, "allowAcrossProviders": false}, "actions": {"allow": []}, "broadcast": {"enabled": false}},
+          "agentToAgent": {"enabled": false},
+          "elevated": {"enabled": false},
+          "sandbox": {"tools": {"allow": ["read", "session_status"], "deny": ["group:runtime","group:web","group:ui","group:automation","group:messaging","group:plugins","group:memory","group:sessions","process","code_execution","browser","canvas","gateway","message","subagents","memory_search","memory_get","sessions_list","sessions_history","sessions_send","sessions_spawn","sessions_yield"]}}
+        },
+        "secretAccess": {"mode": "none"},
+        "timeoutSeconds": 600,
+        "retry": {"maxAttempts": 1, "backoffSeconds": 2}
       }
     ]
   },
@@ -914,6 +996,12 @@
         "system-coder-auditor",
         "audit-report"
       ]
+    ],
+    "code-work-order": [
+      ["super-advisor", "blueprint-coder"],
+      ["blueprint-coder", "system-coder-auditor"],
+      ["system-coder-auditor", "security-compliance-agent"],
+      ["security-compliance-agent", "super-advisor"]
     ]
   },
   "marketData": {

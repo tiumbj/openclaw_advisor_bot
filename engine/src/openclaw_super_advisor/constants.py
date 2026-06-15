@@ -18,6 +18,7 @@ RUNTIME_AGENT_IDS = (
     "security-compliance-agent",
     "reliability-watchdog-agent",
     "knowledge-skill-manager",
+    "blueprint-coder",
 )
 
 # Skills owned by the original 4 runtime agents (maintained for compatibility)
@@ -102,6 +103,40 @@ _KNOWLEDGE_SKILL_MANAGER_SKILLS = (
     "skill-candidate-lifecycle",
     "experiment-outcome-recording",
 )
+_BLUEPRINT_CODER_SKILLS = (
+    "advanced-python-engineering",
+    "software-architecture-design",
+    "algorithm-and-logic-design",
+    "blueprint-compliance-engineering",
+    "runtime-pipeline-wiring",
+    "event-driven-system-design",
+    "state-machine-engineering",
+    "data-pipeline-engineering",
+    "secure-refactoring",
+    "root-cause-debugging",
+    "logic-conflict-remediation",
+    "dead-code-elimination",
+    "test-and-regression-engineering",
+    "property-based-testing",
+    "performance-and-reliability-engineering",
+    "migration-and-backward-compatibility",
+    "isolated-worktree-patching",
+    "release-and-rollback-planning",
+)
+
+BLUEPRINT_CODER_EXEC_ALLOWLIST = (
+    "git diff",
+    "git status",
+    "git log",
+    "git add",
+    "git commit",
+    "git checkout",
+    "git worktree",
+    "python -m pytest",
+    "python -m ruff",
+    "python -m mypy",
+    "python -m pip_audit",
+)
 
 AGENT_SKILL_NAMES: dict[str, tuple[str, ...]] = {
     "super-advisor": _SUPER_ADVISOR_SKILLS,
@@ -116,6 +151,7 @@ AGENT_SKILL_NAMES: dict[str, tuple[str, ...]] = {
     "security-compliance-agent": _SECURITY_COMPLIANCE_SKILLS,
     "reliability-watchdog-agent": _RELIABILITY_WATCHDOG_SKILLS,
     "knowledge-skill-manager": _KNOWLEDGE_SKILL_MANAGER_SKILLS,
+    "blueprint-coder": _BLUEPRINT_CODER_SKILLS,
 }
 
 SKILL_NAMES = tuple(
@@ -156,6 +192,12 @@ _STANDARD_DENY = (
 _SUPER_ADVISOR_DENY = tuple(
     item for item in _STANDARD_DENY if item not in {"group:messaging", "message"}
 )
+# blueprint-coder may write/edit/apply_patch inside its isolated worktree only;
+# exec is controlled via exec.mode=allowlist rather than the deny list.
+_BLUEPRINT_CODER_DENY = tuple(
+    item for item in _STANDARD_DENY
+    if item not in {"write", "edit", "apply_patch", "exec"}
+)
 
 AGENT_ALLOWED_TOOLS: dict[str, tuple[str, ...]] = {
     "super-advisor": ("read", "session_status"),
@@ -170,10 +212,15 @@ AGENT_ALLOWED_TOOLS: dict[str, tuple[str, ...]] = {
     "security-compliance-agent": ("read", "session_status"),
     "reliability-watchdog-agent": ("read", "session_status"),
     "knowledge-skill-manager": ("read", "session_status"),
+    "blueprint-coder": ("read", "session_status", "write", "edit", "apply_patch"),
 }
 
 AGENT_DENIED_TOOLS: dict[str, tuple[str, ...]] = {
-    agent_id: (_SUPER_ADVISOR_DENY if agent_id == "super-advisor" else _STANDARD_DENY)
+    agent_id: (
+        _SUPER_ADVISOR_DENY if agent_id == "super-advisor"
+        else _BLUEPRINT_CODER_DENY if agent_id == "blueprint-coder"
+        else _STANDARD_DENY
+    )
     for agent_id in RUNTIME_AGENT_IDS
 }
 

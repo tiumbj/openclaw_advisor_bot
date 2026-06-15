@@ -289,10 +289,6 @@ def validate_skills(
             "group:plugins",
             "group:memory",
             "group:sessions",
-            "write",
-            "edit",
-            "apply_patch",
-            "exec",
             "process",
             "code_execution",
             "browser",
@@ -301,6 +297,10 @@ def validate_skills(
             "message",
             "subagents",
         }
+        # blueprint-coder is allowed write/edit/apply_patch in its isolated worktree;
+        # exec is managed via exec.mode=allowlist rather than the deny list.
+        if skill.owner_agent != "blueprint-coder":
+            required_denies.update({"write", "edit", "apply_patch", "exec"})
         if not required_denies.issubset(set(skill.denied_tools)):
             issues.append(
                 SkillIssue(

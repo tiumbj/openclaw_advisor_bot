@@ -8,6 +8,7 @@ from .constants import (
     AGENT_ALLOWED_TOOLS,
     AGENT_DENIED_TOOLS,
     AGENT_SKILL_NAMES,
+    BLUEPRINT_CODER_EXEC_ALLOWLIST,
     CANONICAL_RUNTIME_AGENT_ID,
     RUNTIME_AGENT_IDS,
     SKILL_NAMES,
@@ -25,6 +26,12 @@ REALTIME_ROUTE_ALLOWLIST = (
 CODE_AUDIT_ROUTE_ALLOWLIST = (
     ("source-bundle", "system-coder-auditor"),
     ("system-coder-auditor", "audit-report"),
+)
+CODE_WORK_ORDER_ROUTE_ALLOWLIST = (
+    ("super-advisor", "blueprint-coder"),
+    ("blueprint-coder", "system-coder-auditor"),
+    ("system-coder-auditor", "security-compliance-agent"),
+    ("security-compliance-agent", "super-advisor"),
 )
 
 
@@ -170,6 +177,18 @@ def _agent_specs() -> dict[str, dict[str, object]]:
             "timeout_seconds": 120,
             "retry_max_attempts": 2,
         },
+        "blueprint-coder": {
+            "name": "Blueprint Coder",
+            "description": (
+                "Isolated code-creation agent; writes, refactors, and patches source code in an "
+                "isolated Git worktree. Triggered only by explicit APPLY_IMPROVEMENT command via "
+                "super-advisor. Cannot access state/.env, cannot push/merge/deploy, cannot "
+                "self-approve patches."
+            ),
+            "secret_access": "none",
+            "timeout_seconds": 600,
+            "retry_max_attempts": 1,
+        },
     }
 
 
@@ -220,10 +239,18 @@ def render_blueprint_config(paths: ProjectPaths) -> dict[str, object]:
                 "tools": {
                     "allow": list(agent.allowed_tools),
                     "deny": list(agent.denied_tools),
-                    "exec": {
-                        "mode": "deny",
-                        "applyPatch": {"enabled": False, "workspaceOnly": True},
-                    },
+                    "exec": (
+                        {
+                            "mode": "allowlist",
+                            "allowlist": list(BLUEPRINT_CODER_EXEC_ALLOWLIST),
+                            "applyPatch": {"enabled": True, "workspaceOnly": True},
+                        }
+                        if agent.agent_id == "blueprint-coder"
+                        else {
+                            "mode": "deny",
+                            "applyPatch": {"enabled": False, "workspaceOnly": True},
+                        }
+                    ),
                     "fs": {"workspaceOnly": True},
                     "message": {
                         "allowCrossContextSend": False,
@@ -238,7 +265,7 @@ def render_blueprint_config(paths: ProjectPaths) -> dict[str, object]:
                     "elevated": {"enabled": False},
                     "sandbox": {
                         "tools": {
-                            "allow": list(agent.allowed_tools),
+                            "allow": ["read", "session_status"],
                             "deny": list(agent.denied_tools),
                         }
                     },
@@ -264,6 +291,12 @@ def render_blueprint_config(paths: ProjectPaths) -> dict[str, object]:
             "code-audit": [
                 ["source-bundle", "system-coder-auditor"],
                 ["system-coder-auditor", "audit-report"],
+            ],
+            "code-work-order": [
+                ["super-advisor", "blueprint-coder"],
+                ["blueprint-coder", "system-coder-auditor"],
+                ["system-coder-auditor", "security-compliance-agent"],
+                ["security-compliance-agent", "super-advisor"],
             ],
         },
     }
@@ -418,6 +451,15 @@ def validate_agent_topology(
                     "code-audit routing must match the allowlist",
                 )
             )
+        code_work_order = routing.get("code-work-order", [])
+        if [tuple(r) for r in code_work_order] != list(CODE_WORK_ORDER_ROUTE_ALLOWLIST):
+            route_issues.append(
+                AgentTopologyIssue(
+                    "routing.code-work-order",
+                    "allowlist_mismatch",
+                    "code-work-order routing must match the allowlist",
+                )
+            )
 
     return AgentTopologyReport(
         version=__version__,
@@ -443,6 +485,7 @@ def validate_routing(
         )
     realtime = routes.get("realtime", [])
     code_audit = routes.get("code-audit", [])
+    code_work_order = routes.get("code-work-order", [])
     if [tuple(item) for item in realtime] != list(REALTIME_ROUTE_ALLOWLIST):
         issues.append(
             AgentTopologyIssue(
@@ -459,14 +502,31 @@ def validate_routing(
                 "code-audit routing must match the allowlist",
             )
         )
+    if [tuple(item) for item in code_work_order] != list(CODE_WORK_ORDER_ROUTE_ALLOWLIST):
+        issues.append(
+            AgentTopologyIssue(
+                "routing.code-work-order",
+                "allowlist_mismatch",
+                "code-work-order routing must match the allowlist",
+            )
+        )
     disallowed_routes = {
         ("telegram-publisher", "xau-strategy-auditor"),
         ("telegram-publisher", "system-coder-auditor"),
         ("xau-strategy-auditor", "telegram-publisher"),
         ("system-coder-auditor", "super-advisor"),
         ("unknown-agent", "any"),
+        ("blueprint-coder", "telegram-publisher"),
+        ("blueprint-coder", "outcome-ledger"),
+        ("blueprint-coder", "super-advisor"),
+        ("blueprint-coder", "blueprint-coder"),
     }
-    for route in [*map(tuple, realtime), *map(tuple, code_audit)]:
+    all_routes = [
+        *map(tuple, realtime),
+        *map(tuple, code_audit),
+        *map(tuple, code_work_order),
+    ]
+    for route in all_routes:
         if route in disallowed_routes:
             issues.append(
                 AgentTopologyIssue(
@@ -479,7 +539,11 @@ def validate_routing(
         version=__version__,
         phase=PHASE,
         valid=not issues,
-        allowed_routes=tuple([*REALTIME_ROUTE_ALLOWLIST, *CODE_AUDIT_ROUTE_ALLOWLIST]),
+        allowed_routes=tuple([
+            *REALTIME_ROUTE_ALLOWLIST,
+            *CODE_AUDIT_ROUTE_ALLOWLIST,
+            *CODE_WORK_ORDER_ROUTE_ALLOWLIST,
+        ]),
         issues=tuple(issues),
     )
 

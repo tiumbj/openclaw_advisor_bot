@@ -1,7 +1,7 @@
 ---
 name: logic-conflict-detection
 description: Logic conflict detection skill.
-version: 1.2.12
+version: 1.2.13
 owner_agent: system-coder-auditor
 purpose: Detect logic conflicts and policy clashes.
 allowed_inputs:

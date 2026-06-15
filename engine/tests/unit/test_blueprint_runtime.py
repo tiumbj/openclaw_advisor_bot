@@ -40,16 +40,17 @@ def test_required_agents_exist(sample_project: Path) -> None:
         "security-compliance-agent",
         "reliability-watchdog-agent",
         "knowledge-skill-manager",
+        "blueprint-coder",
     ]
 
 
 def test_agent_workspaces_are_isolated(sample_project: Path) -> None:
     paths = build_paths(sample_project)
     agents = build_agent_topology(paths)
-    assert len({agent.workspace for agent in agents}) == 12
-    assert len({agent.agent_dir for agent in agents}) == 12
-    assert len({agent.session_store for agent in agents}) == 12
-    assert len({agent.memory_dir for agent in agents}) == 12
+    assert len({agent.workspace for agent in agents}) == 13
+    assert len({agent.agent_dir for agent in agents}) == 13
+    assert len({agent.session_store for agent in agents}) == 13
+    assert len({agent.memory_dir for agent in agents}) == 13
 
 
 def test_realtime_route_happy_path(sample_project: Path) -> None:
@@ -92,7 +93,12 @@ def test_non_publisher_agents_cannot_send_telegram_directly(sample_project: Path
         agent_id = agent["id"]
         tools = agent["tools"]
         message_policy = tools["message"]
-        assert tools["allow"] == ["read", "session_status"]
+        if agent_id == "blueprint-coder":
+            assert tools["allow"] == ["read", "session_status", "write", "edit", "apply_patch"]
+            assert tools["exec"]["mode"] == "allowlist"
+        else:
+            assert tools["allow"] == ["read", "session_status"]
+            assert tools["exec"]["mode"] == "deny"
         assert message_policy["broadcast"]["enabled"] is False
         if agent_id != "telegram-publisher":
             assert agent["secretAccess"]["mode"] == "none"

@@ -1,7 +1,7 @@
 ---
 name: component-restart-protocol
 description: Bounded automatic restart procedure for failed system components with rollback guard.
-version: 1.2.12
+version: 1.2.13
 owner_agent: reliability-watchdog-agent
 purpose: Recover failed components without human intervention up to max_restart_attempts.
 allowed_inputs:

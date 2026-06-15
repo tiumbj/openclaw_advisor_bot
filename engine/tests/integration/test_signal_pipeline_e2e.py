@@ -1,27 +1,25 @@
 """End-to-end integration tests for the deterministic signal pipeline.
 
 14 required scenarios (P2.4 work order, Step 12):
-  S01 – valid market data → features → confirmed event
-  S02 – stale data → no confirmed event (quality gate)
-  S03 – confirmed event → MAIN approve → Thai Market delivery request
-  S04 – candidate event → not published (HOLD)
-  S05 – invalidated event → published once
-  S06 – duplicate event_id → dedup rejection
-  S07 – authorized Operator inbound → MAIN reply
-  S08 – unauthorized Operator inbound → reject
-  S09 – Market inbound → reject
-  S10 – Specialist direct reply → deny
-  S11 – agent numeric evidence → REJECT
-  S12 – restart → dedup/checkpoint state persists
-  S13 – wrong agent_id → fail closed
-  S14 – event schema/integrity failure → reject
+  S01 - valid market data → features → confirmed event
+  S02 - stale data → no confirmed event (quality gate)
+  S03 - confirmed event → MAIN approve → Thai Market delivery request
+  S04 - candidate event → not published (HOLD)
+  S05 - invalidated event → published once
+  S06 - duplicate event_id → dedup rejection
+  S07 - authorized Operator inbound → MAIN reply
+  S08 - unauthorized Operator inbound → reject
+  S09 - Market inbound → reject
+  S10 - Specialist direct reply → deny
+  S11 - agent numeric evidence → REJECT
+  S12 - restart → dedup/checkpoint state persists
+  S13 - wrong agent_id → fail closed
+  S14 - event schema/integrity failure → reject
 
 No tokens, no live Telegram, no secrets.
 """
 from __future__ import annotations
 
-import copy
-import json
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -32,21 +30,17 @@ import pytest
 from openclaw_super_advisor.event_consumer import ALLOWED_MARKET_PUBLISH, consume_event
 from openclaw_super_advisor.events import (
     build_event_envelope,
-    sha256_hex,
-    canonical_json,
     validate_event_envelope,
 )
 from openclaw_super_advisor.market_data.features import (
     FORMULA_VERSION,
+    classify_trend,
+    compute_atr,
     compute_ema_features,
     compute_rsi,
-    compute_atr,
-    classify_trend,
-    compute_headroom_atr,
 )
 from openclaw_super_advisor.signal_engine import (
     SignalInput,
-    ThresholdConfig,
     build_signal_event,
     evaluate_signal,
 )
@@ -59,7 +53,6 @@ from openclaw_super_advisor.telegram import (
     TelegramPolicyError,
     TelegramPublisher,
 )
-
 
 # ---------------------------------------------------------------------------
 # Shared helpers
@@ -128,21 +121,19 @@ def _confirmed_payload(**overrides: Any) -> ApprovedPublicationPayload:
 
 
 # ---------------------------------------------------------------------------
-# S01 – valid market data → features → confirmed event
+# S01 - valid market data → features → confirmed event
 # ---------------------------------------------------------------------------
 
 def test_s01_valid_market_data_pipeline_produces_confirmed_event() -> None:
-    """Full feature → signal → event pipeline for valid XAUUSD data."""
+    """Full feature -> signal -> event pipeline for valid XAUUSD data."""
     now = _now()
-    evidence_ids = ("ev-1", "ev-2", "ev-3")
-    fetched_at = _iso(now - timedelta(seconds=5))
 
-    # 200+ candles to satisfy all periods (EMA-200 needs ≥200)
+    # 200+ candles to satisfy all periods (EMA-200 needs >=200)
     closes = [2300.0 + i * 0.1 for i in range(210)]
     highs = [c + 0.5 for c in closes]
     lows = [c - 0.5 for c in closes]
 
-    ema_feats = compute_ema_features(closes, evidence_ids=evidence_ids, fetched_at_utc=fetched_at)
+    ema_feats = compute_ema_features(closes)
     rsi = compute_rsi(closes)
     atr = compute_atr(highs, lows, closes)
 
@@ -169,14 +160,15 @@ def test_s01_valid_market_data_pipeline_produces_confirmed_event() -> None:
     assert report.valid, [f"{i.path}: {i.message}" for i in report.issues]
     assert event["event_type"] == "SUPER_POTENTIAL_CONFIRMED"
     assert event["provenance"]["numeric_fields"]["score"]["source_system"] == "python"
-    assert event["provenance"]["numeric_fields"]["score"]["formula_version"] == decision.threshold_version
+    score_prov = event["provenance"]["numeric_fields"]["score"]
+    assert score_prov["formula_version"] == decision.threshold_version
 
     decision2 = consume_event(event)
     assert decision2.action == "PUBLISH"
 
 
 # ---------------------------------------------------------------------------
-# S02 – stale data → no confirmed event (quality gate fails)
+# S02 - stale data → no confirmed event (quality gate fails)
 # ---------------------------------------------------------------------------
 
 def test_s02_stale_data_blocked_by_quality_gate() -> None:
@@ -195,7 +187,7 @@ def test_s02_stale_data_blocked_by_quality_gate() -> None:
 
 
 # ---------------------------------------------------------------------------
-# S03 – confirmed event → MAIN approve → Thai Market delivery request
+# S03 - confirmed event → MAIN approve → Thai Market delivery request
 # ---------------------------------------------------------------------------
 
 def test_s03_confirmed_event_produces_thai_market_delivery(tmp_path: Path) -> None:
@@ -212,7 +204,7 @@ def test_s03_confirmed_event_produces_thai_market_delivery(tmp_path: Path) -> No
 
 
 # ---------------------------------------------------------------------------
-# S04 – candidate event → HOLD (not published)
+# S04 - candidate event → HOLD (not published)
 # ---------------------------------------------------------------------------
 
 def test_s04_candidate_internal_is_held_not_published() -> None:
@@ -231,7 +223,7 @@ def test_s04_candidate_internal_is_held_not_published() -> None:
 
 
 # ---------------------------------------------------------------------------
-# S05 – invalidated event → published once
+# S05 - invalidated event → published once
 # ---------------------------------------------------------------------------
 
 def test_s05_invalidated_event_is_published_once() -> None:
@@ -256,7 +248,7 @@ def test_s05_invalidated_event_is_published_once() -> None:
 
 
 # ---------------------------------------------------------------------------
-# S06 – duplicate event_id → dedup rejection
+# S06 - duplicate event_id → dedup rejection
 # ---------------------------------------------------------------------------
 
 def test_s06_duplicate_event_id_rejected_by_consumer() -> None:
@@ -275,7 +267,7 @@ def test_s06_duplicate_event_id_rejected_by_consumer() -> None:
 
 
 # ---------------------------------------------------------------------------
-# S07 – authorized Operator inbound → MAIN can reply
+# S07 - authorized Operator inbound → MAIN can reply
 # ---------------------------------------------------------------------------
 
 def test_s07_authorized_operator_inbound_and_reply() -> None:
@@ -284,7 +276,7 @@ def test_s07_authorized_operator_inbound_and_reply() -> None:
         token="op-token",
         owner_user_id="111",
         allowed_chat_ids=("222",),
-        http_post=lambda _tok, payload: sent.append(payload) or {"ok": True},
+        http_post=lambda _tok, _payload: sent.append(_payload) or {"ok": True},
     )
 
     inbound = transport.receive_update({
@@ -313,7 +305,7 @@ def test_s07_authorized_operator_inbound_and_reply() -> None:
 
 
 # ---------------------------------------------------------------------------
-# S08 – unauthorized Operator inbound → reject
+# S08 - unauthorized Operator inbound → reject
 # ---------------------------------------------------------------------------
 
 def test_s08_unauthorized_operator_inbound_rejected() -> None:
@@ -321,7 +313,7 @@ def test_s08_unauthorized_operator_inbound_rejected() -> None:
         token="op-token",
         owner_user_id="111",
         allowed_chat_ids=("222",),
-        http_post=lambda _tok, payload: {"ok": True},
+        http_post=lambda _tok, _payload: {"ok": True},
     )
 
     with pytest.raises(TelegramPolicyError, match="unauthorized"):
@@ -336,14 +328,14 @@ def test_s08_unauthorized_operator_inbound_rejected() -> None:
 
 
 # ---------------------------------------------------------------------------
-# S09 – Market Bot inbound → reject (market bot is outbound-only)
+# S09 - Market Bot inbound → reject (market bot is outbound-only)
 # ---------------------------------------------------------------------------
 
 def test_s09_market_bot_inbound_rejected() -> None:
     market = TelegramMarketTransport(
         token="market-token",
         target_chat_id="-100",
-        http_post=lambda _tok, payload: {"ok": True},
+        http_post=lambda _tok, _payload: {"ok": True},
     )
 
     with pytest.raises(TelegramPolicyError, match="market bot inbound"):
@@ -351,7 +343,7 @@ def test_s09_market_bot_inbound_rejected() -> None:
 
 
 # ---------------------------------------------------------------------------
-# S10 – Specialist direct reply via Operator Bot → deny
+# S10 - Specialist direct reply via Operator Bot → deny
 # ---------------------------------------------------------------------------
 
 def test_s10_operator_bot_cannot_send_market_alerts(tmp_path: Path) -> None:
@@ -360,7 +352,7 @@ def test_s10_operator_bot_cannot_send_market_alerts(tmp_path: Path) -> None:
         token="op-token",
         owner_user_id="111",
         allowed_chat_ids=("222",),
-        http_post=lambda _tok, payload: sent.append(payload) or {"ok": True},
+        http_post=lambda _tok, _payload: sent.append(_payload) or {"ok": True},
     )
     publisher = TelegramPublisher(MarketAlertDedupStore(tmp_path / "dedup.json"))
     delivery = publisher.format_market(_confirmed_payload())
@@ -372,7 +364,7 @@ def test_s10_operator_bot_cannot_send_market_alerts(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# S11 – agent numeric evidence → REJECT at event_consumer
+# S11 - agent numeric evidence → REJECT at event_consumer
 # ---------------------------------------------------------------------------
 
 def test_s11_agent_numeric_evidence_rejected() -> None:
@@ -404,7 +396,7 @@ def test_s11_agent_numeric_evidence_rejected() -> None:
 
 
 # ---------------------------------------------------------------------------
-# S12 – restart → dedup state persists from file
+# S12 - restart → dedup state persists from file
 # ---------------------------------------------------------------------------
 
 def test_s12_dedup_store_persists_across_restart(tmp_path: Path) -> None:
@@ -421,7 +413,7 @@ def test_s12_dedup_store_persists_across_restart(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# S13 – wrong agent_id → fail closed
+# S13 - wrong agent_id → fail closed
 # ---------------------------------------------------------------------------
 
 def test_s13_wrong_agent_id_fails_closed() -> None:
@@ -496,7 +488,7 @@ def test_s13b_wrong_agent_id_with_agent_numeric_fails_closed() -> None:
 
 
 # ---------------------------------------------------------------------------
-# S14 – event schema/integrity failure → reject
+# S14 - event schema/integrity failure → reject
 # ---------------------------------------------------------------------------
 
 def test_s14a_schema_invalid_event_rejected() -> None:

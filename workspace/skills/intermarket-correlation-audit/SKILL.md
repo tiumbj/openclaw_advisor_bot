@@ -1,7 +1,7 @@
 ---
 name: intermarket-correlation-audit
 description: Audit directional alignment between XAUUSD, DXY proxy, US10Y, and FX basket before alert publication.
-version: 1.2.12
+version: 1.2.13
 owner_agent: intermarket-macro-agent
 purpose: Flag macro divergence that weakens alert confidence before it reaches MAIN.
 allowed_inputs:

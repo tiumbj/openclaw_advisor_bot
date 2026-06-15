@@ -1,4 +1,4 @@
 """Package version metadata."""
 
-__version__ = "1.2.12"
+__version__ = "1.2.13"
 PHASE = "P2.4"

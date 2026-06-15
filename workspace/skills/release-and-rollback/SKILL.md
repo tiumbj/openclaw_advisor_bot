@@ -1,7 +1,7 @@
 ---
 name: release-and-rollback
 description: Release and rollback skill.
-version: 1.2.12
+version: 1.2.13
 owner_agent: system-coder-auditor
 purpose: Define release gates and rollback evidence.
 allowed_inputs:

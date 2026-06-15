@@ -12,7 +12,7 @@ def test_rendered_config_is_read_only(sample_project: Path) -> None:
     rendered = render_config(paths, env_path=paths.canonical_env_example_path)
     report = validate_rendered_config(rendered, paths)
     assert report.valid
-    assert len(rendered["agents"]["list"]) == 12  # type: ignore[index]
+    assert len(rendered["agents"]["list"]) == 13  # type: ignore[index]
     tools = rendered["tools"]  # type: ignore[index]
     assert tools["allow"] == ["read", "session_status"]
     assert tools["exec"]["mode"] == "deny"
