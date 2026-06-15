@@ -1,0 +1,87 @@
+{
+  "baseline": {
+    "baseline_commit": "d44da0983b38408575ceedfccb00b909862ff9f0",
+    "branch": "main",
+    "current_head_at_generation": "d44da0983b38408575ceedfccb00b909862ff9f0",
+    "origin_main_at_generation": "d44da0983b38408575ceedfccb00b909862ff9f0",
+    "package_version": "1.2.10",
+    "phase": "P2.4"
+  },
+  "baseline_commit": "d44da0983b38408575ceedfccb00b909862ff9f0",
+  "command_evidence": [
+    {
+      "command": "python -m pip check",
+      "status": "PASS"
+    },
+    {
+      "command": "python -m ruff check .",
+      "status": "PASS"
+    },
+    {
+      "command": "python -m mypy engine\\src",
+      "status": "PASS"
+    },
+    {
+      "command": "python -m pytest -m \"not live\" -q --basetemp .\\_tmp\\audit-pytest",
+      "status": "FAIL_THEN_PASS_AFTER_PARENT_TEMP_CREATED"
+    },
+    {
+      "command": "python -m build",
+      "status": "PASS_WITH_SETuptools_LICENSE_DEPRECATION"
+    },
+    {
+      "command": "python -m pip_audit",
+      "status": "PASS"
+    },
+    {
+      "command": "openclaw-advisor security-scan --include-history --strict",
+      "status": "PASS"
+    },
+    {
+      "command": ".\\scripts\\Start-OpenClawUI.ps1",
+      "status": "PASS"
+    },
+    {
+      "command": ".\\scripts\\Test-OpenClawUI.ps1",
+      "status": "PASS"
+    },
+    {
+      "command": "openclaw doctor",
+      "status": "WARNINGS_PRESENT"
+    }
+  ],
+  "evidence_hash_sha256": "c64e268670c538b9e168f19e8b1e27ec1797550d23e275da8d6e72b6072d78f0",
+  "generated_at_utc": "2026-06-15T00:57:20.800653Z",
+  "severity_counts": {
+    "HIGH": 4,
+    "LOW": 1,
+    "MEDIUM": 5
+  },
+  "traceability": [
+    {
+      "evidence": "PPA-0003",
+      "implementation": "planner/router helpers only",
+      "requirement": "MAIN runtime orchestration",
+      "risk": "HIGH"
+    },
+    {
+      "evidence": "PPA-0004",
+      "implementation": "TickRecord/BarRecord omit realtime_class",
+      "requirement": "Data numerics carry realtime_class provenance",
+      "risk": "HIGH"
+    },
+    {
+      "evidence": "PPA-0009",
+      "implementation": "unit tests only, no live credential evidence",
+      "requirement": "FRED live validation",
+      "risk": "MEDIUM"
+    },
+    {
+      "evidence": "PPA-0008",
+      "implementation": "doctor warnings remain",
+      "requirement": "Runtime operator readiness",
+      "risk": "MEDIUM"
+    }
+  ],
+  "verdict": "PRE_PRODUCTION_AUDIT_FAIL - REMEDIATION_REQUIRED"
+}

@@ -1,0 +1,355 @@
+{
+  "baseline": {
+    "baseline_commit": "d44da0983b38408575ceedfccb00b909862ff9f0",
+    "branch": "main",
+    "current_head_at_generation": "d44da0983b38408575ceedfccb00b909862ff9f0",
+    "origin_main_at_generation": "d44da0983b38408575ceedfccb00b909862ff9f0",
+    "package_version": "1.2.10",
+    "phase": "P2.4"
+  },
+  "baseline_commit": "d44da0983b38408575ceedfccb00b909862ff9f0",
+  "command_evidence": [
+    {
+      "command": "python -m pip check",
+      "status": "PASS"
+    },
+    {
+      "command": "python -m ruff check .",
+      "status": "PASS"
+    },
+    {
+      "command": "python -m mypy engine\\src",
+      "status": "PASS"
+    },
+    {
+      "command": "python -m pytest -m \"not live\" -q --basetemp .\\_tmp\\audit-pytest",
+      "status": "FAIL_THEN_PASS_AFTER_PARENT_TEMP_CREATED"
+    },
+    {
+      "command": "python -m build",
+      "status": "PASS_WITH_SETuptools_LICENSE_DEPRECATION"
+    },
+    {
+      "command": "python -m pip_audit",
+      "status": "PASS"
+    },
+    {
+      "command": "openclaw-advisor security-scan --include-history --strict",
+      "status": "PASS"
+    },
+    {
+      "command": ".\\scripts\\Start-OpenClawUI.ps1",
+      "status": "PASS"
+    },
+    {
+      "command": ".\\scripts\\Test-OpenClawUI.ps1",
+      "status": "PASS"
+    },
+    {
+      "command": "openclaw doctor",
+      "status": "WARNINGS_PRESENT"
+    }
+  ],
+  "evidence_hash_sha256": "26bf8d1835905044f4cfac2fb0c66f1e2fffc05aa38072cb965bcf230023ad8c",
+  "findings": [
+    {
+      "actual_behavior": "PROJECT_STATUS.json still records observed_remote_head, implementation_commit, and github_gates for 286224e while actual HEAD is d44da09.",
+      "blueprint_requirement_id": "P2.4-PRE-PRODUCTION-AUDIT",
+      "category": "report-truth",
+      "component": "P2.4 status reports",
+      "evidence": [
+        "git rev-parse HEAD -> d44da0983b38408575ceedfccb00b909862ff9f0",
+        "docs/PROJECT_STATUS.json observed_remote_head -> 286224ec29e0a6881ed3a7003db5b63ec3ba233e",
+        "docs/PROJECT_STATUS.json github_gates -> runs 27516318293/27516318322 on 286224e",
+        "actual final runs observed before audit -> 27516473364/27516473368 on d44da09"
+      ],
+      "expected_behavior": "Committed reports must identify the actual audited HEAD and final GitHub run IDs.",
+      "exploitability_or_failure_probability": "Observed during independent audit.",
+      "files": [],
+      "finding_id": "PPA-0001",
+      "functions_or_lines": [],
+      "impact": "A next auditor cannot rely on Git reports alone to reconstruct final provenance.",
+      "remediation": "Update reports from generated evidence after the final status commit, then re-run CI/security.",
+      "reproduction_steps": [
+        "git rev-parse HEAD -> d44da0983b38408575ceedfccb00b909862ff9f0",
+        "docs/PROJECT_STATUS.json observed_remote_head -> 286224ec29e0a6881ed3a7003db5b63ec3ba233e",
+        "docs/PROJECT_STATUS.json github_gates -> runs 27516318293/27516318322 on 286224e",
+        "actual final runs observed before audit -> 27516473364/27516473368 on d44da09"
+      ],
+      "root_cause": "PROJECT_STATUS.json still records observed_remote_head, implementation_commit, and github_gates for 286224e while actual HEAD is d44da09.",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "verification_required": [
+        "Re-run independent audit command evidence from a clean checkout.",
+        "Verify GitHub CI and security on the remediation commit."
+      ]
+    },
+    {
+      "actual_behavior": "openclaw doctor warns that state/openclaw.json contains plaintext secret-bearing gateway.auth.token.",
+      "blueprint_requirement_id": "P2.4-PRE-PRODUCTION-AUDIT",
+      "category": "runtime-security",
+      "component": "OpenClaw runtime configuration",
+      "evidence": [
+        "openclaw doctor -> WARNING: openclaw.json contains plaintext secret-bearing config fields",
+        "affected path reported by doctor: gateway.auth.token"
+      ],
+      "expected_behavior": "Runtime config must keep secret-bearing fields out of plaintext-readable config.",
+      "exploitability_or_failure_probability": "Observed during independent audit.",
+      "files": [],
+      "finding_id": "PPA-0002",
+      "functions_or_lines": [],
+      "impact": "Agents or tools with config read access may expose runtime auth material.",
+      "remediation": "Migrate gateway token to SecretRef or OpenClaw secret store and verify with deep security audit.",
+      "reproduction_steps": [
+        "openclaw doctor -> WARNING: openclaw.json contains plaintext secret-bearing config fields",
+        "affected path reported by doctor: gateway.auth.token"
+      ],
+      "root_cause": "openclaw doctor warns that state/openclaw.json contains plaintext secret-bearing gateway.auth.token.",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "verification_required": [
+        "Re-run independent audit command evidence from a clean checkout.",
+        "Verify GitHub CI and security on the remediation commit."
+      ]
+    },
+    {
+      "actual_behavior": "Production source exposes only simple MainPlanner and AgentRouter helpers; no executable MAIN runtime loop, result validator, conflict resolver, recovery resume, or idempotent dispatch path was found.",
+      "blueprint_requirement_id": "P2.4-PRE-PRODUCTION-AUDIT",
+      "category": "architecture-runtime",
+      "component": "MAIN agent manager",
+      "evidence": [
+        "engine/src/openclaw_super_advisor/main_agent/planner.py has build_plan only",
+        "engine/src/openclaw_super_advisor/main_agent/router.py classifies routes by allowlist membership",
+        "rg did not identify MAIN result validator or conflict resolver implementation"
+      ],
+      "expected_behavior": "MAIN must be a runtime orchestrator with capability-based routing, validation, conflict resolution, max hops, pause/stop/resume, and recovery idempotency.",
+      "exploitability_or_failure_probability": "Observed during independent audit.",
+      "files": [],
+      "finding_id": "PPA-0003",
+      "functions_or_lines": [],
+      "impact": "Blueprint requirements for MAIN runtime behavior are not proven by production code.",
+      "remediation": "Implement and test the MAIN runtime manager before release-gate consideration.",
+      "reproduction_steps": [
+        "engine/src/openclaw_super_advisor/main_agent/planner.py has build_plan only",
+        "engine/src/openclaw_super_advisor/main_agent/router.py classifies routes by allowlist membership",
+        "rg did not identify MAIN result validator or conflict resolver implementation"
+      ],
+      "root_cause": "Production source exposes only simple MainPlanner and AgentRouter helpers; no executable MAIN runtime loop, result validator, conflict resolver, recovery resume, or idempotent dispatch path was found.",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "verification_required": [
+        "Re-run independent audit command evidence from a clean checkout.",
+        "Verify GitHub CI and security on the remediation commit."
+      ]
+    },
+    {
+      "actual_behavior": "TickRecord and BarRecord contain data_quality but no realtime_class field.",
+      "blueprint_requirement_id": "P2.4-PRE-PRODUCTION-AUDIT",
+      "category": "data-provenance",
+      "component": "Market data schemas",
+      "evidence": [
+        "engine/src/openclaw_super_advisor/market_data/schemas.py TickRecord fields omit realtime_class",
+        "engine/src/openclaw_super_advisor/market_data/schemas.py BarRecord fields omit realtime_class",
+        "workspace/skills/data-provenance-contract requires realtime_class"
+      ],
+      "expected_behavior": "All market numerics must carry provenance including realtime_class.",
+      "exploitability_or_failure_probability": "Observed during independent audit.",
+      "files": [],
+      "finding_id": "PPA-0004",
+      "functions_or_lines": [],
+      "impact": "Agents and downstream logic cannot reliably distinguish realtime, stale, unknown, and daily macro data.",
+      "remediation": "Add realtime_class/provenance to schemas and enforce it in ingestion, storage, and event validation.",
+      "reproduction_steps": [
+        "engine/src/openclaw_super_advisor/market_data/schemas.py TickRecord fields omit realtime_class",
+        "engine/src/openclaw_super_advisor/market_data/schemas.py BarRecord fields omit realtime_class",
+        "workspace/skills/data-provenance-contract requires realtime_class"
+      ],
+      "root_cause": "TickRecord and BarRecord contain data_quality but no realtime_class field.",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "verification_required": [
+        "Re-run independent audit command evidence from a clean checkout.",
+        "Verify GitHub CI and security on the remediation commit."
+      ]
+    },
+    {
+      "actual_behavior": "python -m pytest -m \"not live\" -q --basetemp .\\_tmp\\audit-pytest fails when .\\_tmp does not already exist.",
+      "blueprint_requirement_id": "P2.4-PRE-PRODUCTION-AUDIT",
+      "category": "clean-validation",
+      "component": "Pytest command reproducibility",
+      "evidence": [
+        "exact command returned FileNotFoundError for .\\_tmp\\audit-pytest",
+        "after creating .\\_tmp in audit clone, the same test selection passed: 197 passed, 1 deselected"
+      ],
+      "expected_behavior": "Required audit command must run from clean checkout exactly as specified.",
+      "exploitability_or_failure_probability": "Observed during independent audit.",
+      "files": [],
+      "finding_id": "PPA-0005",
+      "functions_or_lines": [],
+      "impact": "Required validation is not directly reproducible without an undocumented setup step.",
+      "remediation": "Make the command create its parent temp directory or document and automate the setup in CI/audit scripts.",
+      "reproduction_steps": [
+        "exact command returned FileNotFoundError for .\\_tmp\\audit-pytest",
+        "after creating .\\_tmp in audit clone, the same test selection passed: 197 passed, 1 deselected"
+      ],
+      "root_cause": "python -m pytest -m \"not live\" -q --basetemp .\\_tmp\\audit-pytest fails when .\\_tmp does not already exist.",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "verification_required": [
+        "Re-run independent audit command evidence from a clean checkout.",
+        "Verify GitHub CI and security on the remediation commit."
+      ]
+    },
+    {
+      "actual_behavior": "Running each subset alone fails the global coverage fail-under gate even when tests pass.",
+      "blueprint_requirement_id": "P2.4-PRE-PRODUCTION-AUDIT",
+      "category": "test-configuration",
+      "component": "Required pytest subsets",
+      "evidence": [
+        "python -m pytest engine\\tests\\unit -q -> 155 passed but coverage 87.06 in one run; parallel run demonstrated coverage pollution risk",
+        "python -m pytest engine\\tests\\integration -q -> 36 passed but coverage 76.81, exit 1",
+        "python -m pytest engine\\tests\\security -q -> 6 passed but coverage 21.74, exit 1"
+      ],
+      "expected_behavior": "Required unit, integration, and security subset commands should be runnable audit gates.",
+      "exploitability_or_failure_probability": "Observed during independent audit.",
+      "files": [],
+      "finding_id": "PPA-0006",
+      "functions_or_lines": [],
+      "impact": "The required validation list cannot be interpreted unambiguously as independent gates.",
+      "remediation": "Separate coverage-gated full suite from subset functional gates or combine coverage across subsets.",
+      "reproduction_steps": [
+        "python -m pytest engine\\tests\\unit -q -> 155 passed but coverage 87.06 in one run; parallel run demonstrated coverage pollution risk",
+        "python -m pytest engine\\tests\\integration -q -> 36 passed but coverage 76.81, exit 1",
+        "python -m pytest engine\\tests\\security -q -> 6 passed but coverage 21.74, exit 1"
+      ],
+      "root_cause": "Running each subset alone fails the global coverage fail-under gate even when tests pass.",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "verification_required": [
+        "Re-run independent audit command evidence from a clean checkout.",
+        "Verify GitHub CI and security on the remediation commit."
+      ]
+    },
+    {
+      "actual_behavior": "Advisor validator outputs resolved paths to C:\\Data\\OpenClawSuperAdvisor instead of the isolated clone path, indicating editable-install/root resolution contamination.",
+      "blueprint_requirement_id": "P2.4-PRE-PRODUCTION-AUDIT",
+      "category": "audit-isolation",
+      "component": "OpenClaw advisor CLI validators",
+      "evidence": [
+        "openclaw-advisor validate-agents --strict output paths point to C:\\Data\\OpenClawSuperAdvisor\\state",
+        "command was run from C:\\Data\\OpenClawSuperAdvisor\\_audit_workspace"
+      ],
+      "expected_behavior": "Clean clone validation must operate on the checkout under audit.",
+      "exploitability_or_failure_probability": "Observed during independent audit.",
+      "files": [],
+      "finding_id": "PPA-0007",
+      "functions_or_lines": [],
+      "impact": "A clean-checkout audit can silently validate the wrong working tree or state directory.",
+      "remediation": "Require OPENCLAW_ADVISOR_ROOT or reinstall package from the checkout before validators run.",
+      "reproduction_steps": [
+        "openclaw-advisor validate-agents --strict output paths point to C:\\Data\\OpenClawSuperAdvisor\\state",
+        "command was run from C:\\Data\\OpenClawSuperAdvisor\\_audit_workspace"
+      ],
+      "root_cause": "Advisor validator outputs resolved paths to C:\\Data\\OpenClawSuperAdvisor instead of the isolated clone path, indicating editable-install/root resolution contamination.",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "verification_required": [
+        "Re-run independent audit command evidence from a clean checkout.",
+        "Verify GitHub CI and security on the remediation commit."
+      ]
+    },
+    {
+      "actual_behavior": "openclaw doctor reports missing command owner, message tool unavailable for telegram route, stale/missing session transcript state, and minimal profile policy warnings.",
+      "blueprint_requirement_id": "P2.4-PRE-PRODUCTION-AUDIT",
+      "category": "runtime-health",
+      "component": "OpenClaw doctor and agent tool policy",
+      "evidence": [
+        "openclaw doctor reports command owner not configured",
+        "openclaw doctor reports super-advisor routed from telegram but message tool unavailable",
+        "openclaw doctor reports recent sessions missing transcripts and orphan transcript file"
+      ],
+      "expected_behavior": "Runtime health checks should have no unresolved warnings before pre-production approval.",
+      "exploitability_or_failure_probability": "Observed during independent audit.",
+      "files": [],
+      "finding_id": "PPA-0008",
+      "functions_or_lines": [],
+      "impact": "Operational ownership, Telegram behavior, and forensic session integrity are not release-ready.",
+      "remediation": "Resolve doctor warnings or explicitly accept them with risk owner and compensating controls.",
+      "reproduction_steps": [
+        "openclaw doctor reports command owner not configured",
+        "openclaw doctor reports super-advisor routed from telegram but message tool unavailable",
+        "openclaw doctor reports recent sessions missing transcripts and orphan transcript file"
+      ],
+      "root_cause": "openclaw doctor reports missing command owner, message tool unavailable for telegram route, stale/missing session transcript state, and minimal profile policy warnings.",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "verification_required": [
+        "Re-run independent audit command evidence from a clean checkout.",
+        "Verify GitHub CI and security on the remediation commit."
+      ]
+    },
+    {
+      "actual_behavior": "No FRED_API_KEY/live FRED result was available in audit evidence; Browser plugin bootstrap failed with sandbox ACL before in-app browser E2E could run.",
+      "blueprint_requirement_id": "P2.4-PRE-PRODUCTION-AUDIT",
+      "category": "required-live-evidence",
+      "component": "FRED and browser live evidence",
+      "evidence": [
+        "FRED_API_KEY not configured in committed .env.example and no live credential evidence recorded",
+        "Browser plugin node runtime failed: windows sandbox apply deny-read ACLs",
+        "script-level UI E2E passed, but browser-plugin E2E was not obtained"
+      ],
+      "expected_behavior": "Pre-production PASS requires live FRED validation and browser E2E evidence.",
+      "exploitability_or_failure_probability": "Observed during independent audit.",
+      "files": [],
+      "finding_id": "PPA-0009",
+      "functions_or_lines": [],
+      "impact": "Live data and browser readiness cannot be approved.",
+      "remediation": "Provide live FRED credential in secure runtime and rerun browser plugin E2E in an environment where the plugin can start.",
+      "reproduction_steps": [
+        "FRED_API_KEY not configured in committed .env.example and no live credential evidence recorded",
+        "Browser plugin node runtime failed: windows sandbox apply deny-read ACLs",
+        "script-level UI E2E passed, but browser-plugin E2E was not obtained"
+      ],
+      "root_cause": "No FRED_API_KEY/live FRED result was available in audit evidence; Browser plugin bootstrap failed with sandbox ACL before in-app browser E2E could run.",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "verification_required": [
+        "Re-run independent audit command evidence from a clean checkout.",
+        "Verify GitHub CI and security on the remediation commit."
+      ]
+    },
+    {
+      "actual_behavior": "python -m build generated dist/ and egg-info artifacts in the audit clone.",
+      "blueprint_requirement_id": "P2.4-PRE-PRODUCTION-AUDIT",
+      "category": "build-cleanliness",
+      "component": "Package build",
+      "evidence": [
+        "git status --short in audit clone after build -> M docs/P2_COVERAGE.json, ?? dist/"
+      ],
+      "expected_behavior": "Audit/build commands should not leave untracked generated artifacts unless ignored or cleaned.",
+      "exploitability_or_failure_probability": "Observed during independent audit.",
+      "files": [],
+      "finding_id": "PPA-0010",
+      "functions_or_lines": [],
+      "impact": "Repeated audit runs can accumulate local noise and obscure source changes.",
+      "remediation": "Update ignore/cleanup policy for generated build and coverage outputs.",
+      "reproduction_steps": [
+        "git status --short in audit clone after build -> M docs/P2_COVERAGE.json, ?? dist/"
+      ],
+      "root_cause": "python -m build generated dist/ and egg-info artifacts in the audit clone.",
+      "severity": "LOW",
+      "status": "OPEN",
+      "verification_required": [
+        "Re-run independent audit command evidence from a clean checkout.",
+        "Verify GitHub CI and security on the remediation commit."
+      ]
+    }
+  ],
+  "generated_at_utc": "2026-06-15T00:57:20.800653Z",
+  "severity_counts": {
+    "HIGH": 4,
+    "LOW": 1,
+    "MEDIUM": 5
+  },
+  "verdict": "PRE_PRODUCTION_AUDIT_FAIL - REMEDIATION_REQUIRED"
+}

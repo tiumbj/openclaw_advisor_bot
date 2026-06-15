@@ -1,0 +1,156 @@
+{
+  "baseline": {
+    "baseline_commit": "d44da0983b38408575ceedfccb00b909862ff9f0",
+    "branch": "main",
+    "current_head_at_generation": "d44da0983b38408575ceedfccb00b909862ff9f0",
+    "origin_main_at_generation": "d44da0983b38408575ceedfccb00b909862ff9f0",
+    "package_version": "1.2.10",
+    "phase": "P2.4"
+  },
+  "baseline_commit": "d44da0983b38408575ceedfccb00b909862ff9f0",
+  "command_evidence": [
+    {
+      "command": "python -m pip check",
+      "status": "PASS"
+    },
+    {
+      "command": "python -m ruff check .",
+      "status": "PASS"
+    },
+    {
+      "command": "python -m mypy engine\\src",
+      "status": "PASS"
+    },
+    {
+      "command": "python -m pytest -m \"not live\" -q --basetemp .\\_tmp\\audit-pytest",
+      "status": "FAIL_THEN_PASS_AFTER_PARENT_TEMP_CREATED"
+    },
+    {
+      "command": "python -m build",
+      "status": "PASS_WITH_SETuptools_LICENSE_DEPRECATION"
+    },
+    {
+      "command": "python -m pip_audit",
+      "status": "PASS"
+    },
+    {
+      "command": "openclaw-advisor security-scan --include-history --strict",
+      "status": "PASS"
+    },
+    {
+      "command": ".\\scripts\\Start-OpenClawUI.ps1",
+      "status": "PASS"
+    },
+    {
+      "command": ".\\scripts\\Test-OpenClawUI.ps1",
+      "status": "PASS"
+    },
+    {
+      "command": "openclaw doctor",
+      "status": "WARNINGS_PRESENT"
+    }
+  ],
+  "evidence_hash_sha256": "a22faf0228224940b56f60bba627e7c099b90a0673e48bc8053664c19f736eff",
+  "files": [
+    {
+      "path": "docs/pre_production_audit/AGENT_ISOLATION_AUDIT.json",
+      "sha256": "982f2ec2ef01c52e700056f865cb78284cb937b93e727dc2d44c7cde6ad102f3"
+    },
+    {
+      "path": "docs/pre_production_audit/AI_HANDOFF_STATUS.json",
+      "sha256": "93118523cc69e0a9b0d289a11909b0cfc67a373430b7544143a70203119708ed"
+    },
+    {
+      "path": "docs/pre_production_audit/AI_HANDOFF_STATUS.md",
+      "sha256": "df05cf581eb9d0456667e907c69ce19b580367d04a881c685b530d1f85eb2416"
+    },
+    {
+      "path": "docs/pre_production_audit/AUDIT_MANIFEST.json",
+      "sha256": "e9b3afb0406678dd78998532841a4da5786345c3f5b8ef4f0ce33e48c1692dd0"
+    },
+    {
+      "path": "docs/pre_production_audit/BACKUP_RESTORE_AUDIT.json",
+      "sha256": "5d87da762a97ecf1f0ac1b4b5bb0402c27ffe347aa4a8736f8a503a94b89f4dd"
+    },
+    {
+      "path": "docs/pre_production_audit/BLUEPRINT_TRACEABILITY.json",
+      "sha256": "b0d4552c4383c9668da7f483673c8ee73fdc125e5a91ba78c92780a57bc3a273"
+    },
+    {
+      "path": "docs/pre_production_audit/BLUEPRINT_TRACEABILITY.md",
+      "sha256": "c80264c754615e61671df0ccaac52731b409b77e43d8f6d102e68b3af5e544ea"
+    },
+    {
+      "path": "docs/pre_production_audit/DATA_PIPELINE_AUDIT.json",
+      "sha256": "fa615c11c4959c612e040b8688158f84b069e8dcbf04db0876342eddf9b5388f"
+    },
+    {
+      "path": "docs/pre_production_audit/EXECUTIVE_SUMMARY.md",
+      "sha256": "4e044b719781770114e4e3565ca1a039aacbda64c4ff0bc5107649ca7e836b3c"
+    },
+    {
+      "path": "docs/pre_production_audit/FINAL_VERDICT.json",
+      "sha256": "9d22e33fbdfd95dafcb4f98d2bc5e523d7a416395b575c34849e6f1994ded756"
+    },
+    {
+      "path": "docs/pre_production_audit/FINDINGS.json",
+      "sha256": "9b3f106f4b7af3fbf82c42d336e3b4e640c26230974790ac2b1f0a97bd37ced5"
+    },
+    {
+      "path": "docs/pre_production_audit/FINDINGS.md",
+      "sha256": "2b18f2b87c90cb3620dd37501030c24952964681254c0e9f0160cbdba1e5917e"
+    },
+    {
+      "path": "docs/pre_production_audit/INTERMARKET_AUDIT.json",
+      "sha256": "954b3a6db4d8cb98c4c7bdc5194901962cf3b6fb1e13e2b2ac962836d6301c9d"
+    },
+    {
+      "path": "docs/pre_production_audit/PERFORMANCE_SOAK_AUDIT.json",
+      "sha256": "954b3a6db4d8cb98c4c7bdc5194901962cf3b6fb1e13e2b2ac962836d6301c9d"
+    },
+    {
+      "path": "docs/pre_production_audit/PERSISTENCE_AUDIT.json",
+      "sha256": "8381805539f199780a6fea31d41ad9992a17ca57215e761586d1b5e1d8a676f3"
+    },
+    {
+      "path": "docs/pre_production_audit/RECOVERY_CHAOS_AUDIT.json",
+      "sha256": "5d87da762a97ecf1f0ac1b4b5bb0402c27ffe347aa4a8736f8a503a94b89f4dd"
+    },
+    {
+      "path": "docs/pre_production_audit/REMEDIATION_BACKLOG.md",
+      "sha256": "01fc1c9cce139bd1286c0b68dd251ebaaf0ed9ae5689d05282dfb4dee320500d"
+    },
+    {
+      "path": "docs/pre_production_audit/RUNTIME_E2E.json",
+      "sha256": "769e2de895094ee206457e79e1a79a45f3199f27c6c827ef0f7e9ab958613c40"
+    },
+    {
+      "path": "docs/pre_production_audit/RUNTIME_E2E.md",
+      "sha256": "dfee6d092d313d51047c369327c835f2ec7b07a9e85c3a9a9bdcdd194aae8e5a"
+    },
+    {
+      "path": "docs/pre_production_audit/SECURITY_AUDIT.json",
+      "sha256": "5805792952bba56954f000891d7a3ff26d862a3601e2415dba89f7fa08b79267"
+    },
+    {
+      "path": "docs/pre_production_audit/SKILL_SEMANTIC_AUDIT.json",
+      "sha256": "fa615c11c4959c612e040b8688158f84b069e8dcbf04db0876342eddf9b5388f"
+    },
+    {
+      "path": "docs/pre_production_audit/TEST_EVIDENCE.json",
+      "sha256": "3c4e8a37e67cef97562990e8dd8ccc47ab647d9b45e751cecfdab09b18c6e42c"
+    },
+    {
+      "path": "docs/pre_production_audit/TEST_EVIDENCE.md",
+      "sha256": "30254768eeb6307a90461a0dc65ab5bc90dfafcf5b061b4bc962e5c6345aa9fb"
+    }
+  ],
+  "generated_at_utc": "2026-06-15T00:57:20.800653Z",
+  "report_count": 24,
+  "severity_counts": {
+    "HIGH": 4,
+    "LOW": 1,
+    "MEDIUM": 5
+  },
+  "verdict": "PRE_PRODUCTION_AUDIT_FAIL - REMEDIATION_REQUIRED"
+}
