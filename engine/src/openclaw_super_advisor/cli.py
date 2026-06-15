@@ -18,7 +18,7 @@ from .events import build_event_envelope, validate_event_envelope
 from .health import run_health_check_as_dict
 from .market_data import build_market_data_service
 from .paths import ProjectPaths, build_paths
-from .persistence import BackupManager, EvidenceArchive, SkillCandidateStore, TelegramPublisher
+from .persistence import BackupManager, EvidenceArchive, SkillCandidateStore, TelegramPublishJournal
 from .providers import build_provider_policy_report, provider_policy_report_as_dict
 from .scanning import perform_security_scan
 from .skills import validate_skills
@@ -330,9 +330,9 @@ def _candidate_for(paths: ProjectPaths, env_file: Path | None) -> SkillCandidate
     return SkillCandidateStore(data_dir / "skill-candidates")
 
 
-def _publisher_for(paths: ProjectPaths, env_file: Path | None) -> TelegramPublisher:
+def _publisher_for(paths: ProjectPaths, env_file: Path | None) -> TelegramPublishJournal:
     _, log_dir, _ = _command_path(paths, env_file)
-    return TelegramPublisher(log_dir / "telegram")
+    return TelegramPublishJournal(log_dir / "telegram")
 
 
 def _main_config_report(paths: ProjectPaths, env_file: Path | None) -> dict[str, object]:

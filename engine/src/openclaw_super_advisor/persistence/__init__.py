@@ -536,7 +536,13 @@ _SYSTEM_EVENT_SEVERITY: dict[str, str] = {
 }
 
 
-class TelegramPublisher:
+class TelegramPublishJournal:
+    """Dry-run journal and dead-letter log for system event publications.
+
+    Intentionally has no token and never calls Bot API.
+    Use telegram.TelegramPublisher for market-alert formatting and dedup gating.
+    """
+
     def __init__(self, journal_dir: Path) -> None:
         self.journal_dir = journal_dir
         self.journal_dir.mkdir(parents=True, exist_ok=True)

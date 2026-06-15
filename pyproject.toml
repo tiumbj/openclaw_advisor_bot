@@ -42,7 +42,7 @@ version = { attr = "openclaw_super_advisor._version.__version__" }
 
 [tool.pytest.ini_options]
 testpaths = ["engine/tests"]
-addopts = "-ra --strict-markers"
+addopts = "-ra --strict-markers --basetemp=engine/.tmp_pytest"
 markers = [
   "live: requires local services, credentials, or network",
   "security: security boundary test",

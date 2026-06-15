@@ -47,22 +47,58 @@ promotion_status: stable
 ---
 # evidence-audit
 
-This skill checks archived evidence and provenance metadata.
+MAIN uses this skill to validate every agent result before accepting it.
+Any result that fails evidence-audit is rejected and must be retried with valid evidence.
 
 ## Procedure
-1. Validate input against required_input_schema; reject malformed payloads without partial processing.
-2. Execute the primary analysis sequence for this skill using Python deterministic rules only.
-3. Record all computed values with evidence IDs and provenance metadata before returning.
-4. Return structured output to the requesting agent; do not fabricate missing values.
+
+1. Receive agent result payload from MAIN.
+2. Verify `evidence_reference` is present and non-empty.
+3. Verify `provenance` is a non-empty dict.
+4. Verify `provenance.source` is NOT "agent", "llm", or "specialist".
+5. For each numeric field in `payload`, check `provenance.numeric_fields.<field>.source_system = python`.
+6. Verify `status` is in the allowed set (COMPLETED|WATCH|LOW_SCORE|NOT_READY|CONFLICT).
+7. Verify `task_id` and `agent_id` match the dispatched values.
+8. Return structured `audit_passed` result with all `rejection_reasons`.
+
+## Validation Rules
+
+1. `evidence_reference` must be non-empty
+2. `provenance` must be non-empty dict
+3. `provenance.source` must NOT be "agent", "llm", or "specialist"
+4. Numeric fields in `payload` require `provenance.numeric_fields.<field>.source_system = python`
+5. `status` must be COMPLETED|WATCH|LOW_SCORE|NOT_READY|CONFLICT
+6. `task_id` must match the dispatched task
+7. `agent_id` must match the dispatched agent
 
 ## Decision Tree
-- Input VALID and all required fields present → proceed with full analysis.
-- Input STALE → annotate stale=True in output; proceed with caveat.
-- Input SOURCE_UNAVAILABLE → return INSUFFICIENT_DATA; do not substitute fabricated values.
-- Required evidence missing or schema mismatch → return REJECTED with ailure_reason.
 
-## Failure Mode
-- **Source unavailable**: Return SOURCE_UNAVAILABLE status; never fill with fabricated data.
-- **Schema violation**: Reject payload; log structured error; do not partially process.
-- **Timeout / retry exhaustion**: Return TIMEOUT status; let job_queue requeue.
-- **Agent unreachable**: Record incident via watchdog callback; escalate after threshold.
+- evidence_reference missing → REJECT, reason=missing_evidence_reference
+- provenance missing → REJECT, reason=missing_provenance
+- provenance.source is agent/llm/specialist → REJECT, reason=agent_numeric_source_forbidden
+- fabricated_numeric_evidence=true → REJECT, reason=fabricated_evidence
+- task_id mismatch → REJECT, reason=task_id_mismatch
+- agent_id mismatch → REJECT, reason=agent_id_mismatch
+- status not in allowed set → REJECT, reason=invalid_status
+- All checks pass → audit_passed=true
+
+## Rejection Triggers
+
+- Missing evidence_reference: REJECT, reason=missing_evidence_reference
+- Missing provenance: REJECT, reason=missing_provenance
+- Numeric value from agent/LLM: REJECT, reason=agent_numeric_source_forbidden
+- fabricated_numeric_evidence=true in payload: REJECT, reason=fabricated_evidence
+- task_id mismatch: REJECT, reason=task_id_mismatch
+- agent_id mismatch: REJECT, reason=agent_id_mismatch
+- status not in allowed set: REJECT, reason=invalid_status
+
+## Output Fields
+
+- `evidence_reference`: echoed
+- `audit_passed`: boolean
+- `rejection_reasons`: list (empty when audit_passed=true)
+
+## Failure Modes
+
+- Empty result payload: REJECT, reason=empty_result
+- Schema error: REJECT, reason=schema_error

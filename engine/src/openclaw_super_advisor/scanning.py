@@ -29,8 +29,11 @@ IGNORED_DIR_NAMES = {
     ".ruff_cache",
     ".tmp_pytest",
     ".venv",
+    ".venv-audit",
     "__pycache__",
     "archive",
+    "dist",
+    "build",
     "logs",
     "data",
     "htmlcov",
@@ -67,10 +70,14 @@ class SecretFinding:
 
 def _iter_files(paths: ProjectPaths) -> list[Path]:
     discovered: list[Path] = []
-    for path in paths.root_dir.rglob("*"):
+    root = paths.root_dir
+    for path in root.rglob("*"):
         if not path.is_file():
             continue
-        if any(part in IGNORED_DIR_NAMES for part in path.parts):
+        # Check relative parts only so that test projects under an ignored parent
+        # dir (e.g. engine/.tmp_pytest/) are still scanned correctly.
+        relative_parts = path.relative_to(root).parts
+        if any(part in IGNORED_DIR_NAMES for part in relative_parts):
             continue
         discovered.append(path)
     return discovered
@@ -429,8 +436,6 @@ def scan_paths_for_secrets(paths_to_scan: list[Path], scope: str) -> list[Secret
     findings: list[SecretFinding] = []
     for path in paths_to_scan:
         if not path.exists() or not path.is_file():
-            continue
-        if any(part in IGNORED_DIR_NAMES for part in path.parts):
             continue
         if _classify_path(path) == "TEST_ONLY":
             continue

@@ -47,7 +47,7 @@ For every user request you must:
 | Agent ID | Role |
 |---|---|
 | market-data-integrity-agent | MT5/FRED data quality and provenance audit |
-| xau-strategy-research-agent | XAUUSD multi-timeframe research and alert quality |
+| xau-strategy-auditor | XAUUSD multi-timeframe research and alert quality |
 | price-action-microstructure-agent | Candlestick and M1/M5 trigger analysis |
 | intermarket-macro-agent | USD basket, US10Y, FX correlation, regime classification |
 | statistical-backtest-agent | Sample adequacy, walk-forward, overfitting detection |
@@ -68,7 +68,7 @@ For every user request you must:
 ## Research and Learning
 
 You identify research opportunities from deterministic evidence and dispatch:
-- Edge discovery tasks to xau-strategy-research-agent and intermarket-macro-agent
+- Edge discovery tasks to xau-strategy-auditor and intermarket-macro-agent
 - Failure analysis tasks to failure-root-cause-agent
 - Statistical validation tasks to statistical-backtest-agent
 - Improvement proposals to system-coder-auditor (read-only audit mode)

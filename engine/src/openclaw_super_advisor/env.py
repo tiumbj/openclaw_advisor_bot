@@ -8,6 +8,7 @@ from typing import Literal
 from urllib.parse import urlparse
 
 from .paths import ProjectPaths
+from .telegram import validate_dual_bot_contract
 
 EnvStatus = Literal["PRESENT", "MISSING", "BLANK", "INVALID_FORMAT"]
 
@@ -181,6 +182,17 @@ def build_env_specs(paths: ProjectPaths) -> tuple[EnvVarSpec, ...]:
         EnvVarSpec("TELEGRAM_TARGET_CHAT_ID", _parse_string),
         EnvVarSpec("TELEGRAM_GROUP_CHAT_ID", _parse_string),
         EnvVarSpec("TELEGRAM_THREAD_ID", _parse_string),
+        EnvVarSpec("OPENCLAW_TELEGRAM_OPERATOR_ENABLED", _parse_bool, allow_blank=False),
+        EnvVarSpec("OPENCLAW_TELEGRAM_OPERATOR_BOT_TOKEN", _secret),
+        EnvVarSpec("OPENCLAW_TELEGRAM_OPERATOR_OWNER_USER_ID", _parse_string),
+        EnvVarSpec("OPENCLAW_TELEGRAM_OPERATOR_ALLOWED_CHAT_IDS", _parse_string),
+        EnvVarSpec("OPENCLAW_TELEGRAM_OPERATOR_MODE", _parse_string, allow_blank=False),
+        EnvVarSpec("OPENCLAW_TELEGRAM_OPERATOR_WEBHOOK_ENABLED", _parse_bool, allow_blank=False),
+        EnvVarSpec("OPENCLAW_TELEGRAM_MARKET_ENABLED", _parse_bool, allow_blank=False),
+        EnvVarSpec("OPENCLAW_TELEGRAM_MARKET_BOT_TOKEN", _secret),
+        EnvVarSpec("OPENCLAW_TELEGRAM_MARKET_TARGET_CHAT_ID", _parse_string),
+        EnvVarSpec("OPENCLAW_TELEGRAM_MARKET_TARGET_THREAD_ID", _parse_string),
+        EnvVarSpec("OPENCLAW_TELEGRAM_MARKET_INBOUND_ENABLED", _parse_bool, allow_blank=False),
         EnvVarSpec("MT5_ENABLED", _parse_bool, allow_blank=False),
         EnvVarSpec("MT5_TERMINAL_PATH", _parse_path),
         EnvVarSpec("MT5_USE_EXISTING_SESSION", _parse_bool, allow_blank=False),
@@ -306,6 +318,9 @@ def audit_environment(paths: ProjectPaths, env_path: Path | None = None) -> EnvA
         for name in ("TELEGRAM_BOT_TOKEN", "TELEGRAM_TARGET_CHAT_ID"):
             if statuses.get(name) == "BLANK":
                 issues.append(ValidationIssue(name, "BLANK", "Required when TELEGRAM_ENABLED=true"))
+    for issue in validate_dual_bot_contract(values):
+        name, _, message = issue.partition(": ")
+        issues.append(ValidationIssue(name, "INVALID_FORMAT", message or issue))
 
     if (
         values.get("MT5_ENABLED", "false").lower() == "true"

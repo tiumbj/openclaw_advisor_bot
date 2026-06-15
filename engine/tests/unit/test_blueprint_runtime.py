@@ -18,7 +18,7 @@ from openclaw_super_advisor.persistence import (
     EvidenceArchive,
     OutcomeLedger,
     SkillCandidateStore,
-    TelegramPublisher,
+    TelegramPublishJournal,
 )
 
 
@@ -253,7 +253,7 @@ def test_backup_excludes_secrets(tmp_path: Path, sample_project: Path) -> None:
 
 
 def test_telegram_uses_approved_evidence_only(tmp_path: Path) -> None:
-    publisher = TelegramPublisher(tmp_path / "telegram")
+    publisher = TelegramPublishJournal(tmp_path / "telegram")
     dry_run = publisher.dry_run({"title": "OpenClaw", "body": "พร้อมเผยแพร่", "evidence_id": "e1"})
     assert "หลักฐาน: e1" in dry_run["message"]
     assert dry_run["delivery_status"] == "SKIPPED"

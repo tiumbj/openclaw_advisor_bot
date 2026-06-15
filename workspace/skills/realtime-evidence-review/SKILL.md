@@ -47,22 +47,49 @@ promotion_status: stable
 ---
 # realtime-evidence-review
 
-This skill reviews realtime evidence only.
+Reviews live Python evidence snapshots for completeness, freshness, and provenance integrity.
+Read-only; must not mutate evidence.
 
 ## Procedure
-1. Validate input against required_input_schema; reject malformed payloads without partial processing.
-2. Execute the primary analysis sequence for this skill using Python deterministic rules only.
-3. Record all computed values with evidence IDs and provenance metadata before returning.
-4. Return structured output to the requesting agent; do not fabricate missing values.
+
+1. Receive evidence snapshot from xau-strategy-auditor.
+2. Verify all required input fields are present; return REJECT if any missing.
+3. Recompute SHA-256 of canonical JSON of evidence payload; compare to integrity_hash.
+4. Verify provenance.source starts with "python_"; reject non-python sources.
+5. Verify provenance.formula_version=features-p2.4-v1.
+6. Check fetched_at_utc age; if > 3 minutes, set freshness_status=stale.
+7. Verify data_quality is not STALE; if stale, return HOLD.
+8. If all checks pass, return snapshot_valid=true, recommendation=PROCEED.
+
+## Required Input Fields
+
+- `evidence_id`: non-empty string
+- `symbol`: XAUUSD
+- `timeframe`: M1|M5|M15|H1|H4|D1
+- `fetched_at_utc`: ISO8601Z
+- `data_quality`: VALID|DEGRADED|STALE|INSUFFICIENT_DATA
+- `features`: dict of Python-computed values
+- `provenance.source`: must be a python_* source
+- `provenance.formula_version`: features-p2.4-v1
+- `integrity_hash`: SHA-256 hex digest
+
+## Output Fields
+
+- `evidence_id`, `snapshot_valid` (bool), `freshness_status` (fresh|stale|unknown)
+- `missing_fields`, `provenance_issues` (lists)
+- `integrity_verified` (bool), `recommendation` (PROCEED|HOLD|REJECT)
 
 ## Decision Tree
-- Input VALID and all required fields present → proceed with full analysis.
-- Input STALE → annotate stale=True in output; proceed with caveat.
-- Input SOURCE_UNAVAILABLE → return INSUFFICIENT_DATA; do not substitute fabricated values.
-- Required evidence missing or schema mismatch → return REJECTED with ailure_reason.
 
-## Failure Mode
-- **Source unavailable**: Return SOURCE_UNAVAILABLE status; never fill with fabricated data.
-- **Schema violation**: Reject payload; log structured error; do not partially process.
-- **Timeout / retry exhaustion**: Return TIMEOUT status; let job_queue requeue.
-- **Agent unreachable**: Record incident via watchdog callback; escalate after threshold.
+1. integrity_hash mismatch: snapshot_valid=false, recommendation=REJECT
+2. provenance.source not python_*: REJECT, reason=non_python_source
+3. data_quality=STALE: recommendation=HOLD, freshness_status=stale
+4. Any required field missing: REJECT
+5. All pass: PROCEED
+
+## Failure Modes
+
+- Empty evidence: REJECTED, reason=empty_evidence
+- integrity_hash absent: REJECTED, reason=missing_integrity_hash
+- fetched_at_utc older than 3 minutes: freshness_status=stale
+- Timeout: return REJECTED, reason=timeout

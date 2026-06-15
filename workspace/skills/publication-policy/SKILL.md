@@ -1,9 +1,9 @@
 ---
 name: publication-policy
-description: Publication policy skill.
+description: Gate MAIN approved Telegram publication payloads; reject forbidden event types and dedup violations.
 version: 1.2.12
 owner_agent: super-advisor
-purpose: Gate approved publication payloads.
+purpose: Final MAIN gate before sending APPROVED_PUBLICATION to telegram-publisher.
 allowed_inputs:
   - publication payload
 required_input_schema: object
@@ -35,11 +35,12 @@ safety_constraints:
   - advisor-only
   - no secret access
   - no execution
-failure_behavior: return structured audit failure
+failure_behavior: return structured rejection; never silently drop
 audit_fields:
-  - evidence_id
-  - correlation_id
-  - provenance
+  - event_id
+  - event_type
+  - publication_decision
+  - reason
 tests:
   - unit
   - integration
@@ -47,22 +48,70 @@ promotion_status: stable
 ---
 # publication-policy
 
-This skill approves only redacted, evidence-backed publications.
+MAIN runs this skill as the final gate before sending APPROVED_PUBLICATION to telegram-publisher.
+A payload that passes publication-policy becomes an `ApprovedPublicationPayload` and is routed to telegram-publisher only.
 
 ## Procedure
-1. Validate input against required_input_schema; reject malformed payloads without partial processing.
-2. Execute the primary analysis sequence for this skill using Python deterministic rules only.
-3. Record all computed values with evidence IDs and provenance metadata before returning.
-4. Return structured output to the requesting agent; do not fabricate missing values.
+
+1. Receive event envelope and audit_result from MAIN.
+2. Verify event_type is in ALLOWED_MARKET_PUBLISH (not FORBIDDEN).
+3. For CONFIRMED events, verify audit_result.audit_passed=true.
+4. Verify event expires_at_utc is in the future.
+5. Verify dedup_key is not in MarketAlertDedupStore within cooldown_seconds.
+6. Verify evidence_reference is present and non-empty.
+7. Verify integrity_hash matches canonical JSON of event payload.
+8. If all gates pass, return publication_approved=true and ApprovedPublicationPayload.
+9. If any gate fails, return publication_approved=false with reason; fail closed.
+
+## Allowed Event Types (Telegram Market Bot only)
+
+| event_type | Publish? | Notes |
+|---|---|---|
+| SUPER_POTENTIAL_CONFIRMED | YES | Score >= 80.0, all gates passed |
+| SUPER_POTENTIAL_INVALIDATED | YES | Publish once; includes reason |
+| DATA_QUALITY_WARNING | YES | Only when data_quality=STALE/INSUFFICIENT_DATA |
+| SYSTEM_INCIDENT | YES | MAIN-escalated only |
+
+## Forbidden Event Types (never publish to Telegram)
+
+- SUPER_POTENTIAL_CANDIDATE_INTERNAL (must never leave MAIN)
+- SYSTEM_HEALTH (internal watchdog events only)
+- Any event_type not in the allowed list above
+
+## Gate Checklist (all must pass before APPROVED_PUBLICATION is issued)
+
+1. event_type in ALLOWED_MARKET_PUBLISH
+2. super-potential-audit returned audit_passed=true (for CONFIRMED events)
+3. event not expired (expires_at_utc > now_utc)
+4. dedup_key not in MarketAlertDedupStore (within cooldown_seconds=3600)
+5. evidence_reference present and non-empty
+6. integrity_hash present and matches event payload canonical JSON
+
+## Required Input Fields
+
+- `event`: full event envelope dict
+- `audit_result`: super-potential-audit output (required for CONFIRMED events)
+- `dedup_store_state`: current dedup key set
+
+## Output Fields
+
+- `publication_approved`: boolean
+- `reason`: string (populated when publication_approved=false)
+- `approved_payload`: ApprovedPublicationPayload (populated when publication_approved=true)
+  - `event_id`, `event_type`, `dedup_key`, `approved_at_utc`, `thai_template_key`
 
 ## Decision Tree
-- Input VALID and all required fields present → proceed with full analysis.
-- Input STALE → annotate stale=True in output; proceed with caveat.
-- Input SOURCE_UNAVAILABLE → return INSUFFICIENT_DATA; do not substitute fabricated values.
-- Required evidence missing or schema mismatch → return REJECTED with ailure_reason.
 
-## Failure Mode
-- **Source unavailable**: Return SOURCE_UNAVAILABLE status; never fill with fabricated data.
-- **Schema violation**: Reject payload; log structured error; do not partially process.
-- **Timeout / retry exhaustion**: Return TIMEOUT status; let job_queue requeue.
-- **Agent unreachable**: Record incident via watchdog callback; escalate after threshold.
+- event_type=CANDIDATE_INTERNAL: REJECT, reason=forbidden_event_type_candidate_internal
+- event_type not in allowlist: REJECT, reason=forbidden_event_type
+- audit_result.audit_passed=false (for CONFIRMED): REJECT, reason=audit_failed
+- event expired: REJECT, reason=event_expired
+- dedup_key in dedup window: REJECT, reason=duplicate_event
+- integrity_hash mismatch: REJECT, reason=integrity_violation
+- All gates pass: publication_approved=true
+
+## Failure Modes
+
+- Missing audit_result for CONFIRMED events: REJECT, reason=missing_audit_result
+- Malformed event envelope: REJECT, reason=schema_error
+- dedup_store_state unavailable: REJECT, reason=dedup_store_unavailable (fail closed)
