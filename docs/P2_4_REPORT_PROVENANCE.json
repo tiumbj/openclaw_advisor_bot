@@ -4,14 +4,14 @@
   "phase": "P2.4",
   "work_package": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION",
   "generated_from_worktree": true,
-  "generated_at_utc": "2026-06-14T23:45:00Z",
+  "generated_at_utc": "2026-06-15T00:06:00Z",
   "baseline_commit": "a996540297e43cd0cb540379575ab636f0986b5e",
   "observed_remote_head_before_remediation": "a996540297e43cd0cb540379575ab636f0986b5e",
-  "implementation_commit": "PENDING",
-  "status_report_commit": "PENDING",
-  "audit_gate": "P2.4 IN_PROGRESS - REMEDIATION COMMITTED LOCALLY, GITHUB GATES PENDING",
-  "phase_status": "IN_PROGRESS",
-  "audit_readiness": "NOT_READY",
+  "implementation_commit": "286224ec29e0a6881ed3a7003db5b63ec3ba233e",
+  "status_report_commit": "SELF_REFERENTIAL_STATUS_COMMIT_SEE_GIT_HEAD",
+  "audit_gate": "P2.4 COMPLETE - READY FOR PRE-PRODUCTION AUDIT",
+  "phase_status": "COMPLETE",
+  "audit_readiness": "READY",
   "evidence_sources": [
     "git fetch --all --prune",
     "git branch --show-current",
@@ -36,7 +36,13 @@
     "openclaw-advisor security-scan --include-history --strict",
     "python -m pip_audit",
     "python -m pip wheel . --no-deps --wheel-dir dist",
-    ".\\scripts\\Test-OpenClawUI.ps1"
+    ".\\scripts\\Test-OpenClawUI.ps1",
+    "gh run watch 27516318293 --exit-status",
+    "gh run watch 27516318322 --exit-status"
+  ],
+  "github_gates": [
+    {"workflow": "ci", "run_id": "27516318293", "status": "PASS", "head": "286224ec29e0a6881ed3a7003db5b63ec3ba233e"},
+    {"workflow": "security", "run_id": "27516318322", "status": "PASS", "head": "286224ec29e0a6881ed3a7003db5b63ec3ba233e"}
   ],
   "root_cause_reports": [
     "docs/P2_4_CI_FAILURE_ROOT_CAUSE.md",
@@ -46,8 +52,8 @@
   ],
   "redaction_status": "no_tokens_or_passwords_written",
   "notes": [
-    "P2.4 remains IN_PROGRESS until GitHub ci and security pass on the remediation commit.",
-    "Local gates are not sufficient to mark READY.",
+    "P2.4 remediation is COMPLETE because local gates and GitHub ci/security pass on pushed HEAD.",
+    "PRE_PRODUCTION_AUDIT is next but has not been started.",
     "HUMAN_RELEASE_GATE remains required before production promotion."
   ]
 }

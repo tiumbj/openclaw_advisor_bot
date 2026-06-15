@@ -3,21 +3,22 @@
   "version": "1.2.10",
   "phase": "P2.4",
   "work_package": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION",
-  "generated_at_utc": "2026-06-14T23:45:00Z",
+  "generated_at_utc": "2026-06-15T00:06:00Z",
   "baseline_commit": "a996540297e43cd0cb540379575ab636f0986b5e",
-  "audit_gate": "P2.4 IN_PROGRESS - REMEDIATION COMMITTED LOCALLY, GITHUB GATES PENDING",
-  "phase_status": "IN_PROGRESS",
-  "audit_readiness": "NOT_READY",
+  "audit_gate": "P2.4 COMPLETE - READY FOR PRE-PRODUCTION AUDIT",
+  "phase_status": "COMPLETE",
+  "audit_readiness": "READY",
   "production_gate": "BLOCKED - HUMAN_RELEASE_GATE not passed",
   "summary": {
     "PASS_LOCAL": 29,
-    "PENDING": 1,
+    "PASS_REMOTE": 1,
+    "PENDING": 0,
     "FAIL": 0,
     "total": 30
   },
   "remote_gates": {
-    "ci": "PENDING",
-    "security": "PENDING"
+    "ci": "PASS: 27516318293",
+    "security": "PASS: 27516318322"
   },
   "items": [
     {"id": "BC-01", "section": "Architecture", "requirement": "Advisor-only, no execution", "status": "PASS_LOCAL"},
@@ -49,6 +50,6 @@
     {"id": "BC-27", "section": "Security", "requirement": "Secret non-exposure", "status": "PASS_LOCAL"},
     {"id": "BC-28", "section": "Verification", "requirement": "Full non-live suite", "status": "PASS_LOCAL", "summary": "197 passed, 1 deselected"},
     {"id": "BC-29", "section": "Verification", "requirement": "Browser/control UI E2E", "status": "PASS_LOCAL"},
-    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PENDING"}
+    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PASS_REMOTE"}
   ]
 }

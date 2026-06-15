@@ -38,7 +38,8 @@
     {"command": "python -m pip wheel . --no-deps --wheel-dir dist", "status": "PASS"},
     {"command": ".\\scripts\\Test-OpenClawUI.ps1", "status": "PASS"}
   ],
-  "closure_status": "PENDING_GITHUB_ACTIONS",
-  "phase_status": "IN_PROGRESS",
-  "audit_readiness": "NOT_READY"
+  "github_closure": {"workflow": "ci", "run_id": "27516318293", "status": "PASS", "head": "286224ec29e0a6881ed3a7003db5b63ec3ba233e"},
+  "closure_status": "CLOSED",
+  "phase_status": "COMPLETE",
+  "audit_readiness": "READY"
 }

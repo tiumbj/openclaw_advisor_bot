@@ -75,4 +75,4 @@ After alignment:
 
 ## Current Truth
 
-This report documents remediation evidence before the replacement GitHub Actions runs complete. P2.4 must remain `IN_PROGRESS` and `NOT_READY` until the pushed commit has passing GitHub `ci` and `security` workflows.
+Replacement GitHub security passed on HEAD `286224ec29e0a6881ed3a7003db5b63ec3ba233e` in run `27516318322`.

@@ -4,25 +4,25 @@
   "package_version": "1.2.10",
   "current_phase": "P2.4",
   "phase": "P2.4",
-  "phase_status": "IN_PROGRESS",
-  "audit_readiness": "NOT_READY",
-  "audit_gate": "P2.4 IN_PROGRESS - REMEDIATION COMMITTED LOCALLY, GITHUB GATES PENDING",
+  "phase_status": "COMPLETE",
+  "audit_readiness": "READY",
+  "audit_gate": "P2.4 COMPLETE - READY FOR PRE-PRODUCTION AUDIT",
   "current_work_package": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION",
-  "updated_at_utc": "2026-06-14T23:45:00Z",
+  "updated_at_utc": "2026-06-15T00:06:00Z",
   "baseline_commit": "a996540297e43cd0cb540379575ab636f0986b5e",
   "observed_remote_head_before_remediation": "a996540297e43cd0cb540379575ab636f0986b5e",
-  "observed_remote_head": "a996540297e43cd0cb540379575ab636f0986b5e",
-  "implementation_commit": "PENDING",
-  "status_report_commit": "PENDING",
+  "observed_remote_head": "286224ec29e0a6881ed3a7003db5b63ec3ba233e",
+  "implementation_commit": "286224ec29e0a6881ed3a7003db5b63ec3ba233e",
+  "status_report_commit": "SELF_REFERENTIAL_STATUS_COMMIT_SEE_GIT_HEAD",
   "next_phase": "PRE_PRODUCTION_AUDIT",
   "next_phase_started": false,
-  "ci_status": "PENDING_GITHUB_ACTIONS",
-  "security_status": "PENDING_GITHUB_ACTIONS",
+  "ci_status": "PASS",
+  "security_status": "PASS",
   "unsupported_provider_removal_status": "PASS",
   "supported_providers": ["openai", "claude", "gemini", "deepseek"],
   "selected_provider": "claude",
   "credit_blocker": "NONE",
-  "next_action": "commit and push remediation, then verify GitHub ci and security workflows on pushed HEAD",
+  "next_action": "handoff to independent pre-production audit; do not start audit in this work package",
   "working_tree_status": {
     "clean": false,
     "tracked_changes": ["WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION in progress"],
@@ -63,7 +63,7 @@
     {"id": "WP-P2_4-MASTER-BLUEPRINT-INTEGRATION", "name": "Master Blueprint Implementation, Integration and Audit-Readiness", "status": "PASS"},
     {"id": "WP-P2_4-MAIN-24X7-DEEP-SKILLS", "name": "MAIN 24x7 Research Platform Deep Implementation", "status": "COMPLETE"},
     {"id": "WP-P2_4-TRUTH-RECONCILIATION", "name": "Truth Reconciliation, Test Closure and Audit-Readiness", "status": "COMPLETE_LOCAL"},
-    {"id": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION", "name": "Final remediation before independent pre-production audit", "status": "IN_PROGRESS"}
+    {"id": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION", "name": "Final remediation before independent pre-production audit", "status": "COMPLETE"}
   ],
   "github_failure_evidence": {
     "ci": {
@@ -99,6 +99,10 @@
     {"name": "package_build", "command": "python -m pip wheel . --no-deps --wheel-dir dist", "status": "PASS"},
     {"name": "control_ui_e2e", "command": ".\\scripts\\Test-OpenClawUI.ps1", "status": "PASS", "summary": "authenticated websocket/session/agent turn pass"}
   ],
+  "github_gates": [
+    {"name": "ci", "run_id": "27516318293", "status": "PASS", "head": "286224ec29e0a6881ed3a7003db5b63ec3ba233e"},
+    {"name": "security", "run_id": "27516318322", "status": "PASS", "head": "286224ec29e0a6881ed3a7003db5b63ec3ba233e"}
+  ],
   "coverage": {
     "total_percent": 87.04,
     "threshold_percent": 85.0,
@@ -111,13 +115,11 @@
     "strict_security_scan": true
   },
   "remaining_gaps": [
-    "Replacement GitHub ci workflow has not yet passed on the remediation commit.",
-    "Replacement GitHub security workflow has not yet passed on the remediation commit.",
     "HUMAN_RELEASE_GATE is not passed and is required before production promotion."
   ],
   "notes": [
-    "Do not start PRE_PRODUCTION_AUDIT from this status file.",
-    "Do not mark P2.4 COMPLETE from local gates alone.",
-    "Commit and push remediation, then update this file only after GitHub ci and security pass."
+    "PRE_PRODUCTION_AUDIT is the next phase but has not been started.",
+    "P2.4 COMPLETE is based on local gates plus GitHub ci/security passing on pushed HEAD.",
+    "Production remains blocked until HUMAN_RELEASE_GATE passes."
   ]
 }
