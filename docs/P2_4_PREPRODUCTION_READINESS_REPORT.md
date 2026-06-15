@@ -9,7 +9,7 @@
 - Audit readiness: `NOT_READY`
 - Updated UTC: `2026-06-15T08:35:00Z`
 - Audit baseline commit: `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a`
-- Audit report commit: `SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD`
+- Audit report commit: `b247db0e3e240e76f8ba754110287792fdb40a44`
 
 ## Verdict
 
@@ -21,8 +21,9 @@ P2.4 remediation remains blocked from soak entry because the browser sandbox hel
 | --- | --- | --- |
 | Non-live validation | PASS_LOCAL | `272 passed, 1 deselected` |
 | Coverage | PASS_LOCAL | `85.81%` total coverage |
-| Skills / agents / routing / config | PASS_LOCAL | `validate-skills --strict`, `validate-agents --strict`, `validate-routing --strict`, `render-config --validate --strict` |
+| Skills / agents / routing / config | PASS_LOCAL | `validate-skills --strict` (`74 skills`), `validate-agents --strict` (`13 agents`), `validate-routing --strict`, `render-config --validate --strict` |
 | Security scan | PASS_LOCAL | `security-scan --include-history --strict` |
+| GitHub remote validation | PASS_REMOTE | Validated commit `b247db0e3e240e76f8ba754110287792fdb40a44`; CI `27541180318` success; security `27541180341` success |
 | Dependency audit | TIMEOUT | `python -m pip_audit`; timed out twice in this workspace window |
 | Telegram operator E2E | PASS_LOCAL | operator flow verified |
 | Market bot outbound | PASS_LOCAL | outbound channel verified |

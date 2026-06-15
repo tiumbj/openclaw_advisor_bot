@@ -9,8 +9,8 @@
 - Audit gate: `BROWSER_SANDBOX_BLOCKED_UPSTREAM`
 - Last update UTC: `2026-06-15T08:35:00Z`
 - Audit baseline commit: `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a`
-- Observed remote head: `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a`
-- Remediation commit: `SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD`
+- Observed remote head: `b247db0e3e240e76f8ba754110287792fdb40a44`
+- Remediation commit: `b247db0e3e240e76f8ba754110287792fdb40a44`
 - Production gate: `HUMAN_RELEASE_GATE_CLOSED`
 
 ## Runtime Truth
@@ -23,8 +23,8 @@
 | Mypy | PASS_LOCAL | `python -m mypy engine\src` |
 | Pytest non-live exact | PASS_LOCAL | `python -m pytest -m "not live" -q --basetemp ._tmp\audit-venv-pytest`; `272 passed, 1 deselected` |
 | Coverage gate | PASS_LOCAL | `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-branch --cov-fail-under=85 --basetemp ._tmp\audit-venv-cov`; coverage `85.81%` |
-| Skill validation | PASS_LOCAL | `openclaw-advisor validate-skills --strict` |
-| Agent validation | PASS_LOCAL | `openclaw-advisor validate-agents --strict` |
+| Skill validation | PASS_LOCAL | `openclaw-advisor validate-skills --strict`; `74 skills` |
+| Agent validation | PASS_LOCAL | `openclaw-advisor validate-agents --strict`; `13 agents` |
 | Routing validation | PASS_LOCAL | `openclaw-advisor validate-routing --strict` |
 | Config validation | PASS_LOCAL | `openclaw-advisor render-config --validate --strict` |
 | Security scan | PASS_LOCAL | `openclaw-advisor security-scan --include-history --strict` |
@@ -34,7 +34,7 @@
 | Browser plugin E2E | BLOCKED_UPSTREAM | Codex-launched `node_repl.exe` fails in Windows sandbox bootstrap with `helper_unknown_error: apply deny-read ACLs` |
 | Browser root cause | UPSTREAM_CODEX_RUNTIME_DEFECT | Failure occurs before user JavaScript / browser session |
 | Browser failure subclass | HELPER_ERROR_PROPAGATION_BUG | Native error is collapsed to generic helper failure |
-| GitHub CI/security | PASS | Baseline verified on `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a`; recheck after this commit |
+| GitHub CI/security | PASS_REMOTE | Validated commit `b247db0e3e240e76f8ba754110287792fdb40a44`; CI `27541180318` success; security `27541180341` success |
 | HUMAN_RELEASE_GATE | CLOSED | Required before production promotion |
 
 ## Findings
@@ -54,4 +54,4 @@
 
 ## Current Truth
 
-Browser sandbox failure is classified as `BROWSER_SANDBOX_BLOCKED_UPSTREAM`, `UPSTREAM_CODEX_RUNTIME_DEFECT`, and `HELPER_ERROR_PROPAGATION_BUG`. Full soak is `NOT_READY_FOR_SOAK`.
+Browser sandbox failure is classified as `BROWSER_SANDBOX_BLOCKED_UPSTREAM`, `UPSTREAM_CODEX_RUNTIME_DEFECT`, and `HELPER_ERROR_PROPAGATION_BUG`. Full soak is `NOT_READY_FOR_SOAK`. Remote validation is scoped to commit `b247db0e3e240e76f8ba754110287792fdb40a44`.

@@ -10,17 +10,31 @@
   "current_work_package": "WP-P2_4-BROWSER-SANDBOX-PROVENANCE-RECONCILIATION",
   "updated_at_utc": "2026-06-15T08:35:00Z",
   "audit_baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "audit_report_commit": "SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD",
+  "audit_report_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
   "baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "observed_remote_head": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "implementation_commit": "SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD",
-  "status_report_commit": "SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD",
-  "remediation_commit": "SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD",
+  "observed_remote_head": "b247db0e3e240e76f8ba754110287792fdb40a44",
+  "implementation_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
+  "status_report_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
+  "remediation_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
   "production_gate": "HUMAN_RELEASE_GATE_CLOSED",
   "next_phase": "PRE_PRODUCTION_AUDIT",
   "next_phase_started": false,
-  "ci_status": "PASS",
-  "security_status": "PASS",
+  "remote_validation": {
+    "validated_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
+    "ci": {
+      "run_id": 27541180318,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "security": {
+      "run_id": 27541180341,
+      "status": "completed",
+      "conclusion": "success",
+      "dependency_vulnerability_scan": "success"
+    }
+  },
+  "ci_status": "PASS_REMOTE",
+  "security_status": "PASS_REMOTE",
   "pip_audit_status": "TIMEOUT",
   "unsupported_provider_removal_status": "PASS",
   "supported_providers": [
@@ -31,7 +45,7 @@
   ],
   "selected_provider": "claude",
   "credit_blocker": "NONE",
-  "next_action": "push evidence reconciliation commit, verify GitHub workflow conclusions, then run independent re-audit",
+  "next_action": "Keep browser disabled and await any upstream fix; remote validation is scoped to the reconciled baseline commit.",
   "provider_static_validation": {
     "status": "PASS",
     "provider_policy": "BLOCKED",
@@ -96,9 +110,14 @@
   },
   "agent_status": {
     "status": "PASS_LOCAL",
-    "agent_count": 12,
+    "agent_count": 13,
     "runtime_agent_id": "super-advisor",
     "all_agents_valid": true
+  },
+  "skill_status": {
+    "status": "PASS_LOCAL",
+    "skill_count": 74,
+    "all_skills_valid": true
   },
   "working_tree_status": {
     "clean": false,
@@ -143,12 +162,14 @@
     {
       "name": "validate_skills",
       "command": "openclaw-advisor validate-skills --strict",
-      "status": "PASS"
+      "status": "PASS",
+      "summary": "74 skills verified"
     },
     {
       "name": "validate_agents",
       "command": "openclaw-advisor validate-agents --strict",
-      "status": "PASS"
+      "status": "PASS",
+      "summary": "13 agents verified"
     },
     {
       "name": "validate_routing",
@@ -158,7 +179,8 @@
     {
       "name": "render_config",
       "command": "openclaw-advisor render-config --validate --strict",
-      "status": "PASS"
+      "status": "PASS",
+      "summary": "13 agents and 74 skills rendered"
     },
     {
       "name": "security_scan",

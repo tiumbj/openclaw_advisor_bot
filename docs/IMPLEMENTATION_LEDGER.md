@@ -904,3 +904,41 @@
   - `Browser sandbox bootstrap remains blocked upstream in Codex runtime.`
   - `Dependency audit (python -m pip_audit) timed out twice in this workspace window.`
 - Next action: `Commit and push the reconciliation bundle, then verify remote alignment and workflow status.`
+
+## Entry 0028
+
+- Timestamp UTC: `2026-06-15T11:56:31Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-BROWSER-SANDBOX-PROVENANCE-RECONCILIATION`
+- Operation: `Corrected the live P2.4 provenance artifacts to replace stale agent and skill counts, scoped remote workflow validation by commit, and removed self-referential SHA semantics from the browser sandbox escalation evidence bundle while preserving the upstream blocker classification and browser-disabled safety boundary.`
+- Files changed:
+  - `artifacts/p2_4_browser_sandbox_escalation_bundle/README.md`
+  - `artifacts/p2_4_browser_sandbox_escalation_bundle/evidence.json`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md`
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.json`
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.md`
+  - `docs/P2_4_REPORT_PROVENANCE.json`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/PROJECT_STATUS.md`
+  - `docs/IMPLEMENTATION_LEDGER.md`
+- Tests run:
+  - `openclaw-advisor validate-skills --strict`
+  - `openclaw-advisor validate-agents --strict`
+  - `openclaw-advisor validate-routing --strict`
+  - `openclaw-advisor render-config --validate --strict`
+  - `python -m ruff check .`
+  - `python -m mypy engine\src`
+  - `$env:PYTHONNOUSERSITE='1'; .\.venv-audit\Scripts\python.exe -m pytest -m "not live" -q --basetemp ._tmp\audit-venv-pytest`
+  - `$env:PYTHONNOUSERSITE='1'; .\.venv-audit\Scripts\python.exe -m pytest -m "not live" --cov=openclaw_super_advisor --cov-branch --cov-fail-under=85 --basetemp ._tmp\audit-venv-cov`
+  - `openclaw-advisor security-scan --include-history --strict`
+  - `.venv-audit\Scripts\python.exe -m pip_audit -v -l --timeout 5 --progress-spinner off`
+- Result: `PARTIAL`
+- Commit: `PENDING`
+- Remote push: `PENDING`
+- CI result: `PASS_REMOTE`
+- Security result: `PASS_REMOTE`
+- Known defects:
+  - `Browser sandbox bootstrap remains blocked upstream in Codex runtime.`
+  - `Local pip_audit timed out again in this workspace window.`
+- Next action: `Commit and push the documentation/provenance correction, then verify the new workflow runs.`

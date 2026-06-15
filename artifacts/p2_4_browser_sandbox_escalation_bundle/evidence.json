@@ -1,8 +1,10 @@
 {
   "schema_version": "p2-4-browser-sandbox-escalation-v1",
   "captured_at_utc": "2026-06-15T08:35:00Z",
-  "baseline_sha": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "final_sha": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
+  "implementation_baseline_sha": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
+  "reconciliation_baseline_sha": "b247db0e3e240e76f8ba754110287792fdb40a44",
+  "evidence_capture_head": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
+  "containing_commit_resolution": "Resolve externally using git log -1 --format=%H -- <file-path>",
   "package_version": "1.2.13",
   "phase": "P2.4",
   "classification": {
@@ -67,6 +69,18 @@
       "owner": "Codex runtime"
     }
   ],
+  "verified_counts": {
+    "agent_count": 13,
+    "skill_count": 74,
+    "agent_count_sources": [
+      "openclaw-advisor validate-agents --strict",
+      "openclaw-advisor render-config --validate --strict"
+    ],
+    "skill_count_sources": [
+      "openclaw-advisor validate-skills --strict",
+      "openclaw-advisor render-config --validate --strict"
+    ]
+  },
   "node_repl": {
     "path": "C:\\Users\\Teera\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\789504f803e82e2b\\bin\\node_repl.exe",
     "sha256": "6FF2F4D43267D1E61E89AA921DEFAC43464045FCD8B2B4546A7F938AE8C05CAA",

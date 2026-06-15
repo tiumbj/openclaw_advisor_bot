@@ -6,9 +6,9 @@
   "generated_from_worktree": true,
   "generated_at_utc": "2026-06-15T08:35:00Z",
   "baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "observed_remote_head_before_remediation": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "implementation_commit": "SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD",
-  "status_report_commit": "SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD",
+  "reconciliation_baseline_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
+  "observed_remote_head_before_reconciliation": "b247db0e3e240e76f8ba754110287792fdb40a44",
+  "containing_commit_resolution": "Resolve externally using git log -1 --format=%H -- <file-path>",
   "audit_gate": "BROWSER_SANDBOX_BLOCKED_UPSTREAM - NOT READY FOR SOAK",
   "phase_status": "REMEDIATION_IN_PROGRESS",
   "audit_readiness": "NOT_READY",
@@ -28,6 +28,20 @@
     "artifacts/p2_4_browser_sandbox_escalation_bundle/evidence.json"
   ],
   "browser_evidence_bundle": "artifacts/p2_4_browser_sandbox_escalation_bundle/evidence.json",
+  "remote_validation": {
+    "validated_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
+    "ci": {
+      "run_id": 27541180318,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "security": {
+      "run_id": 27541180341,
+      "status": "completed",
+      "conclusion": "success",
+      "dependency_vulnerability_scan": "success"
+    }
+  },
   "browser_classification": {
     "browser_sandbox": "BLOCKED_UPSTREAM",
     "root_cause": "UPSTREAM_CODEX_RUNTIME_DEFECT",

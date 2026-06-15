@@ -18,8 +18,18 @@
     "total": 30
   },
   "remote_gates": {
-    "ci": "PASS: baseline verified on 4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-    "security": "PASS: baseline verified on 4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a"
+    "validated_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
+    "ci": {
+      "run_id": 27541180318,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "security": {
+      "run_id": 27541180341,
+      "status": "completed",
+      "conclusion": "success",
+      "dependency_vulnerability_scan": "success"
+    }
   },
   "items": [
     {"id": "BC-01", "section": "Architecture", "requirement": "Advisor-only, no execution", "status": "PASS_LOCAL"},
@@ -31,10 +41,10 @@
     {"id": "BC-07", "section": "Security", "requirement": "Token-gated dashboard", "status": "PASS_LOCAL"},
     {"id": "BC-08", "section": "Security", "requirement": "Python numeric ownership", "status": "PASS_LOCAL"},
     {"id": "BC-09", "section": "Security", "requirement": "UNKNOWN handling", "status": "PASS_LOCAL"},
-    {"id": "BC-10", "section": "Agent Topology", "requirement": "12-agent topology", "status": "PASS_LOCAL"},
+    {"id": "BC-10", "section": "Agent Topology", "requirement": "13-agent topology", "status": "PASS_LOCAL"},
     {"id": "BC-11", "section": "Agent Topology", "requirement": "Agent isolation", "status": "PASS_LOCAL"},
     {"id": "BC-12", "section": "Agent Topology", "requirement": "Route allowlists", "status": "PASS_LOCAL"},
-    {"id": "BC-13", "section": "Skills", "requirement": "56-skill catalog", "status": "PASS_LOCAL"},
+    {"id": "BC-13", "section": "Skills", "requirement": "74-skill catalog", "status": "PASS_LOCAL"},
     {"id": "BC-14", "section": "Skills", "requirement": "Skill frontmatter + semantic validation", "status": "PASS_LOCAL"},
     {"id": "BC-15", "section": "Security", "requirement": "Standard deny policy", "status": "PASS_LOCAL"},
     {"id": "BC-16", "section": "Data", "requirement": "MT5 symbol pipeline", "status": "PASS_LOCAL"},
@@ -51,6 +61,6 @@
     {"id": "BC-27", "section": "Security", "requirement": "Secret non-exposure", "status": "PASS_LOCAL"},
     {"id": "BC-28", "section": "Verification", "requirement": "Full non-live suite", "status": "PASS_LOCAL", "summary": "272 passed, 1 deselected"},
     {"id": "BC-29", "section": "Verification", "requirement": "Browser/control UI E2E", "status": "BLOCKED_UPSTREAM", "summary": "Codex sandbox bootstrap fails before browser session"},
-    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PASS_REMOTE"}
+    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PASS_REMOTE", "summary": "Validated commit b247db0e3e240e76f8ba754110287792fdb40a44; CI 27541180318 success; security 27541180341 success"}
   ]
 }

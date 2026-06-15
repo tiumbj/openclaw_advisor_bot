@@ -32,10 +32,10 @@
 | BC-07 | Security | Token-gated dashboard | PASS_LOCAL | authenticated config access remains enforced |
 | BC-08 | Security | Python numeric ownership | PASS_LOCAL | unchanged safety boundary |
 | BC-09 | Security | UNKNOWN handling | PASS_LOCAL | non-live tests pass |
-| BC-10 | Agent Topology | 12-agent topology | PASS_LOCAL | `validate-agents --strict` |
+| BC-10 | Agent Topology | 13-agent topology | PASS_LOCAL | `validate-agents --strict`; 13 agents including `blueprint-coder` |
 | BC-11 | Agent Topology | Agent isolation | PASS_LOCAL | agent validation |
 | BC-12 | Agent Topology | Route allowlists | PASS_LOCAL | `validate-routing --strict` |
-| BC-13 | Skills | 56-skill catalog | PASS_LOCAL | `validate-skills --strict` |
+| BC-13 | Skills | 74-skill catalog | PASS_LOCAL | `validate-skills --strict`; 74 skills rendered |
 | BC-14 | Skills | Skill frontmatter + semantic validation | PASS_LOCAL | all skills validated successfully |
 | BC-15 | Security | Standard deny policy | PASS_LOCAL | strict security scan |
 | BC-16 | Data | MT5 symbol pipeline | PASS_LOCAL | non-live tests pass |
@@ -52,7 +52,7 @@
 | BC-27 | Security | Secret non-exposure | PASS_LOCAL | strict security scan |
 | BC-28 | Verification | Full non-live suite | PASS_LOCAL | `272 passed, 1 deselected` |
 | BC-29 | Verification | Browser/control UI E2E | BLOCKED_UPSTREAM | Codex helper bootstrap fails before user JavaScript; see escalation bundle |
-| BC-30 | Verification | Push and remote gates | PASS_REMOTE | baseline `ci` and `security` pass on `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a` |
+| BC-30 | Verification | Push and remote gates | PASS_REMOTE | validated commit `b247db0e3e240e76f8ba754110287792fdb40a44`; CI `27541180318` success; security `27541180341` success |
 
 ## Remaining Risk Register
 

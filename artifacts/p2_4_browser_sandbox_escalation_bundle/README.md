@@ -25,8 +25,11 @@ What is included:
 - Error propagation limitation
 - Ownership matrix
 - Recommended upstream reproduction procedure
+- Verified topology counts: 13 agents and 74 skills
+- Non-self-referential SHA semantics for the reconciliation baseline and capture head
 
 Redaction policy:
 
 - No tokens, secrets, chat IDs, or provider keys are included
 - Personal paths are included only where required to identify the helper/runtime boundary
+- Current commit SHA is intentionally resolved externally rather than embedded in the bundle

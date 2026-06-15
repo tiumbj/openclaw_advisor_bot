@@ -7,7 +7,7 @@
   "audit_readiness": "NOT_READY",
   "updated_at_utc": "2026-06-15T08:35:00Z",
   "audit_baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "audit_report_commit": "SELF_REFERENTIAL_EVIDENCE_RECONCILIATION_COMMIT_SEE_GIT_HEAD",
+  "audit_report_commit": "b247db0e3e240e76f8ba754110287792fdb40a44",
   "verdict": "REMEDIATION_IN_PROGRESS_NOT_READY_FOR_SOAK",
   "local_evidence": {
     "ruff": "PASS",
@@ -15,11 +15,12 @@
     "pip_check": "PASS",
     "pytest_non_live_exact": "PASS: 272 passed, 1 deselected",
     "coverage_gate": "PASS: 85.81%",
-    "validate_skills": "PASS",
-    "validate_agents": "PASS",
+    "validate_skills": "PASS: 74 skills",
+    "validate_agents": "PASS: 13 agents",
     "validate_routing": "PASS",
     "render_config": "PASS",
     "security_scan": "PASS",
+    "remote_validation": "PASS_REMOTE: validated commit b247db0e3e240e76f8ba754110287792fdb40a44; CI 27541180318 success; security 27541180341 success",
     "pip_audit": "TIMEOUT: timed out twice in this workspace window",
     "telegram_operator_e2e": "PASS",
     "market_bot_outbound": "PASS"
