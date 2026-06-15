@@ -986,3 +986,31 @@
   - `Local pip_audit not run in this window; GitHub dependency scan (run 27552496438) is authoritative.`
   - `Local security-scan shows active_source_violations=0 but pass=false due to .venv-blueprint/ binary false positives; CI scan (run 27552496438) is authoritative and passes.`
 - Next action: `Update provenance docs with confirmed CI run IDs and commit; HUMAN_RELEASE_GATE remains CLOSED; browser remains BLOCKED_UPSTREAM.`
+
+## Entry 0030
+
+- Timestamp UTC: `2026-06-15T14:22:58Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT`
+- Operation: `Updated all provenance docs with the confirmed validated_subject_commit adebabca2665ea782bef6146fb27ef7d51b5fb12 and CI run IDs 27552496423/27552496438, updated IMPLEMENTATION_LEDGER Entry 0029 with confirmed commit and CI conclusions.`
+- Files changed:
+  - `docs/IMPLEMENTATION_LEDGER.md`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json`
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.md`
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.json`
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.md`
+  - `docs/P2_4_REPORT_PROVENANCE.json`
+  - `docs/PROJECT_STATUS.json`
+  - `docs/PROJECT_STATUS.md`
+- Tests run:
+  - `gh run watch 27553025817 --exit-status` → PASS: ci workflow success (2m55s)
+  - `gh run watch 27553025734 --exit-status` → PASS: security workflow success
+- Result: `PASS`
+- Commit: `899bd7eebfa073fc572944f26cc05b2405fb5bab`
+- Remote push: `PASS`
+- CI result: `PASS` — run `27553025817` success
+- Security result: `PASS` — run `27553025734` success
+- Known defects:
+  - `Browser sandbox bootstrap remains blocked upstream in Codex runtime.`
+  - `HUMAN_RELEASE_GATE remains CLOSED.`
+- Next action: `WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT complete. Await HUMAN_RELEASE_GATE decision for production promotion.`
