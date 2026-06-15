@@ -8,8 +8,8 @@
   "provenance_model_version": "non-self-referential-v1",
   "provenance_model_note": "This document describes report_subject_commit. It cannot embed its own containing commit SHA because the SHA is unknown until after the commit is created. Resolve the containing commit externally with git log -1 --format=%H -- <file-path>.",
   "baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "report_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
-  "validated_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
+  "report_subject_commit": "adebabca2665ea782bef6146fb27ef7d51b5fb12",
+  "validated_subject_commit": "adebabca2665ea782bef6146fb27ef7d51b5fb12",
   "containing_commit_resolution": "git log -1 --format=%H -- docs/P2_4_REPORT_PROVENANCE.json",
   "audit_gate": "BROWSER_SANDBOX_BLOCKED_UPSTREAM - NOT READY FOR SOAK",
   "phase_status": "REMEDIATION_IN_PROGRESS",
@@ -31,14 +31,14 @@
   ],
   "browser_evidence_bundle": "artifacts/p2_4_browser_sandbox_escalation_bundle/evidence.json",
   "remote_validation": {
-    "validated_subject_commit": "938668f1cb14492f0d3236230e68513977c1faf3",
+    "validated_subject_commit": "adebabca2665ea782bef6146fb27ef7d51b5fb12",
     "ci": {
-      "run_id": 27544625989,
+      "run_id": 27552496423,
       "status": "completed",
       "conclusion": "success"
     },
     "security": {
-      "run_id": 27544625996,
+      "run_id": 27552496438,
       "status": "completed",
       "conclusion": "success",
       "dependency_vulnerability_scan": "success"
@@ -66,6 +66,6 @@
     "Latest verified browser helper failure occurs before user JavaScript executes.",
     "Native Windows ACL tests passed on the disposable path classes used for comparison.",
     "Full soak remains not ready because the browser E2E gate is still blocked upstream.",
-    "This document describes 938668f1cb14492f0d3236230e68513977c1faf3. Its own containing commit SHA must be resolved externally after push."
+    "This document describes adebabca2665ea782bef6146fb27ef7d51b5fb12. Its own containing commit SHA must be resolved externally after push."
   ]
 }

@@ -977,12 +977,12 @@
   - git rev-parse HEAD (worktree) → 938668f1cb14492f0d3236230e68513977c1faf3
   - git status --short (worktree) → all changes are tracked modifications, no unexpected files
 - Result: `PASS`
-- Commit: `PENDING`
-- Remote push: `PENDING`
-- CI result: `NOT_RUN`
-- Security result: `NOT_RUN`
+- Commit: `adebabca2665ea782bef6146fb27ef7d51b5fb12`
+- Remote push: `PASS`
+- CI result: `PASS` — run `27552496423` success
+- Security result: `PASS` — run `27552496438` success; dependency vulnerability scan success
 - Known defects:
   - `Browser sandbox bootstrap remains blocked upstream in Codex runtime.`
-  - `Local pip_audit not run in this window; GitHub dependency scan is authoritative.`
-  - `Security scan local pass=false due to .venv-blueprint/ binary false positives; active_source_violations=0 (PASS for project source); CI scan authoritative.`
-- Next action: `Commit staged changes, push branch, open PR to main, verify CI and security workflow conclusions.`
+  - `Local pip_audit not run in this window; GitHub dependency scan (run 27552496438) is authoritative.`
+  - `Local security-scan shows active_source_violations=0 but pass=false due to .venv-blueprint/ binary false positives; CI scan (run 27552496438) is authoritative and passes.`
+- Next action: `Update provenance docs with confirmed CI run IDs and commit; HUMAN_RELEASE_GATE remains CLOSED; browser remains BLOCKED_UPSTREAM.`

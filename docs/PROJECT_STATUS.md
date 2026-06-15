@@ -9,8 +9,8 @@
 - Audit gate: `BROWSER_SANDBOX_BLOCKED_UPSTREAM`
 - Last update UTC: `2026-06-15T13:00:00Z`
 - Audit baseline commit: `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a`
-- Report subject commit: `938668f1cb14492f0d3236230e68513977c1faf3`
-- Validated subject commit: `938668f1cb14492f0d3236230e68513977c1faf3`
+- Report subject commit: `adebabca2665ea782bef6146fb27ef7d51b5fb12`
+- Validated subject commit: `adebabca2665ea782bef6146fb27ef7d51b5fb12`
 - Containing commit: resolve with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`
 - Provenance model: `non-self-referential-v1`
 - Production gate: `HUMAN_RELEASE_GATE_CLOSED`
@@ -36,7 +36,7 @@
 | Browser plugin E2E | BLOCKED_UPSTREAM | Codex-launched `node_repl.exe` fails in Windows sandbox bootstrap with `helper_unknown_error: apply deny-read ACLs` |
 | Browser root cause | UPSTREAM_CODEX_RUNTIME_DEFECT | Failure occurs before user JavaScript / browser session |
 | Browser failure subclass | HELPER_ERROR_PROPAGATION_BUG | Native error is collapsed to generic helper failure |
-| GitHub CI/security | PASS_REMOTE | Validated subject commit `938668f1cb14492f0d3236230e68513977c1faf3`; CI `27544625989` success; security `27544625996` success |
+| GitHub CI/security | PASS_REMOTE | Validated subject commit `adebabca2665ea782bef6146fb27ef7d51b5fb12`; CI `27552496423` success; security `27552496438` success |
 | HUMAN_RELEASE_GATE | CLOSED | Required before production promotion |
 
 ## Findings
@@ -57,4 +57,4 @@
 
 ## Current Truth
 
-Browser sandbox failure is classified as `BROWSER_SANDBOX_BLOCKED_UPSTREAM`, `UPSTREAM_CODEX_RUNTIME_DEFECT`, and `HELPER_ERROR_PROPAGATION_BUG`. Full soak is `NOT_READY_FOR_SOAK`. Remote validation is scoped to subject commit `938668f1cb14492f0d3236230e68513977c1faf3`. This document cannot embed its own containing commit SHA; resolve externally with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`.
+Browser sandbox failure is classified as `BROWSER_SANDBOX_BLOCKED_UPSTREAM`, `UPSTREAM_CODEX_RUNTIME_DEFECT`, and `HELPER_ERROR_PROPAGATION_BUG`. Full soak is `NOT_READY_FOR_SOAK`. Remote validation is scoped to subject commit `adebabca2665ea782bef6146fb27ef7d51b5fb12`. This document cannot embed its own containing commit SHA; resolve externally with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`.

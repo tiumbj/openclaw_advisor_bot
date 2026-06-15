@@ -9,8 +9,8 @@
 - Audit readiness: `NOT_READY`
 - Updated UTC: `2026-06-15T13:00:00Z`
 - Audit baseline commit: `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a`
-- Report subject commit: `938668f1cb14492f0d3236230e68513977c1faf3`
-- Validated subject commit: `938668f1cb14492f0d3236230e68513977c1faf3`
+- Report subject commit: `adebabca2665ea782bef6146fb27ef7d51b5fb12`
+- Validated subject commit: `adebabca2665ea782bef6146fb27ef7d51b5fb12`
 - Containing commit: resolve with `git log -1 --format=%H -- docs/P2_4_PREPRODUCTION_READINESS_REPORT.md`
 - Provenance model: `non-self-referential-v1`
 
@@ -26,7 +26,7 @@ P2.4 remediation remains blocked from soak entry because the browser sandbox hel
 | Coverage | PASS_LOCAL | `85.89%` total (threshold 85.0%) |
 | Skills / agents / routing / config | PASS_LOCAL | `validate-skills --strict` (`74 skills`), `validate-agents --strict` (`13 agents`), `validate-routing --strict`, `render-config --validate --strict` |
 | Security scan | PASS_LOCAL | `security-scan --include-history --strict` |
-| GitHub remote validation | PASS_REMOTE | Validated subject commit `938668f1cb14492f0d3236230e68513977c1faf3`; CI `27544625989` success; security `27544625996` success |
+| GitHub remote validation | PASS_REMOTE | Validated subject commit `adebabca2665ea782bef6146fb27ef7d51b5fb12`; CI `27552496423` success; security `27552496438` success |
 | Dependency audit | TIMEOUT | `python -m pip_audit`; timed out twice in this workspace window; GitHub dependency scan is authoritative |
 | Telegram operator E2E | PASS_LOCAL | operator flow verified |
 | Market bot outbound | PASS_LOCAL | outbound channel verified |
