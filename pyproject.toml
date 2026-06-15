@@ -42,7 +42,7 @@ version = { attr = "openclaw_super_advisor._version.__version__" }
 
 [tool.pytest.ini_options]
 testpaths = ["engine/tests"]
-addopts = "-ra --strict-markers --cov=openclaw_super_advisor --cov-branch --cov-report=term-missing --cov-report=json:docs/P2_COVERAGE.json"
+addopts = "-ra --strict-markers"
 markers = [
   "live: requires local services, credentials, or network",
   "security: security boundary test",
@@ -67,7 +67,7 @@ output = "docs/P2_COVERAGE.json"
 line-length = 100
 target-version = "py312"
 src = ["engine/src", "engine/tests", "scripts"]
-extend-exclude = ["engine/.tmp_pytest"]
+extend-exclude = ["engine/.tmp_pytest", "_tmp", "._tmp", "dist", "build", "*.egg-info"]
 
 [tool.ruff.lint]
 select = [

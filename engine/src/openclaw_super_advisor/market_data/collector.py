@@ -480,6 +480,19 @@ class MarketDataService:
                     quality_flags=tuple(
                         str(item) for item in cast(list[object], tick["quality_flags"])
                     ),
+                    source=str(tick.get("source", "UNKNOWN")),
+                    source_system=str(tick.get("source_system", "UNKNOWN")),
+                    fetched_at_utc=(
+                        None
+                        if tick.get("fetched_at_utc") is None
+                        else _snapshot_datetime(tick["fetched_at_utc"])
+                    ),
+                    realtime_class=str(tick.get("realtime_class", "UNKNOWN")),
+                    formula_version=(
+                        None
+                        if tick.get("formula_version") is None
+                        else str(tick["formula_version"])
+                    ),
                 )
             ]
             bar_records = [
@@ -503,6 +516,19 @@ class MarketDataService:
                     data_quality=str(row["data_quality"]),
                     quality_flags=tuple(
                         str(item) for item in cast(list[object], row["quality_flags"])
+                    ),
+                    source=str(row.get("source", "UNKNOWN")),
+                    source_system=str(row.get("source_system", "UNKNOWN")),
+                    fetched_at_utc=(
+                        None
+                        if row.get("fetched_at_utc") is None
+                        else _snapshot_datetime(row["fetched_at_utc"])
+                    ),
+                    realtime_class=str(row.get("realtime_class", "UNKNOWN")),
+                    formula_version=(
+                        None
+                        if row.get("formula_version") is None
+                        else str(row["formula_version"])
                     ),
                 )
                 for row in related_bars

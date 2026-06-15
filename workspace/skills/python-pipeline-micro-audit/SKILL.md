@@ -1,7 +1,7 @@
 ---
 name: python-pipeline-micro-audit
 description: Python pipeline micro audit skill.
-version: 1.2.10
+version: 1.2.11
 owner_agent: system-coder-auditor
 purpose: Audit Python pipeline details and regressions.
 allowed_inputs:

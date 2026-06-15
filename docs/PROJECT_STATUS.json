@@ -1,34 +1,31 @@
 {
-  "schema_version": "project-status-v4",
+  "schema_version": "project-status-v5",
   "project": "openclaw_advisor_bot",
-  "package_version": "1.2.10",
+  "package_version": "1.2.11",
   "current_phase": "P2.4",
   "phase": "P2.4",
-  "phase_status": "COMPLETE",
-  "audit_readiness": "READY",
-  "audit_gate": "P2.4 COMPLETE - READY FOR PRE-PRODUCTION AUDIT",
-  "current_work_package": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION",
-  "updated_at_utc": "2026-06-15T00:06:00Z",
-  "baseline_commit": "a996540297e43cd0cb540379575ab636f0986b5e",
-  "observed_remote_head_before_remediation": "a996540297e43cd0cb540379575ab636f0986b5e",
-  "observed_remote_head": "286224ec29e0a6881ed3a7003db5b63ec3ba233e",
-  "implementation_commit": "286224ec29e0a6881ed3a7003db5b63ec3ba233e",
-  "status_report_commit": "SELF_REFERENTIAL_STATUS_COMMIT_SEE_GIT_HEAD",
+  "phase_status": "REMEDIATION_IN_PROGRESS",
+  "audit_readiness": "NOT_READY",
+  "audit_gate": "REMEDIATION_REQUIRED",
+  "current_work_package": "WP-P2_4-PPA-0001-0010-REMEDIATION",
+  "updated_at_utc": "2026-06-15T02:00:00Z",
+  "audit_baseline_commit": "d44da0983b38408575ceedfccb00b909862ff9f0",
+  "audit_report_commit": "e725e25cffa0d497920e9dad72521ece5b7ae4f2",
+  "baseline_commit": "d44da0983b38408575ceedfccb00b909862ff9f0",
+  "observed_remote_head": "e725e25cffa0d497920e9dad72521ece5b7ae4f2",
+  "implementation_commit": "PENDING_REMEDIATION_COMMIT",
+  "status_report_commit": "PENDING_REMEDIATION_COMMIT",
+  "remediation_commit": "PENDING_COMMIT",
+  "production_gate": "HUMAN_RELEASE_GATE_CLOSED",
   "next_phase": "PRE_PRODUCTION_AUDIT",
   "next_phase_started": false,
-  "ci_status": "PASS",
-  "security_status": "PASS",
+  "ci_status": "NOT_RUN_FOR_REMEDIATION",
+  "security_status": "NOT_RUN_FOR_REMEDIATION",
   "unsupported_provider_removal_status": "PASS",
   "supported_providers": ["openai", "claude", "gemini", "deepseek"],
   "selected_provider": "claude",
   "credit_blocker": "NONE",
-  "next_action": "handoff to independent pre-production audit; do not start audit in this work package",
-  "working_tree_status": {
-    "clean": false,
-    "tracked_changes": ["WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION in progress"],
-    "untracked_changes": ["engine/.tmp_pytest/"],
-    "ignored_runtime_updates": ["state/openclaw.json", "state/.env", "workspace/.openclaw/"]
-  },
+  "next_action": "push remediation commit, wait for CI/security, then run independent re-audit",
   "provider_static_validation": {
     "status": "PASS",
     "provider_policy": "BLOCKED",
@@ -40,12 +37,18 @@
     "detail": "All providers disabled in .env.example; offline contract and policy checks pass."
   },
   "gateway_status": {
-    "status": "PASS_LOCAL",
+    "status": "PARTIAL",
     "bind": "127.0.0.1",
     "port": 18789,
     "auth_mode": "token",
     "control_ui_enabled": true,
-    "control_ui_e2e": "PASS"
+    "websocket_authenticated": true,
+    "session_read_pass": true,
+    "agent_turn_pass": true,
+    "warnings": [
+      "Start-OpenClawUI.ps1 reports token_consistent=false due service token fingerprint drift",
+      "Start-OpenClawUI.ps1 reports openclaw status --json parse warning"
+    ]
   },
   "agent_status": {
     "status": "PASS_LOCAL",
@@ -53,73 +56,63 @@
     "runtime_agent_id": "super-advisor",
     "all_agents_valid": true
   },
-  "work_packages": [
-    {"id": "WP-CODEX-01", "name": "Remove Unsupported Provider Completely", "status": "PASS"},
-    {"id": "WP-CODEX-02", "name": "Four-provider Configuration Foundation", "status": "PASS"},
-    {"id": "WP-CODEX-03", "name": "Static Provider Validation", "status": "PASS"},
-    {"id": "WP-CODEX-04", "name": "OpenClaw Offline Runtime Audit", "status": "PASS"},
-    {"id": "WP-P2_4-BLUEPRINT", "name": "Pre-production Blueprint and Compliance Audit", "status": "PASS"},
-    {"id": "WP-P2_4-RUNTIME-RECOVERY", "name": "Runtime Recovery, Token Reconciliation, and UI Auth", "status": "PASS"},
-    {"id": "WP-P2_4-MASTER-BLUEPRINT-INTEGRATION", "name": "Master Blueprint Implementation, Integration and Audit-Readiness", "status": "PASS"},
-    {"id": "WP-P2_4-MAIN-24X7-DEEP-SKILLS", "name": "MAIN 24x7 Research Platform Deep Implementation", "status": "COMPLETE"},
-    {"id": "WP-P2_4-TRUTH-RECONCILIATION", "name": "Truth Reconciliation, Test Closure and Audit-Readiness", "status": "COMPLETE_LOCAL"},
-    {"id": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION", "name": "Final remediation before independent pre-production audit", "status": "COMPLETE"}
-  ],
-  "github_failure_evidence": {
-    "ci": {
-      "run_id": "27503144728",
-      "workflow": "ci",
-      "job": "validate",
-      "failed_step": "Ruff",
-      "failed_command": "python -m ruff check .",
-      "exit_code": 1,
-      "root_cause_report": "docs/P2_4_CI_FAILURE_ROOT_CAUSE.md"
-    },
-    "security": {
-      "run_id": "27503144729",
-      "workflow": "security",
-      "job": "audit",
-      "failed_step": "Secret, source, AST, constant, graph, and tracking scan",
-      "failed_command": "openclaw-advisor security-scan --include-history --strict | Tee-Object -FilePath security-scan.json",
-      "exit_code": 1,
-      "root_cause_report": "docs/P2_4_SECURITY_FAILURE_ROOT_CAUSE.md"
-    }
+  "working_tree_status": {
+    "clean": false,
+    "tracked_changes": ["PPA remediation source, tests, docs, and generated coverage"],
+    "untracked_changes": [],
+    "ignored_runtime_updates": ["state/openclaw.json", "state/.env", "state/remediation-backups/"]
   },
   "local_gates": [
     {"name": "pip_check", "command": "python -m pip check", "status": "PASS"},
     {"name": "ruff", "command": "python -m ruff check .", "status": "PASS"},
     {"name": "mypy", "command": "python -m mypy engine\\src", "status": "PASS"},
-    {"name": "pytest_non_live", "command": "python -m pytest -m \"not live\"", "status": "PASS", "summary": "197 passed, 1 deselected, total coverage 87.04%"},
-    {"name": "validate_skills", "command": "openclaw-advisor validate-skills --strict", "status": "PASS", "summary": "56 skills"},
-    {"name": "validate_agents", "command": "openclaw-advisor validate-agents --strict", "status": "PASS", "summary": "12 agents"},
+    {"name": "pytest_non_live_exact", "command": "python -m pytest -m \"not live\" -q --basetemp ._tmp\\audit-pytest", "status": "PASS", "summary": "217 passed, 1 deselected"},
+    {"name": "pytest_unit", "command": "python -m pytest engine\\tests\\unit -q", "status": "PASS", "summary": "174 passed"},
+    {"name": "pytest_integration", "command": "python -m pytest engine\\tests\\integration -q", "status": "PASS", "summary": "37 passed"},
+    {"name": "pytest_security", "command": "python -m pytest engine\\tests\\security -q", "status": "PASS", "summary": "6 passed"},
+    {"name": "coverage_gate", "command": "python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-branch --cov-report=term-missing --cov-report=json:docs/P2_COVERAGE.json --cov-fail-under=85", "status": "PASS", "summary": "coverage 87.73%"},
+    {"name": "validate_skills", "command": "openclaw-advisor validate-skills --strict", "status": "PASS"},
+    {"name": "validate_agents", "command": "openclaw-advisor validate-agents --strict", "status": "PASS"},
     {"name": "validate_routing", "command": "openclaw-advisor validate-routing --strict", "status": "PASS"},
     {"name": "render_config", "command": "openclaw-advisor render-config --validate --strict", "status": "PASS"},
     {"name": "security_scan", "command": "openclaw-advisor security-scan --include-history --strict", "status": "PASS", "summary": "active_source_violations=0"},
-    {"name": "pip_audit", "command": "python -m pip_audit", "status": "PASS", "summary": "No known vulnerabilities found"},
-    {"name": "package_build", "command": "python -m pip wheel . --no-deps --wheel-dir dist", "status": "PASS"},
-    {"name": "control_ui_e2e", "command": ".\\scripts\\Test-OpenClawUI.ps1", "status": "PASS", "summary": "authenticated websocket/session/agent turn pass"}
-  ],
-  "github_gates": [
-    {"name": "ci", "run_id": "27516318293", "status": "PASS", "head": "286224ec29e0a6881ed3a7003db5b63ec3ba233e"},
-    {"name": "security", "run_id": "27516318322", "status": "PASS", "head": "286224ec29e0a6881ed3a7003db5b63ec3ba233e"}
+    {"name": "pip_audit", "command": "python -m pip_audit", "status": "PASS", "summary": "No known vulnerabilities found; local package 1.2.11 skipped because not on PyPI"},
+    {"name": "package_build", "command": "python -m build", "status": "PASS"},
+    {"name": "fred_live_check", "command": "python scripts\\audit\\fred_live_check.py", "status": "PASS", "summary": "credential masked; DGS10 VALID; DTWEXBGS STALE; both DAILY_MACRO"}
   ],
   "coverage": {
-    "total_percent": 87.04,
+    "total_percent": 87.73,
     "threshold_percent": 85.0,
     "artifact": "docs/P2_COVERAGE.json"
   },
+  "findings": {
+    "PPA-0001": "OPEN",
+    "PPA-0002": "PARTIAL",
+    "PPA-0003": "CLOSED_LOCAL",
+    "PPA-0004": "CLOSED_LOCAL",
+    "PPA-0005": "CLOSED_LOCAL",
+    "PPA-0006": "CLOSED_LOCAL",
+    "PPA-0007": "CLOSED_LOCAL",
+    "PPA-0008": "PARTIAL",
+    "PPA-0009": "PARTIAL",
+    "PPA-0010": "CLOSED_LOCAL"
+  },
+  "remaining_gaps": [
+    "Browser plugin E2E remains blocked by Windows sandbox ACL during in-app browser bootstrap.",
+    "OpenClaw doctor still reports Telegram route/message mismatch in installed runtime despite local config attempts; explicit tools.allow caused zero-callable-tools runtime failure and was reverted.",
+    "OpenClaw secrets audit still reports unrelated local plaintext provider key in ignored local state/.env/provider sqlite.",
+    "Report provenance PPA-0001 requires post-push workflow attestation and independent re-audit.",
+    "Real 24-hour soak is NOT_RUN."
+  ],
   "safety_boundaries": {
     "advisor_only": true,
     "broker_write_enabled": false,
     "mt5_order_send_enabled": false,
-    "strict_security_scan": true
+    "strict_security_scan": true,
+    "human_release_gate": "CLOSED"
   },
-  "remaining_gaps": [
-    "HUMAN_RELEASE_GATE is not passed and is required before production promotion."
-  ],
   "notes": [
-    "PRE_PRODUCTION_AUDIT is the next phase but has not been started.",
-    "P2.4 COMPLETE is based on local gates plus GitHub ci/security passing on pushed HEAD.",
-    "Production remains blocked until HUMAN_RELEASE_GATE passes."
+    "Do not declare READY/PASS until independent re-audit validates remediation.",
+    "Production remains blocked by HUMAN_RELEASE_GATE_CLOSED."
   ]
 }

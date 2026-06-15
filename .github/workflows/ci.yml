@@ -30,8 +30,17 @@ jobs:
         run: python -m ruff check .
       - name: Mypy
         run: python -m mypy engine\src
-      - name: Pytest non-live and coverage gate
-        run: python -m pytest -m "not live"
+      - name: Prepare pytest temp directory
+        run: New-Item -ItemType Directory -Force .\_tmp | Out-Null
+      - name: Pytest non-live
+        run: python -m pytest -m "not live" -q --basetemp .\_tmp\ci-pytest
+      - name: Pytest functional subsets
+        run: |
+          python -m pytest engine\tests\unit -q
+          python -m pytest engine\tests\integration -q
+          python -m pytest engine\tests\security -q
+      - name: Full-suite coverage gate
+        run: python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-branch --cov-report=term-missing --cov-report=json:docs/P2_COVERAGE.json --cov-fail-under=85
       - name: Skill validation
         run: openclaw-advisor validate-skills --strict
       - name: Agent topology validation

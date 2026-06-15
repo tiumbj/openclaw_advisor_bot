@@ -1,7 +1,7 @@
 ---
 name: skill-candidate-lifecycle
 description: Manage new skill proposals from candidate to validated SKILL.md through the skill validator gate.
-version: 1.2.10
+version: 1.2.11
 owner_agent: knowledge-skill-manager
 purpose: Ensure new skills meet frontmatter completeness and semantic depth before entering production workspace.
 allowed_inputs:

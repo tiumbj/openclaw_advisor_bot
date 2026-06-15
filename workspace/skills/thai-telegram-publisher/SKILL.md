@@ -1,7 +1,7 @@
 ---
 name: thai-telegram-publisher
 description: Thai telegram publisher skill.
-version: 1.2.10
+version: 1.2.11
 owner_agent: telegram-publisher
 purpose: Format Thai publication payloads for delivery.
 allowed_inputs:

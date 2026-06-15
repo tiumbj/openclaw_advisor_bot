@@ -1,7 +1,7 @@
 ---
 name: process-health-monitor
 description: Monitor Python engine, OpenClaw Gateway, and queue worker process health via probes.
-version: 1.2.10
+version: 1.2.11
 owner_agent: reliability-watchdog-agent
 purpose: Detect process crashes and degradation before they cause evidence pipeline gaps.
 allowed_inputs:

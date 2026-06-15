@@ -25,13 +25,41 @@ def installed_project_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
 
+def is_project_root(path: Path) -> bool:
+    """Return whether a path looks like an OpenClaw advisor checkout."""
+    return (
+        (path / "config" / "openclaw.template.json").is_file()
+        and (path / "workspace" / "skills").is_dir()
+        and (
+            (path / "pyproject.toml").is_file()
+            or (path / ".env.example").is_file()
+            or (path / "state" / ".env").is_file()
+        )
+    )
+
+
 def resolve_project_root(project_root: str | Path | None = None) -> Path:
     if project_root is not None:
-        return Path(project_root).resolve()
+        root = Path(project_root).resolve()
+        if not is_project_root(root):
+            raise ValueError(f"project_root is not an OpenClaw advisor checkout: {root}")
+        return root
     override = os.environ.get("OPENCLAW_ADVISOR_ROOT")
     if override:
-        return Path(override).resolve()
-    return installed_project_root()
+        root = Path(override).resolve()
+        if not is_project_root(root):
+            raise ValueError(f"OPENCLAW_ADVISOR_ROOT is not an OpenClaw advisor checkout: {root}")
+        return root
+    cwd = Path.cwd().resolve()
+    if is_project_root(cwd):
+        return cwd
+    installed = installed_project_root()
+    if is_project_root(installed):
+        return installed
+    raise ValueError(
+        "unable to resolve OpenClaw advisor project root; set OPENCLAW_ADVISOR_ROOT "
+        "or pass --project-root"
+    )
 
 
 def build_paths(project_root: str | Path | None = None) -> ProjectPaths:

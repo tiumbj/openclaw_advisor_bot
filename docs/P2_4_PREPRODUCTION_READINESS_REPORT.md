@@ -1,35 +1,39 @@
-# P2.4 Pre-production Readiness Report
+# P2.4 Remediation Readiness Report
 
 ## Status
 
-- Package version: `1.2.10`
+- Package version: `1.2.11`
 - Phase: `P2.4`
-- Work package: `WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION`
-- Phase status: `COMPLETE`
-- Audit readiness: `READY`
-- Updated UTC: `2026-06-15T00:06:00Z`
-- Baseline commit: `a996540297e43cd0cb540379575ab636f0986b5e`
+- Work package: `WP-P2_4-PPA-0001-0010-REMEDIATION`
+- Phase status: `REMEDIATION_IN_PROGRESS`
+- Audit readiness: `NOT_READY`
+- Updated UTC: `2026-06-15T02:00:00Z`
+- Audit baseline commit: `d44da0983b38408575ceedfccb00b909862ff9f0`
+- Audit report commit: `e725e25cffa0d497920e9dad72521ece5b7ae4f2`
 
 ## Verdict
 
-P2.4 is ready for independent pre-production audit. The next phase has not been started.
+P2.4 remediation is partially complete locally, but it is not ready for PASS or release. Independent re-audit is still required, Browser plugin E2E is blocked, and `HUMAN_RELEASE_GATE` remains closed.
 
 ## Evidence
 
 | Area | State | Evidence |
 | --- | --- | --- |
-| CI failure root cause | DOCUMENTED | `docs/P2_4_CI_FAILURE_ROOT_CAUSE.md` |
-| Security failure root cause | DOCUMENTED | `docs/P2_4_SECURITY_FAILURE_ROOT_CAUSE.md` |
-| Local static gates | PASS_LOCAL | Ruff, mypy, pip check, validators |
-| Local tests | PASS_LOCAL | `197 passed, 1 deselected`, total coverage `87.04%` |
-| Local security | PASS_LOCAL | strict security scan active source violations `0`; `pip-audit` no known vulnerabilities |
-| Runtime/browser E2E | PASS_LOCAL | `.\scripts\Test-OpenClawUI.ps1` |
-| GitHub CI | PASS | run `27516318293` on HEAD `286224e` |
-| GitHub Security | PASS | run `27516318322` on HEAD `286224e` |
-| Production gate | BLOCKED | `HUMAN_RELEASE_GATE` not passed |
+| MAIN runtime manager | CLOSED_LOCAL | Unit/integration tests cover graph validation, dispatch, conflict, recovery, pause/resume, duplicate dispatch, and human gate |
+| Market provenance | CLOSED_LOCAL | Tick/bar/event validation enforces realtime class and computed `formula_version` |
+| Pytest temp path | CLOSED_LOCAL | Exact `--basetemp ._tmp\audit-pytest` command passes |
+| Coverage split | CLOSED_LOCAL | Subset tests pass without global coverage gate; full-suite explicit gate remains strict |
+| Root isolation | CLOSED_LOCAL | Validators emit `resolved_project_root`; temp root tests pass |
+| Runtime secret | PARTIAL | Gateway token paths migrated to SecretRef; unrelated local provider key remains in ignored state |
+| OpenClaw doctor | PARTIAL | Command owner/session warnings remediated; Telegram message warning remains |
+| FRED live | PASS_LOCAL | `DGS10` valid and `DTWEXBGS` stale daily macro, credential masked |
+| Browser plugin E2E | BLOCKED | Browser bootstrap fails with Windows sandbox ACL |
+| Production gate | BLOCKED | `HUMAN_RELEASE_GATE_CLOSED` |
 
 ## Required Closure
 
-1. Hand off to an independent pre-production audit agent.
-2. Do not start `PRE_PRODUCTION_AUDIT` in this remediation work package.
-3. Keep production blocked until `HUMAN_RELEASE_GATE` passes.
+1. Push remediation commit and wait for GitHub CI/security.
+2. Resolve Browser plugin sandbox ACL or document externally reproducible blocker.
+3. Resolve or formally accept OpenClaw Telegram message warning with owner/compensating control.
+4. Publish post-push provenance/attestation for PPA-0001.
+5. Run independent re-audit from a clean clone.

@@ -249,7 +249,7 @@ def detect_duplicate_env_files(
     for path in paths.root_dir.rglob(".env"):
         resolved = path.resolve()
         if (
-            any(part in {"_tmp", ".tmp_pytest"} for part in resolved.parts)
+            any(part in {"_tmp", "._tmp", ".tmp_pytest"} for part in resolved.parts)
             and any(part == "state" for part in resolved.parts)
             and resolved.name == ".env"
         ):

@@ -477,4 +477,17 @@ class SQLiteStateStore:
             bar_id=str(payload["bar_id"]),
             data_quality=str(payload["data_quality"]),
             quality_flags=tuple(str(item) for item in payload["quality_flags"]),
+            source=str(payload.get("source", "UNKNOWN")),
+            source_system=str(payload.get("source_system", "UNKNOWN")),
+            fetched_at_utc=(
+                None
+                if payload.get("fetched_at_utc") is None
+                else from_iso_z(str(payload["fetched_at_utc"]))
+            ),
+            realtime_class=str(payload.get("realtime_class", "UNKNOWN")),
+            formula_version=(
+                None
+                if payload.get("formula_version") is None
+                else str(payload["formula_version"])
+            ),
         )

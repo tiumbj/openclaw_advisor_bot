@@ -36,6 +36,16 @@ def test_detects_duplicate_env_file(sample_project: Path) -> None:
         rogue_env.unlink()
 
 
+def test_detect_duplicate_env_ignores_audit_pytest_temp(sample_project: Path) -> None:
+    temp_env = sample_project / "._tmp" / "audit-pytest" / "case" / "project" / "state" / ".env"
+    temp_env.parent.mkdir(parents=True)
+    temp_env.write_text("TEMP_ONLY=true\n", encoding="utf-8")
+
+    report = audit_environment(build_paths(sample_project))
+
+    assert report.valid
+
+
 def test_load_settings_redacts_secrets(sample_project: Path) -> None:
     env_path = sample_project / "state" / ".env"
     env_path.write_text(

@@ -1,7 +1,7 @@
 ---
 name: sample-adequacy-review
 description: Verify statistical sample size before any backtest or performance metric is computed.
-version: 1.2.10
+version: 1.2.11
 owner_agent: statistical-backtest-agent
 purpose: Block under-powered analysis that produces false confidence in strategy performance.
 allowed_inputs:

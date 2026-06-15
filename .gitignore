@@ -4,10 +4,13 @@ venv/
 __pycache__/
 *.py[cod]
 *.egg-info/
+dist/
+build/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
+coverage.json
 htmlcov/
 
 # Runtime state
@@ -21,7 +24,11 @@ data/ledger/
 data/releases/
 logs/
 archive/
-_tmp/
+_tmp/*
+!_tmp/.gitkeep
+._tmp/*
+!._tmp/.gitkeep
+engine/.tmp_pytest/
 workspace/.openclaw/
 
 # Local data

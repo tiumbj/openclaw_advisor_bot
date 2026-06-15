@@ -1,32 +1,35 @@
 {
-  "schema_version": "p2-4-readiness-v3",
-  "package_version": "1.2.10",
+  "schema_version": "p2-4-readiness-v4",
+  "package_version": "1.2.11",
   "phase": "P2.4",
-  "work_package": "WP-P2_4-GPT55-PRE-AUDIT-REMEDIATION",
-  "phase_status": "COMPLETE",
-  "audit_readiness": "READY",
-  "updated_at_utc": "2026-06-15T00:06:00Z",
-  "baseline_commit": "a996540297e43cd0cb540379575ab636f0986b5e",
-  "verdict": "READY_FOR_INDEPENDENT_PRE_PRODUCTION_AUDIT",
+  "work_package": "WP-P2_4-PPA-0001-0010-REMEDIATION",
+  "phase_status": "REMEDIATION_IN_PROGRESS",
+  "audit_readiness": "NOT_READY",
+  "updated_at_utc": "2026-06-15T02:00:00Z",
+  "audit_baseline_commit": "d44da0983b38408575ceedfccb00b909862ff9f0",
+  "audit_report_commit": "e725e25cffa0d497920e9dad72521ece5b7ae4f2",
+  "verdict": "REMEDIATION_IN_PROGRESS_NOT_READY_FOR_PASS",
   "local_evidence": {
     "ruff": "PASS",
     "mypy": "PASS",
     "pip_check": "PASS",
-    "pytest_non_live": "PASS: 197 passed, 1 deselected, total coverage 87.04%",
+    "pytest_non_live_exact": "PASS: 217 passed, 1 deselected",
+    "pytest_unit": "PASS: 174 passed",
+    "pytest_integration": "PASS: 37 passed",
+    "pytest_security": "PASS: 6 passed",
+    "coverage_gate": "PASS: 87.73%",
     "security_scan": "PASS: active_source_violations=0",
     "pip_audit": "PASS: no known vulnerabilities found",
     "package_build": "PASS",
-    "control_ui_e2e": "PASS"
+    "fred_live": "PASS: credential masked, DGS10 VALID, DTWEXBGS STALE"
   },
-  "remote_evidence": {
-    "ci": "PASS: 27516318293",
-    "security": "PASS: 27516318322"
+  "blocked_or_partial": {
+    "browser_plugin_e2e": "BLOCKED: in-app browser bootstrap fails with Windows sandbox ACL apply deny-read ACLs",
+    "openclaw_doctor": "PARTIAL: Telegram route/message warning remains",
+    "runtime_secret_security": "PARTIAL: gateway token SecretRef migrated; unrelated local provider plaintext remains in ignored state",
+    "real_24h_soak": "NOT_RUN"
   },
-  "required_closure": [
-    "Hand off to an independent pre-production audit agent.",
-    "Do not start PRE_PRODUCTION_AUDIT in this remediation work package.",
-    "Keep production blocked until HUMAN_RELEASE_GATE passes."
-  ],
   "next_phase": "PRE_PRODUCTION_AUDIT",
-  "next_phase_started": false
+  "next_phase_started": false,
+  "human_release_gate": "CLOSED"
 }

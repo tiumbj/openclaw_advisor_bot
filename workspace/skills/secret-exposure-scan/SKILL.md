@@ -1,7 +1,7 @@
 ---
 name: secret-exposure-scan
 description: Scan agent outputs, logs, and evidence packets for accidental secret exposure.
-version: 1.2.10
+version: 1.2.11
 owner_agent: security-compliance-agent
 purpose: Prevent API keys, tokens, passwords, and MT5 credentials from appearing in any output.
 allowed_inputs:

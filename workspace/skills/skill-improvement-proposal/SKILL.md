@@ -1,7 +1,7 @@
 ---
 name: skill-improvement-proposal
 description: Skill improvement proposal skill.
-version: 1.2.10
+version: 1.2.11
 owner_agent: system-coder-auditor
 purpose: Propose new skills without self-approval.
 allowed_inputs:

@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 from typing import Any, cast
 
 from .._version import __version__
+from ..constants import REALTIME_CLASS_REALTIME
 from .backend import DiscoveredSymbol
 from .schemas import BarRecord, TickRecord
 from .timeframes import Timeframe, timeframe_delta
@@ -132,6 +133,10 @@ def normalize_tick(
         sequence_id=sequence_id,
         data_quality="valid",
         quality_flags=(),
+        source="mt5_tick",
+        source_system="MetaTrader5",
+        fetched_at_utc=ensure_utc(received_at_utc),
+        realtime_class=REALTIME_CLASS_REALTIME,
     )
 
 
@@ -180,4 +185,8 @@ def normalize_bar(
         bar_id=bar_id,
         data_quality="valid",
         quality_flags=(),
+        source="mt5_bar",
+        source_system="MetaTrader5",
+        fetched_at_utc=ensure_utc(as_of_utc),
+        realtime_class=REALTIME_CLASS_REALTIME,
     )

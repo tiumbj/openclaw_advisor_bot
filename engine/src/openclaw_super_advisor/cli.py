@@ -39,6 +39,14 @@ def _print(payload: dict[str, object]) -> None:
     print(json.dumps(payload, ensure_ascii=True, indent=2))
 
 
+def _base_payload(paths: ProjectPaths) -> dict[str, object]:
+    return {
+        "version": __version__,
+        "phase": PHASE,
+        "resolved_project_root": str(paths.root_dir),
+    }
+
+
 def _is_temp_finding(node: object) -> bool:
     if not isinstance(node, dict):
         return False
@@ -330,8 +338,7 @@ def _publisher_for(paths: ProjectPaths, env_file: Path | None) -> TelegramPublis
 def _main_config_report(paths: ProjectPaths, env_file: Path | None) -> dict[str, object]:
     rendered = _load_rendered_config(paths, env_file)
     return {
-        "version": __version__,
-        "phase": PHASE,
+        **_base_payload(paths),
         "config": rendered,
     }
 
@@ -353,8 +360,7 @@ def main(argv: list[str] | None = None) -> int:
             env_report = audit_environment(paths, env_path=env_file)
             _print(
                 {
-                    "version": __version__,
-                    "phase": PHASE,
+                    **_base_payload(paths),
                     "valid": env_report.valid,
                     "env_path": str(env_report.env_path),
                     "statuses": env_report.statuses,
@@ -368,6 +374,7 @@ def main(argv: list[str] | None = None) -> int:
             skill_report = validate_skills(paths, rendered_config=rendered_config)
             _print(
                 {
+                    "resolved_project_root": str(paths.root_dir),
                     "version": skill_report.version,
                     "phase": skill_report.phase,
                     "valid": skill_report.valid,
@@ -383,8 +390,7 @@ def main(argv: list[str] | None = None) -> int:
             topology_report = validate_agent_topology(rendered_config, paths)
             config_report = validate_rendered_config(rendered_config, paths)
             payload = {
-                "version": __version__,
-                "phase": PHASE,
+                **_base_payload(paths),
                 "valid": topology_report.valid and config_report.valid,
                 "agents": [agent.__dict__ for agent in topology_report.agents],
                 "topology_issues": [issue.__dict__ for issue in topology_report.issues],
@@ -400,8 +406,7 @@ def main(argv: list[str] | None = None) -> int:
             route_report = validate_routing(routing)
             _print(
                 {
-                    "version": __version__,
-                    "phase": PHASE,
+                    **_base_payload(paths),
                     "valid": route_report.valid,
                     "allowed_routes": [list(item) for item in route_report.allowed_routes],
                     "issues": [issue.__dict__ for issue in route_report.issues],

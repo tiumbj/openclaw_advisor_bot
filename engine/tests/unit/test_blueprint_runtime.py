@@ -9,6 +9,7 @@ from openclaw_super_advisor.agent_topology import (
 )
 from openclaw_super_advisor.cli import main
 from openclaw_super_advisor.config import render_config
+from openclaw_super_advisor.constants import REALTIME_CLASS_COMPUTED, REALTIME_CLASS_REALTIME
 from openclaw_super_advisor.events import build_event_envelope, validate_event_envelope
 from openclaw_super_advisor.paths import build_paths
 from openclaw_super_advisor.persistence import (
@@ -83,6 +84,72 @@ def test_event_schema_round_trip() -> None:
     assert report.valid
     assert report.event is not None
     assert report.event["integrity_hash"]
+
+
+def test_numeric_event_requires_provenance() -> None:
+    event = build_event_envelope(
+        "SUPER_POTENTIAL_CANDIDATE_INTERNAL",
+        {"entry": 2310.25},
+        source_component="test-suite",
+        source_agent="super-advisor",
+        evidence_reference="evidence-002",
+    )
+
+    report = validate_event_envelope(event)
+
+    assert not report.valid
+    assert any(issue.path == "provenance.numeric_fields" for issue in report.issues)
+
+
+def test_numeric_event_accepts_market_provenance() -> None:
+    event = build_event_envelope(
+        "SUPER_POTENTIAL_CANDIDATE_INTERNAL",
+        {"entry": 2310.25},
+        source_component="test-suite",
+        source_agent="super-advisor",
+        evidence_reference="evidence-003",
+        provenance={
+            "numeric_fields": {
+                "entry": {
+                    "source": "mt5_tick",
+                    "source_system": "MetaTrader5",
+                    "fetched_at_utc": "2026-06-15T00:00:00Z",
+                    "realtime_class": REALTIME_CLASS_REALTIME,
+                }
+            }
+        },
+    )
+
+    report = validate_event_envelope(event)
+
+    assert report.valid
+
+
+def test_computed_numeric_event_requires_formula_version() -> None:
+    event = build_event_envelope(
+        "SUPER_POTENTIAL_CANDIDATE_INTERNAL",
+        {"score": 72.0},
+        source_component="test-suite",
+        source_agent="super-advisor",
+        evidence_reference="evidence-004",
+        provenance={
+            "numeric_fields": {
+                "score": {
+                    "source": "fx_basket",
+                    "source_system": "python",
+                    "fetched_at_utc": "2026-06-15T00:00:00Z",
+                    "realtime_class": REALTIME_CLASS_COMPUTED,
+                }
+            }
+        },
+    )
+
+    report = validate_event_envelope(event)
+
+    assert not report.valid
+    assert any(
+        issue.rule == "missing" and "formula_version" in issue.path for issue in report.issues
+    )
 
 
 def test_evidence_archive_is_append_only(tmp_path: Path) -> None:

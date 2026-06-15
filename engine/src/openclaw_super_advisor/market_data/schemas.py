@@ -3,11 +3,23 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 
+from ..constants import REALTIME_CLASS_ALLOWED, REALTIME_CLASS_COMPUTED, REALTIME_CLASS_UNKNOWN
+
 
 def _to_iso_z(value: datetime) -> str:
     if value.tzinfo is None:
         raise ValueError("datetime must be timezone-aware UTC")
     return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
+
+
+def _validate_realtime_class(value: str) -> None:
+    if value not in REALTIME_CLASS_ALLOWED:
+        raise ValueError(f"invalid realtime_class: {value}")
+
+
+def _validate_formula(realtime_class: str, formula_version: str | None) -> None:
+    if realtime_class == REALTIME_CLASS_COMPUTED and not formula_version:
+        raise ValueError("COMPUTED market data requires formula_version")
 
 
 @dataclass(frozen=True)
@@ -29,11 +41,25 @@ class TickRecord:
     sequence_id: str
     data_quality: str
     quality_flags: tuple[str, ...]
+    source: str = "UNKNOWN"
+    source_system: str = "UNKNOWN"
+    fetched_at_utc: datetime | None = None
+    realtime_class: str = REALTIME_CLASS_UNKNOWN
+    formula_version: str | None = None
+
+    def __post_init__(self) -> None:
+        _validate_realtime_class(self.realtime_class)
+        _validate_formula(self.realtime_class, self.formula_version)
+        if self.fetched_at_utc is not None:
+            _to_iso_z(self.fetched_at_utc)
 
     def to_dict(self) -> dict[str, object]:
         payload = asdict(self)
         payload["market_time_utc"] = _to_iso_z(self.market_time_utc)
         payload["received_at_utc"] = _to_iso_z(self.received_at_utc)
+        payload["fetched_at_utc"] = (
+            None if self.fetched_at_utc is None else _to_iso_z(self.fetched_at_utc)
+        )
         payload["quality_flags"] = list(self.quality_flags)
         return payload
 
@@ -58,11 +84,25 @@ class BarRecord:
     bar_id: str
     data_quality: str
     quality_flags: tuple[str, ...]
+    source: str = "UNKNOWN"
+    source_system: str = "UNKNOWN"
+    fetched_at_utc: datetime | None = None
+    realtime_class: str = REALTIME_CLASS_UNKNOWN
+    formula_version: str | None = None
+
+    def __post_init__(self) -> None:
+        _validate_realtime_class(self.realtime_class)
+        _validate_formula(self.realtime_class, self.formula_version)
+        if self.fetched_at_utc is not None:
+            _to_iso_z(self.fetched_at_utc)
 
     def to_dict(self) -> dict[str, object]:
         payload = asdict(self)
         payload["open_time_utc"] = _to_iso_z(self.open_time_utc)
         payload["close_time_utc"] = _to_iso_z(self.close_time_utc)
+        payload["fetched_at_utc"] = (
+            None if self.fetched_at_utc is None else _to_iso_z(self.fetched_at_utc)
+        )
         payload["quality_flags"] = list(self.quality_flags)
         return payload
 
