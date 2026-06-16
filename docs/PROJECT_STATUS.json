@@ -33,7 +33,7 @@
   },
   "ci_status": "PASS_REMOTE",
   "security_status": "PASS_REMOTE",
-  "pip_audit_status": "TIMEOUT",
+  "pip_audit_status": "PASS",
   "unsupported_provider_removal_status": "PASS",
   "supported_providers": [
     "openai",
@@ -149,13 +149,13 @@
       "name": "pytest_non_live_clean_venv",
       "command": ".venv-blueprint\\Scripts\\python.exe -m pytest -m \"not live\" -q --basetemp C:\\Temp\\audit_pytest_tmp",
       "status": "PASS",
-      "summary": "293 passed, 1 deselected (272 baseline + 21 new boundary tests; NFD-001 defect eliminated)"
+      "summary": "356 passed, 1 deselected (baseline + Registry control-plane tests in 1.2.15; NFD-001 eliminated, NFD-002 Registry added)"
     },
     {
       "name": "coverage_gate_clean_venv",
-      "command": ".venv-blueprint\\Scripts\\python.exe -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-branch --cov-fail-under=85",
+      "command": "python -m pytest -m \"not live\" --cov=openclaw_super_advisor --cov-branch --cov-fail-under=85",
       "status": "PASS",
-      "summary": "coverage 85.89% (threshold 85.0%)"
+      "summary": "coverage 85.20% (threshold 85.0%)"
     },
     {
       "name": "validate_skills",
@@ -206,7 +206,7 @@
     }
   ],
   "coverage": {
-    "total_percent": 85.81,
+    "total_percent": 85.20,
     "threshold_percent": 85.0,
     "artifact": "docs/P2_COVERAGE.json"
   },

@@ -23,15 +23,15 @@
 | Pip check | PASS_LOCAL | `python -m pip check` |
 | Ruff | PASS_LOCAL | `python -m ruff check .` |
 | Mypy | PASS_LOCAL | `python -m mypy engine\src` |
-| Pytest non-live | PASS_LOCAL | `293 passed, 1 deselected` (272 baseline + 21 new boundary tests; NFD-001 time-sensitivity eliminated) |
-| Coverage gate | PASS_LOCAL | `85.89%` total (threshold 85.0%) |
+| Pytest non-live | PASS_LOCAL | `356 passed, 1 deselected` (baseline + Registry control-plane tests in 1.2.15; NFD-001 eliminated, NFD-002 Registry added) |
+| Coverage gate | PASS_LOCAL | `85.20%` total (threshold 85.0%) |
 | Skill validation | PASS_LOCAL | `openclaw-advisor validate-skills --strict`; `74 skills` |
 | Agent validation | PASS_LOCAL | `openclaw-advisor validate-agents --strict`; `13 agents` |
 | Agent registry validation | PASS_LOCAL | `openclaw-advisor validate-agent-registry --strict`; generated registry in sync with `workspace/agents/*/AGENT.md` |
 | Routing validation | PASS_LOCAL | `openclaw-advisor validate-routing --strict` |
 | Config validation | PASS_LOCAL | `openclaw-advisor render-config --validate --strict` |
 | Security scan | PASS_LOCAL | `openclaw-advisor security-scan --include-history --strict` |
-| Dependency audit | TIMEOUT | `python -m pip_audit`; timed out twice in this workspace window; GitHub dependency scan is authoritative |
+| Dependency audit | PASS_LOCAL | `python -m pip_audit --cache-dir /tmp/pip-audit-cache`; no known vulnerabilities found (local cache permission issue resolved with clean cache dir) |
 | Telegram operator E2E | PASS_LOCAL | Operator flow verified |
 | Market bot outbound | PASS_LOCAL | Outbound channel verified |
 | Browser plugin E2E | BLOCKED_UPSTREAM | Codex-launched `node_repl.exe` fails in Windows sandbox bootstrap with `helper_unknown_error: apply deny-read ACLs` |

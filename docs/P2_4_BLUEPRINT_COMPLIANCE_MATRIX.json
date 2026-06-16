@@ -1,12 +1,12 @@
 {
   "schema_version": "p2-4-blueprint-compliance-v3",
-  "version": "1.2.14",
+  "version": "1.2.15",
   "phase": "P2.4",
-  "work_package": "WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT",
-  "generated_at_utc": "2026-06-15T13:00:00Z",
+  "work_package": "WP-P2_4-NFD002-AGENT-REGISTRY",
+  "generated_at_utc": "2026-06-16T00:00:00Z",
   "baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "report_subject_commit": "adebabca2665ea782bef6146fb27ef7d51b5fb12",
-  "validated_subject_commit": "adebabca2665ea782bef6146fb27ef7d51b5fb12",
+  "report_subject_commit": "cb803ef624e78bdedb6c18f136dfe91c51f97d3b",
+  "validated_subject_commit": "cb803ef624e78bdedb6c18f136dfe91c51f97d3b",
   "containing_commit_resolution": "git log -1 --format=%H -- docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json",
   "provenance_model_version": "non-self-referential-v1",
   "audit_gate": "BROWSER_SANDBOX_BLOCKED_UPSTREAM",
@@ -14,25 +14,27 @@
   "audit_readiness": "NOT_READY",
   "production_gate": "BLOCKED - HUMAN_RELEASE_GATE not passed",
   "summary": {
-    "PASS_LOCAL": 28,
-    "PASS_REMOTE": 1,
+    "PASS_LOCAL": 29,
+    "PASS_REMOTE": 0,
     "BLOCKED_UPSTREAM": 1,
-    "PENDING": 0,
+    "PENDING": 1,
     "FAIL": 0,
-    "total": 30
+    "total": 31
   },
   "remote_gates": {
-    "validated_subject_commit": "adebabca2665ea782bef6146fb27ef7d51b5fb12",
+    "validated_subject_commit": "cb803ef624e78bdedb6c18f136dfe91c51f97d3b",
+    "status": "PENDING_PUSH",
+    "note": "candidate not yet pushed; prior adebabca run_id 27552496423 CI success and 27552496438 security success",
     "ci": {
-      "run_id": 27552496423,
-      "status": "completed",
-      "conclusion": "success"
+      "run_id": null,
+      "status": "pending",
+      "conclusion": "pending"
     },
     "security": {
-      "run_id": 27552496438,
-      "status": "completed",
-      "conclusion": "success",
-      "dependency_vulnerability_scan": "success"
+      "run_id": null,
+      "status": "pending",
+      "conclusion": "pending",
+      "dependency_vulnerability_scan": "pending"
     }
   },
   "items": [
@@ -63,8 +65,9 @@
     {"id": "BC-25", "section": "Windows", "requirement": "Auto-start scripts", "status": "PASS_LOCAL"},
     {"id": "BC-26", "section": "Security", "requirement": "No unsupported provider leakage", "status": "PASS_LOCAL"},
     {"id": "BC-27", "section": "Security", "requirement": "Secret non-exposure", "status": "PASS_LOCAL"},
-    {"id": "BC-28", "section": "Verification", "requirement": "Full non-live suite", "status": "PASS_LOCAL", "summary": "293 passed, 1 deselected (272 baseline + 21 new boundary tests in 1.2.14; NFD-001 eliminated); coverage 85.89%"},
+    {"id": "BC-28", "section": "Verification", "requirement": "Full non-live suite", "status": "PASS_LOCAL", "summary": "356 passed, 1 deselected (baseline + Registry control-plane tests in 1.2.15; NFD-001 eliminated, NFD-002 Registry added); coverage 85.20%"},
     {"id": "BC-29", "section": "Verification", "requirement": "Browser/control UI E2E", "status": "BLOCKED_UPSTREAM", "summary": "Codex sandbox bootstrap fails before browser session"},
-    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PASS_REMOTE", "summary": "Validated subject commit adebabca2665ea782bef6146fb27ef7d51b5fb12; CI 27552496423 success; security 27552496438 success"}
+    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PENDING", "summary": "Candidate cb803ef not yet pushed; prior adebabca validated by CI 27552496423 and security 27552496438"},
+    {"id": "BC-31", "section": "Verification", "requirement": "Agent Registry validation", "status": "PASS_LOCAL", "summary": "schema 1.0.0; hash b82a4d6d75752c1c4d7ffaa774cdc1723b50a8ebdcfb6e9c9f9a1f5e9800f781; 13 agents; 0 issues; deterministic across runs"}
   ]
 }

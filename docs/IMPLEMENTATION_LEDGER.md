@@ -1014,3 +1014,70 @@
   - `Browser sandbox bootstrap remains blocked upstream in Codex runtime.`
   - `HUMAN_RELEASE_GATE remains CLOSED.`
 - Next action: `WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT complete. Await HUMAN_RELEASE_GATE decision for production promotion.`
+
+## Entry 0031
+
+- Timestamp UTC: `2026-06-16T00:00:00Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-NFD002-AGENT-REGISTRY`
+- Operation: `Implemented the authoritative Agent Capability Registry (NFD-002): agent_registry.py (1086 lines), registry_runtime.py (161 lines), extended cli.py with validate-agent-registry / list-agents / describe-agent / route-task / manager-query / pipeline-dry-run commands, extended health.py with full Registry snapshot fields, added config/agent_capability_registry.json generated file, added AGENT.md definitions for all 13 agents (workspace/agents/*), bumped version to 1.2.15, fixed research_cycle.py CycleStep to StrEnum, added .gitattributes LF enforcement, added 658 test lines (test_main_runtime_registry.py) and 290 test lines (test_agent_registry.py), extended test_main_runtime_manager.py and test_main_runtime_e2e.py, extended test_cli.py (8 CLI integration tests). Full deep micro audit performed; all project-controlled findings closed; pip_audit PASS with clean cache dir.`
+- Files changed (source):
+  - `engine/src/openclaw_super_advisor/_version.py` (1.2.14→1.2.15)
+  - `engine/src/openclaw_super_advisor/agent_registry.py` (new, 1086 lines)
+  - `engine/src/openclaw_super_advisor/cli.py` (new commands: validate-agent-registry, list-agents, describe-agent, route-task, manager-query, pipeline-dry-run)
+  - `engine/src/openclaw_super_advisor/config.py` (agentCapabilityRegistry config section)
+  - `engine/src/openclaw_super_advisor/health.py` (Registry snapshot fields)
+  - `engine/src/openclaw_super_advisor/main_agent/__init__.py`
+  - `engine/src/openclaw_super_advisor/main_agent/planner.py`
+  - `engine/src/openclaw_super_advisor/main_agent/registry_runtime.py` (new, 161 lines)
+  - `engine/src/openclaw_super_advisor/main_agent/router.py`
+  - `engine/src/openclaw_super_advisor/main_agent/runtime.py`
+  - `engine/src/openclaw_super_advisor/paths.py` (agent_registry_path)
+  - `engine/src/openclaw_super_advisor/research/research_cycle.py` (StrEnum fix)
+  - `config/agent_capability_registry.json` (new generated file)
+  - `.gitattributes` (LF enforcement)
+  - `workspace/agents/*/AGENT.md` (13 AGENT.md files)
+  - `workspace/skills/*/SKILL.md` (version bump to 1.2.15)
+  - `workspace/AGENTS.md`
+  - `scripts/startup/Start-AdvisorStack.ps1`
+  - `docs/ARCHITECTURE.md`
+- Files changed (tests):
+  - `engine/tests/conftest.py`
+  - `engine/tests/integration/test_cli.py`
+  - `engine/tests/integration/test_main_runtime_e2e.py`
+  - `engine/tests/unit/test_agent_registry.py` (new, 290 lines)
+  - `engine/tests/unit/test_health.py`
+  - `engine/tests/unit/test_main_runtime_manager.py`
+  - `engine/tests/unit/test_main_runtime_registry.py` (new, 658 lines)
+- Tests run:
+  - `python -m pip check` → PASS: no broken requirements
+  - `python -m ruff check engine/ workspace/ scripts/ config/` → PASS: all checks passed
+  - `python -m mypy engine/src` → PASS: no issues in 59 source files
+  - `python -m pytest -m "not live" -q --basetemp C:/Temp/audit-phase-b-primary` → PASS: 356 passed, 1 deselected
+  - `python -m pytest -m "not live" --cov=openclaw_super_advisor --cov-branch --cov-fail-under=85` → PASS: 85.20%
+  - `openclaw-advisor validate-agent-registry --strict` → PASS: valid=True, status=AGENT_REGISTRY_READY, hash=b82a4d6d..., 13 agents, 0 issues
+  - `openclaw-advisor validate-skills --strict` → PASS: 74 skills
+  - `openclaw-advisor validate-agents --strict` → PASS: 13 agents
+  - `openclaw-advisor validate-routing --strict` → PASS: 11 routes
+  - `openclaw-advisor render-config --validate --strict` → PASS: valid=True
+  - `openclaw-advisor security-scan --include-history --strict` → PASS: active_source_violations=0
+  - `openclaw-advisor health` → PASS: registry_loaded_by_main_runtime=true, hash=b82a4d6d..., agent_count=13
+  - `openclaw-advisor route-task --task-type code_implementation` → selected_agent=blueprint-coder
+  - `openclaw-advisor route-task --task-type security_review` → selected_agent=security-compliance-agent
+  - `openclaw-advisor route-task --task-type unknown_task_type` → selected_agent=null (fail closed)
+  - `python -m pytest engine/tests/integration/test_cli.py -q` → PASS: 8 passed
+  - `python -m build --outdir C:/Temp/audit-build-dist` → PASS: wheel and sdist built successfully
+  - Isolated worktree `C:\Temp\openclaw_isolated_cb803ef` (HEAD=cb803ef): 356 passed, 1 deselected; coverage 85.20%; all CLI validations PASS
+  - Wheel smoke test: version 1.2.15, validate-agent-registry valid=True, route-task code_implementation→blueprint-coder
+  - `python -m pip_audit --cache-dir /tmp/pip-audit-cache -l --timeout 15` → PASS: no known vulnerabilities found (exit code 0)
+  - Hash determinism: two independent builds → b82a4d6d75752c1c4d7ffaa774cdc1723b50a8ebdcfb6e9c9f9a1f5e9800f781 (identical)
+- Result: `PASS_LOCAL`
+- Commit: `PENDING_PUSH`
+- Remote push: `PENDING`
+- CI result: `PENDING`
+- Security result: `PENDING`
+- Known defects:
+  - `Browser sandbox bootstrap remains blocked upstream in Codex runtime.`
+  - `HUMAN_RELEASE_GATE remains CLOSED.`
+  - `NFD-002 remains OPEN pending exact-final-SHA CI and Security workflow completion.`
+- Next action: `Push candidate, verify CI and Security workflows on exact final SHA, confirm routing evidence, close NFD-002 in terminal report.`
