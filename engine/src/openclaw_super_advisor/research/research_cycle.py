@@ -12,11 +12,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 
-class CycleStep(str, Enum):
+class CycleStep(StrEnum):
     COLLECT_EVIDENCE = "COLLECT_EVIDENCE"
     FORM_HYPOTHESIS = "FORM_HYPOTHESIS"
     DESIGN_EXPERIMENT = "DESIGN_EXPERIMENT"
