@@ -290,6 +290,10 @@ def _definition_source_from_path(path: Path, project_root: Path) -> str:
     return path.resolve().relative_to(project_root.resolve()).as_posix()
 
 
+def _project_relative_path(path: Path, project_root: Path) -> str:
+    return path.resolve().relative_to(project_root.resolve()).as_posix()
+
+
 def parse_agent_markdown(path: Path, *, project_root: Path) -> AgentCapabilityRecord:
     frontmatter_text, _ = _split_frontmatter(path.read_text(encoding="utf-8"), path)
     loaded = yaml.safe_load(frontmatter_text)
@@ -369,11 +373,13 @@ def build_agent_registry(paths: ProjectPaths) -> AgentCapabilityRegistry:
     for agent_id in RUNTIME_AGENT_IDS:
         agent_path = paths.agents_dir / agent_id / "AGENT.md"
         agents.append(parse_agent_markdown(agent_path, project_root=paths.root_dir))
+    generated_from = _project_relative_path(paths.agents_dir, paths.root_dir)
+    generated_path = _project_relative_path(paths.agent_registry_path, paths.root_dir)
     payload = {
         "schema_version": AGENT_REGISTRY_SCHEMA_VERSION,
         "registry_version": __version__,
-        "generated_from": str(paths.agents_dir).replace("\\", "/"),
-        "generated_path": str(paths.agent_registry_path).replace("\\", "/"),
+        "generated_from": generated_from,
+        "generated_path": generated_path,
         "generated_by": "openclaw-advisor validate-agent-registry --write",
         "agent_count": len(agents),
         "skill_count": sum(len(agent.owned_skills) for agent in agents),
@@ -384,8 +390,8 @@ def build_agent_registry(paths: ProjectPaths) -> AgentCapabilityRegistry:
         schema_version=AGENT_REGISTRY_SCHEMA_VERSION,
         registry_version=__version__,
         registry_hash=registry_hash,
-        generated_from=str(paths.agents_dir).replace("\\", "/"),
-        generated_path=str(paths.agent_registry_path).replace("\\", "/"),
+        generated_from=generated_from,
+        generated_path=generated_path,
         generated_by="openclaw-advisor validate-agent-registry --write",
         agent_count=len(agents),
         skill_count=sum(len(agent.owned_skills) for agent in agents),

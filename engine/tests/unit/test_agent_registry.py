@@ -44,6 +44,8 @@ def test_registry_definition_sources_are_workspace_relative(sample_project: Path
 
     assert all(not Path(agent.definition_source).is_absolute() for agent in registry.agents)
     assert all(agent.definition_source.startswith("workspace/agents/") for agent in registry.agents)
+    assert registry.generated_from == "workspace/agents"
+    assert registry.generated_path == "config/agent_capability_registry.json"
 
 
 @pytest.mark.parametrize(

@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
   "registry_version": "1.2.15",
-  "registry_hash": "8912ee6b61ebbc8cfb71125fd1e907fd69c633515409f927d73c978894deb58b",
-  "generated_from": "C:/Data/OpenClawSuperAdvisor/workspace/agents",
-  "generated_path": "C:/Data/OpenClawSuperAdvisor/config/agent_capability_registry.json",
+  "registry_hash": "b82a4d6d75752c1c4d7ffaa774cdc1723b50a8ebdcfb6e9c9f9a1f5e9800f781",
+  "generated_from": "workspace/agents",
+  "generated_path": "config/agent_capability_registry.json",
   "generated_by": "openclaw-advisor validate-agent-registry --write",
   "agent_count": 13,
   "skill_count": 74,
