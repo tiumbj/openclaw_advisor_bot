@@ -992,7 +992,8 @@ class ManagerRegistryRuntime:
             if not allowed:
                 rejected.append({"agent_id": candidate.agent_id, "reason": reason})
                 continue
-            safety = tuple(candidate.forbidden_actions[:3]) + tuple(
+            safety = (
+                *candidate.forbidden_actions[:3],
                 f"allowed_tools={','.join(candidate.allowed_tools)}",
             )
             return RoutingDecision(

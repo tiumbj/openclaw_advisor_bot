@@ -288,3 +288,17 @@ def test_agents_cannot_self_approve(sample_project: Path) -> None:
     assert runtime.get_agent_capability("blueprint-coder").self_approval_allowed is False
     assert runtime.get_agent_capability("system-coder-auditor").self_approval_allowed is False
     assert runtime.get_agent_capability("security-compliance-agent").self_approval_allowed is False
+
+
+def test_route_task_safety_restrictions_are_strings(sample_project: Path) -> None:
+    runtime = _runtime(sample_project)
+    decision = runtime.route_task("code_implementation")
+
+    assert decision.selected_agent is not None
+    # Each element must be a whole string, not a single character from tuple(string) decomposition.
+    for item in decision.safety_restrictions:
+        assert len(item) > 1, (
+            f"safety_restrictions decomposed to chars: {decision.safety_restrictions}"
+        )
+    tools_items = [s for s in decision.safety_restrictions if s.startswith("allowed_tools=")]
+    assert len(tools_items) == 1, "exactly one allowed_tools summary expected"

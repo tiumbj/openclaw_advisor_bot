@@ -5,8 +5,8 @@
   "work_package": "WP-P2_4-NFD002-AGENT-REGISTRY",
   "generated_at_utc": "2026-06-16T00:00:00Z",
   "baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "report_subject_commit": "cb803ef624e78bdedb6c18f136dfe91c51f97d3b",
-  "validated_subject_commit": "cb803ef624e78bdedb6c18f136dfe91c51f97d3b",
+  "report_subject_commit": "4274a0fc203ef173f11cd91c375d730cac6605a0",
+  "validated_subject_commit": "4274a0fc203ef173f11cd91c375d730cac6605a0",
   "containing_commit_resolution": "git log -1 --format=%H -- docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json",
   "provenance_model_version": "non-self-referential-v1",
   "audit_gate": "BROWSER_SANDBOX_BLOCKED_UPSTREAM",
@@ -22,7 +22,7 @@
     "total": 31
   },
   "remote_gates": {
-    "validated_subject_commit": "cb803ef624e78bdedb6c18f136dfe91c51f97d3b",
+    "validated_subject_commit": "4274a0fc203ef173f11cd91c375d730cac6605a0",
     "status": "PENDING_PUSH",
     "note": "candidate not yet pushed; prior adebabca run_id 27552496423 CI success and 27552496438 security success",
     "ci": {
@@ -65,9 +65,9 @@
     {"id": "BC-25", "section": "Windows", "requirement": "Auto-start scripts", "status": "PASS_LOCAL"},
     {"id": "BC-26", "section": "Security", "requirement": "No unsupported provider leakage", "status": "PASS_LOCAL"},
     {"id": "BC-27", "section": "Security", "requirement": "Secret non-exposure", "status": "PASS_LOCAL"},
-    {"id": "BC-28", "section": "Verification", "requirement": "Full non-live suite", "status": "PASS_LOCAL", "summary": "356 passed, 1 deselected (baseline + Registry control-plane tests in 1.2.15; NFD-001 eliminated, NFD-002 Registry added); coverage 85.20%"},
+    {"id": "BC-28", "section": "Verification", "requirement": "Full non-live suite", "status": "PASS_LOCAL", "summary": "357 passed, 1 deselected (baseline + Registry control-plane tests + SCA-001 safety_restrictions regression test in 1.2.15; NFD-001 eliminated, NFD-002 Registry added); coverage 85.20%"},
     {"id": "BC-29", "section": "Verification", "requirement": "Browser/control UI E2E", "status": "BLOCKED_UPSTREAM", "summary": "Codex sandbox bootstrap fails before browser session"},
-    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PENDING", "summary": "Candidate cb803ef not yet pushed; prior adebabca validated by CI 27552496423 and security 27552496438"},
+    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PENDING", "summary": "Candidate 4274a0fc not yet pushed; prior adebabca validated by CI 27552496423 and security 27552496438"},
     {"id": "BC-31", "section": "Verification", "requirement": "Agent Registry validation", "status": "PASS_LOCAL", "summary": "schema 1.0.0; hash b82a4d6d75752c1c4d7ffaa774cdc1723b50a8ebdcfb6e9c9f9a1f5e9800f781; 13 agents; 0 issues; deterministic across runs"}
   ]
 }

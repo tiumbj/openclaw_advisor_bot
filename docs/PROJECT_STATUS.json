@@ -10,8 +10,8 @@
   "current_work_package": "WP-P2_4-NFD002-AGENT-REGISTRY",
   "updated_at_utc": "2026-06-16T00:00:00Z",
   "audit_baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
-  "report_subject_commit": "adebabca2665ea782bef6146fb27ef7d51b5fb12",
-  "validated_subject_commit": "adebabca2665ea782bef6146fb27ef7d51b5fb12",
+  "report_subject_commit": "4274a0fc203ef173f11cd91c375d730cac6605a0",
+  "validated_subject_commit": "4274a0fc203ef173f11cd91c375d730cac6605a0",
   "containing_commit_resolution": "git log -1 --format=%H -- docs/PROJECT_STATUS.json",
   "provenance_model_version": "non-self-referential-v1",
   "production_gate": "HUMAN_RELEASE_GATE_CLOSED",
@@ -149,7 +149,7 @@
       "name": "pytest_non_live_clean_venv",
       "command": ".venv-blueprint\\Scripts\\python.exe -m pytest -m \"not live\" -q --basetemp C:\\Temp\\audit_pytest_tmp",
       "status": "PASS",
-      "summary": "356 passed, 1 deselected (baseline + Registry control-plane tests in 1.2.15; NFD-001 eliminated, NFD-002 Registry added)"
+      "summary": "357 passed, 1 deselected (baseline + Registry control-plane tests + SCA-001 regression test in 1.2.15; NFD-001 eliminated, NFD-002 Registry added)"
     },
     {
       "name": "coverage_gate_clean_venv",

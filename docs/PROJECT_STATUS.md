@@ -9,8 +9,8 @@
 - Audit gate: `BROWSER_SANDBOX_BLOCKED_UPSTREAM`
 - Last update UTC: `2026-06-16T00:00:00Z`
 - Audit baseline commit: `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a`
-- Report subject commit: `adebabca2665ea782bef6146fb27ef7d51b5fb12`
-- Validated subject commit: `adebabca2665ea782bef6146fb27ef7d51b5fb12`
+- Report subject commit: `4274a0fc203ef173f11cd91c375d730cac6605a0`
+- Validated subject commit: `4274a0fc203ef173f11cd91c375d730cac6605a0`
 - Containing commit: resolve with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`
 - Provenance model: `non-self-referential-v1`
 - Production gate: `HUMAN_RELEASE_GATE_CLOSED`
@@ -23,7 +23,7 @@
 | Pip check | PASS_LOCAL | `python -m pip check` |
 | Ruff | PASS_LOCAL | `python -m ruff check .` |
 | Mypy | PASS_LOCAL | `python -m mypy engine\src` |
-| Pytest non-live | PASS_LOCAL | `356 passed, 1 deselected` (baseline + Registry control-plane tests in 1.2.15; NFD-001 eliminated, NFD-002 Registry added) |
+| Pytest non-live | PASS_LOCAL | `357 passed, 1 deselected` (baseline + Registry control-plane tests + SCA-001 regression test in 1.2.15; NFD-001 eliminated, NFD-002 Registry added) |
 | Coverage gate | PASS_LOCAL | `85.20%` total (threshold 85.0%) |
 | Skill validation | PASS_LOCAL | `openclaw-advisor validate-skills --strict`; `74 skills` |
 | Agent validation | PASS_LOCAL | `openclaw-advisor validate-agents --strict`; `13 agents` |
@@ -59,4 +59,4 @@
 
 ## Current Truth
 
-Browser sandbox failure is classified as `BROWSER_SANDBOX_BLOCKED_UPSTREAM`, `UPSTREAM_CODEX_RUNTIME_DEFECT`, and `HELPER_ERROR_PROPAGATION_BUG`. Full soak is `NOT_READY_FOR_SOAK`. Remote validation is scoped to subject commit `adebabca2665ea782bef6146fb27ef7d51b5fb12`. This document cannot embed its own containing commit SHA; resolve externally with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`.
+Browser sandbox failure is classified as `BROWSER_SANDBOX_BLOCKED_UPSTREAM`, `UPSTREAM_CODEX_RUNTIME_DEFECT`, and `HELPER_ERROR_PROPAGATION_BUG`. Full soak is `NOT_READY_FOR_SOAK`. Remote validation is scoped to subject commit `4274a0fc203ef173f11cd91c375d730cac6605a0`. This document cannot embed its own containing commit SHA; resolve externally with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`.

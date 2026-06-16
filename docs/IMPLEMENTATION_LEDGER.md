@@ -1081,3 +1081,41 @@
   - `HUMAN_RELEASE_GATE remains CLOSED.`
   - `NFD-002 remains OPEN pending exact-final-SHA CI and Security workflow completion.`
 - Next action: `Push candidate, verify CI and Security workflows on exact final SHA, confirm routing evidence, close NFD-002 in terminal report.`
+
+## Entry 0032
+
+- Timestamp UTC: `2026-06-16T01:00:00Z`
+- Phase: `P2.4`
+- Work Package: `WP-P2_4-NFD002-AGENT-REGISTRY`
+- Operation: `Independent System Coder Auditor (SCA) review of candidate 4274a0f found SCA-001: tuple(f-string) decomposition bug in ManagerRegistryRuntime.route_task() — safety_restrictions field contained individual characters instead of whole strings because Python's tuple(iterable) iterates a string character-by-character. Fixed by using (*candidate.forbidden_actions[:3], f"allowed_tools=...") iterable-unpacking syntax. Added regression test test_route_task_safety_restrictions_are_strings to cover the bug. Confirmed no routing correctness or security impact (field was reporting-only). Independent Security Compliance Agent review confirmed: pass=true, active_source_violations=0, no secrets in working tree or history, pip_audit exit 0 no known vulnerabilities, advisor_only=true, execution_allowed=false enforced at constants and schema level. Full non-live suite now 357 passed, 1 deselected. Ruff clean (RUF005 fixed by unpacking, E501 fixed by line wrapping). Mypy clean: no issues in 59 source files.`
+- Files changed (source):
+  - `engine/src/openclaw_super_advisor/agent_registry.py` (SCA-001 tuple decomposition fix: line 995-997)
+- Files changed (tests):
+  - `engine/tests/unit/test_agent_registry.py` (new test: test_route_task_safety_restrictions_are_strings)
+- Files changed (docs):
+  - `docs/P2_4_PREPRODUCTION_READINESS_REPORT.json` (report_subject_commit→4274a0f, pytest count 356→357)
+  - `docs/P2_4_BLUEPRINT_COMPLIANCE_MATRIX.json` (report_subject_commit→4274a0f, BC-28 count 356→357)
+  - `docs/PROJECT_STATUS.json` (report_subject_commit→4274a0f, pytest count 356→357)
+  - `docs/PROJECT_STATUS.md` (report_subject_commit→4274a0f, pytest count 356→357)
+  - `docs/IMPLEMENTATION_LEDGER.md` (this entry)
+- Tests run:
+  - `python -m ruff check engine/src/.../agent_registry.py engine/tests/.../test_agent_registry.py` → PASS: all checks passed (RUF005 fixed via unpacking, E501 fixed via line wrap)
+  - `python -m mypy engine/src` → PASS: no issues in 59 source files
+  - `pytest engine/tests/unit/test_agent_registry.py::test_route_task_safety_restrictions_are_strings -v` → PASS: 1 passed
+  - Full non-live suite: `python -m pytest -m "not live" -q --basetemp C:/Temp/audit_sca_fix2` → PASS: 357 passed, 1 deselected
+  - `openclaw-advisor validate-agent-registry --strict` → PASS: valid=True, hash=b82a4d6d..., 13 agents, 0 issues
+  - `openclaw-advisor validate-routing --strict` → PASS: valid=True
+  - `openclaw-advisor security-scan --include-history --strict` → PASS: pass=true, active_source_violations=0, secrets=0
+  - `python -m pip_audit --cache-dir C:/Temp/pip-audit-sca-cache` → PASS: exit 0, no known vulnerabilities
+- SCA review verdict: `PASS — 1 project-controlled finding found (SCA-001) and CLOSED inline; no further findings`
+- Security compliance review verdict: `PASS — pass=true, active_source_violations=0, advisor_only enforced, no secrets, pip_audit clean`
+- Result: `PASS_LOCAL`
+- Commit: `PENDING_PUSH`
+- Remote push: `PENDING`
+- CI result: `PENDING`
+- Security result: `PENDING`
+- Known defects:
+  - `Browser sandbox bootstrap remains blocked upstream in Codex runtime.`
+  - `HUMAN_RELEASE_GATE remains CLOSED.`
+  - `NFD-002 remains OPEN pending exact-final-SHA CI and Security workflow completion.`
+- Next action: `Push final candidate, verify CI and Security workflows on exact final SHA, write final Thai-language report covering sections A–M, close NFD-002.`
