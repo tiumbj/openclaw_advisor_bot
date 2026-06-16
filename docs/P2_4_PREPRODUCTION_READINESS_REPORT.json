@@ -24,7 +24,7 @@
     "validate_routing": "PASS",
     "render_config": "PASS",
     "security_scan": "PASS: active_source_violations=0",
-    "remote_validation": "PENDING_PUSH: 4274a0fc203ef173f11cd91c375d730cac6605a0 not yet pushed; prior adebabca CI 27552496423/security 27552496438 success",
+    "remote_validation": "PASS_REMOTE: 7a996e1b3b1d259bcdc376690510f943e0177bef pushed; CI 27601171398 success; security 27601171429 success",
     "pip_audit": "PASS: no known vulnerabilities found (local cache permission error resolved with clean cache dir; exit code 0)",
     "telegram_operator_e2e": "PASS_LOCAL",
     "market_bot_outbound": "PASS_LOCAL"

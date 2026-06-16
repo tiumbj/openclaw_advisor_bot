@@ -15,26 +15,26 @@
   "production_gate": "BLOCKED - HUMAN_RELEASE_GATE not passed",
   "summary": {
     "PASS_LOCAL": 29,
-    "PASS_REMOTE": 0,
+    "PASS_REMOTE": 1,
     "BLOCKED_UPSTREAM": 1,
-    "PENDING": 1,
+    "PENDING": 0,
     "FAIL": 0,
     "total": 31
   },
   "remote_gates": {
-    "validated_subject_commit": "4274a0fc203ef173f11cd91c375d730cac6605a0",
-    "status": "PENDING_PUSH",
-    "note": "candidate not yet pushed; prior adebabca run_id 27552496423 CI success and 27552496438 security success",
+    "validated_subject_commit": "7a996e1b3b1d259bcdc376690510f943e0177bef",
+    "status": "PASS_REMOTE",
+    "note": "final candidate pushed and both workflows completed success",
     "ci": {
-      "run_id": null,
-      "status": "pending",
-      "conclusion": "pending"
+      "run_id": 27601171398,
+      "status": "completed",
+      "conclusion": "success"
     },
     "security": {
-      "run_id": null,
-      "status": "pending",
-      "conclusion": "pending",
-      "dependency_vulnerability_scan": "pending"
+      "run_id": 27601171429,
+      "status": "completed",
+      "conclusion": "success",
+      "dependency_vulnerability_scan": "success"
     }
   },
   "items": [
@@ -67,7 +67,7 @@
     {"id": "BC-27", "section": "Security", "requirement": "Secret non-exposure", "status": "PASS_LOCAL"},
     {"id": "BC-28", "section": "Verification", "requirement": "Full non-live suite", "status": "PASS_LOCAL", "summary": "357 passed, 1 deselected (baseline + Registry control-plane tests + SCA-001 safety_restrictions regression test in 1.2.15; NFD-001 eliminated, NFD-002 Registry added); coverage 85.20%"},
     {"id": "BC-29", "section": "Verification", "requirement": "Browser/control UI E2E", "status": "BLOCKED_UPSTREAM", "summary": "Codex sandbox bootstrap fails before browser session"},
-    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PENDING", "summary": "Candidate 4274a0fc not yet pushed; prior adebabca validated by CI 27552496423 and security 27552496438"},
+    {"id": "BC-30", "section": "Verification", "requirement": "Push and remote gates", "status": "PASS_REMOTE", "summary": "7a996e1b pushed; CI 27601171398 success; security 27601171429 success; NFD-002 CLOSED_REMOTE"},
     {"id": "BC-31", "section": "Verification", "requirement": "Agent Registry validation", "status": "PASS_LOCAL", "summary": "schema 1.0.0; hash b82a4d6d75752c1c4d7ffaa774cdc1723b50a8ebdcfb6e9c9f9a1f5e9800f781; 13 agents; 0 issues; deterministic across runs"}
   ]
 }

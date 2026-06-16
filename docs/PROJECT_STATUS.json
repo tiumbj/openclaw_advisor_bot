@@ -18,14 +18,14 @@
   "next_phase": "PRE_PRODUCTION_AUDIT",
   "next_phase_started": false,
   "remote_validation": {
-    "validated_subject_commit": "adebabca2665ea782bef6146fb27ef7d51b5fb12",
+    "validated_subject_commit": "7a996e1b3b1d259bcdc376690510f943e0177bef",
     "ci": {
-      "run_id": 27552496423,
+      "run_id": 27601171398,
       "status": "completed",
       "conclusion": "success"
     },
     "security": {
-      "run_id": 27552496438,
+      "run_id": 27601171429,
       "status": "completed",
       "conclusion": "success",
       "dependency_vulnerability_scan": "success"
@@ -212,7 +212,7 @@
   },
   "findings": {
     "NFD-001": "CLOSED_LOCAL",
-    "NFD-002": "OPEN",
+    "NFD-002": "CLOSED_REMOTE",
     "PPA-0001": "CLOSED_LOCAL",
     "PPA-0002": "CLOSED_LOCAL",
     "PPA-0003": "CLOSED_LOCAL",

@@ -37,7 +37,7 @@
 | Browser plugin E2E | BLOCKED_UPSTREAM | Codex-launched `node_repl.exe` fails in Windows sandbox bootstrap with `helper_unknown_error: apply deny-read ACLs` |
 | Browser root cause | UPSTREAM_CODEX_RUNTIME_DEFECT | Failure occurs before user JavaScript / browser session |
 | Browser failure subclass | HELPER_ERROR_PROPAGATION_BUG | Native error is collapsed to generic helper failure |
-| GitHub CI/security | PASS_REMOTE | Validated subject commit `adebabca2665ea782bef6146fb27ef7d51b5fb12`; CI `27552496423` success; security `27552496438` success |
+| GitHub CI/security | PASS_REMOTE | Validated subject commit `7a996e1b3b1d259bcdc376690510f943e0177bef`; CI `27601171398` success; security `27601171429` success |
 | HUMAN_RELEASE_GATE | CLOSED | Required before production promotion |
 
 ## Findings
@@ -45,7 +45,7 @@
 | Finding | Status | Evidence |
 | --- | --- | --- |
 | NFD-001 | CLOSED_LOCAL | `consume_event()` `now_utc` parameter injection; 21 deterministic boundary tests in `test_event_consumer_clock.py` |
-| NFD-002 | OPEN | Authoritative Agent Capability Registry implemented and validated locally; full non-live suite / CI / security rerun still pending |
+| NFD-002 | CLOSED_REMOTE | Authoritative Agent Capability Registry implemented; 357 non-live tests pass; CI `27601171398` and security `27601171429` success on SHA `7a996e1b`; SCA-001 tuple decomposition bug found and closed inline |
 | PPA-0001 | CLOSED_LOCAL | Non-self-referential provenance model adopted; `observed_remote_head`/`implementation_commit`/`status_report_commit`/`remediation_commit` removed |
 | PPA-0002 | CLOSED_LOCAL | Gateway token paths are reconciled for the current runtime state |
 | PPA-0003 | CLOSED_LOCAL | MAIN runtime manager tests remain green |

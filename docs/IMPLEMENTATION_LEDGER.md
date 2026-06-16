@@ -1109,13 +1109,13 @@
   - `python -m pip_audit --cache-dir C:/Temp/pip-audit-sca-cache` → PASS: exit 0, no known vulnerabilities
 - SCA review verdict: `PASS — 1 project-controlled finding found (SCA-001) and CLOSED inline; no further findings`
 - Security compliance review verdict: `PASS — pass=true, active_source_violations=0, advisor_only enforced, no secrets, pip_audit clean`
-- Result: `PASS_LOCAL`
-- Commit: `PENDING_PUSH`
-- Remote push: `PENDING`
-- CI result: `PENDING`
-- Security result: `PENDING`
+- Result: `PASS_REMOTE`
+- Commit: `7a996e1b3b1d259bcdc376690510f943e0177bef`
+- Remote push: `COMPLETE — 87151bf..7a996e1 main -> main`
+- CI result: `PASS — run_id 27601171398, status=completed, conclusion=success, headSha=7a996e1b3b1d259bcdc376690510f943e0177bef`
+- Security result: `PASS — run_id 27601171429, status=completed, conclusion=success, headSha=7a996e1b3b1d259bcdc376690510f943e0177bef`
 - Known defects:
   - `Browser sandbox bootstrap remains blocked upstream in Codex runtime.`
   - `HUMAN_RELEASE_GATE remains CLOSED.`
-  - `NFD-002 remains OPEN pending exact-final-SHA CI and Security workflow completion.`
-- Next action: `Push final candidate, verify CI and Security workflows on exact final SHA, write final Thai-language report covering sections A–M, close NFD-002.`
+- NFD-002 status: `CLOSED_REMOTE`
+- Next action: `Write final Thai-language NFD-002 closure report covering sections A–M.`
