@@ -39,6 +39,13 @@ def test_registry_validation_is_ready(sample_project: Path) -> None:
     assert report.registry_config_mismatch_count == 0
 
 
+def test_registry_definition_sources_are_workspace_relative(sample_project: Path) -> None:
+    registry = build_agent_registry(build_paths(sample_project))
+
+    assert all(not Path(agent.definition_source).is_absolute() for agent in registry.agents)
+    assert all(agent.definition_source.startswith("workspace/agents/") for agent in registry.agents)
+
+
 @pytest.mark.parametrize(
     ("task_type", "expected_agent"),
     [

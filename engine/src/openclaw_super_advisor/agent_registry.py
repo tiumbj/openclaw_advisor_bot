@@ -286,7 +286,11 @@ def _safe_relative_to(path: Path, root: Path) -> bool:
         return False
 
 
-def parse_agent_markdown(path: Path) -> AgentCapabilityRecord:
+def _definition_source_from_path(path: Path, project_root: Path) -> str:
+    return path.resolve().relative_to(project_root.resolve()).as_posix()
+
+
+def parse_agent_markdown(path: Path, *, project_root: Path) -> AgentCapabilityRecord:
     frontmatter_text, _ = _split_frontmatter(path.read_text(encoding="utf-8"), path)
     loaded = yaml.safe_load(frontmatter_text)
     if not isinstance(loaded, dict):
@@ -305,7 +309,7 @@ def parse_agent_markdown(path: Path) -> AgentCapabilityRecord:
     ]
     if missing:
         raise ValueError(f"{path} frontmatter missing fields: {', '.join(missing)}")
-    metadata["definition_source"] = str(path).replace("\\", "/")
+    metadata["definition_source"] = _definition_source_from_path(path, project_root)
     metadata["definition_hash"] = _agent_definition_hash(metadata)
     owned_skills = tuple(cast(list[str], metadata.get("owned_skills", [])))
     return AgentCapabilityRecord(
@@ -351,7 +355,7 @@ def parse_agent_markdown(path: Path) -> AgentCapabilityRecord:
         self_approval_allowed=_as_bool(
             metadata.get("self_approval_allowed"), "self_approval_allowed", path
         ),
-        definition_source=str(path).replace("\\", "/"),
+        definition_source=_definition_source_from_path(path, project_root),
         definition_version=_as_string(
             metadata.get("definition_version"), "definition_version", path
         ),
@@ -364,7 +368,7 @@ def build_agent_registry(paths: ProjectPaths) -> AgentCapabilityRegistry:
     agents: list[AgentCapabilityRecord] = []
     for agent_id in RUNTIME_AGENT_IDS:
         agent_path = paths.agents_dir / agent_id / "AGENT.md"
-        agents.append(parse_agent_markdown(agent_path))
+        agents.append(parse_agent_markdown(agent_path, project_root=paths.root_dir))
     payload = {
         "schema_version": AGENT_REGISTRY_SCHEMA_VERSION,
         "registry_version": __version__,
@@ -522,6 +526,8 @@ def _validate_generated_registry_payload(
             )
         else:
             source_path = Path(definition_source)
+            if not source_path.is_absolute():
+                source_path = paths.root_dir / source_path
             if ".." in source_path.parts:
                 issues.append(
                     AgentRegistryIssue(
