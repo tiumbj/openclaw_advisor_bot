@@ -72,6 +72,7 @@ if (Test-Path $GatewayScript) {
 Write-Host "$(Get-Date -Format 'yyyy-MM-ddTHH:mm:ssZ') [INFO] Starting Python engine..."
 $EngineArgs = @(
     "-m", "openclaw_super_advisor",
+    "serve",
     "--env-file", $EnvFile,
     "--project-root", $ProjectRoot,
     "--resume"

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
+import time
 from datetime import UTC, datetime
 from io import StringIO
 from pathlib import Path
@@ -208,6 +210,41 @@ def test_cli_validation_commands(sample_project: Path) -> None:
     assert provider_policy["phase"] == PHASE
     assert provider_policy["policy"]["status"] == "BLOCKED"
     assert provider_policy["policy"]["reason"] == "NO_ENABLED_PROVIDER"
+
+
+def test_cli_serve_runtime_stays_alive_until_shutdown(sample_project: Path) -> None:
+    root = str(sample_project)
+    env_path = str(sample_project / "state" / ".env")
+    command = [
+        sys.executable,
+        "-m",
+        "openclaw_super_advisor",
+        "serve",
+        "--project-root",
+        root,
+        "--env-file",
+        env_path,
+        "--resume",
+    ]
+    proc = subprocess.Popen(
+        command,
+        cwd=root,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        deadline = time.monotonic() + 10.0
+        while proc.poll() is None and time.monotonic() < deadline:
+            time.sleep(0.1)
+        assert proc.poll() is None
+    finally:
+        proc.terminate()
+        try:
+            proc.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            proc.wait(timeout=10)
 
 
 def test_cli_registry_generation_is_deterministic(sample_project: Path) -> None:

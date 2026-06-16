@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import cast
@@ -24,6 +25,7 @@ from .market_data import build_market_data_service
 from .paths import ProjectPaths, build_paths
 from .persistence import BackupManager, EvidenceArchive, SkillCandidateStore, TelegramPublishJournal
 from .providers import build_provider_policy_report, provider_policy_report_as_dict
+from .runtime.shutdown import install_signal_handlers, wait_for_shutdown
 from .scanning import perform_security_scan
 from .skills import validate_skills
 
@@ -291,6 +293,12 @@ def build_parser() -> argparse.ArgumentParser:
     render_parser.add_argument("--validate", action="store_true")
     render_parser.add_argument("--strict", action="store_true")
 
+    serve_parser = subparsers.add_parser("serve")
+    serve_parser.set_defaults(command_id="serve")
+    _common_parser(serve_parser)
+    serve_parser.add_argument("--env-file", type=Path, default=None)
+    serve_parser.add_argument("--resume", action="store_true")
+
     security_parser = subparsers.add_parser("security-scan")
     security_parser.set_defaults(command_id="security-scan")
     _common_parser(security_parser)
@@ -397,6 +405,30 @@ def _main_runtime_manager(paths: ProjectPaths, env_file: Path | None) -> MainRun
     )
 
 
+def _serve_runtime(paths: ProjectPaths, env_file: Path | None, *, resume: bool) -> int:
+    runtime = _main_runtime_manager(paths, env_file)
+    if runtime.registry_state != "AGENT_REGISTRY_READY":
+        raise RuntimeError(f"MAIN runtime registry is not ready: {runtime.registry_state}")
+    assert runtime.registry_snapshot is not None
+    install_signal_handlers()
+    _print(
+        {
+            **_base_payload(paths),
+            "status": "RUNNING",
+            "pid": os.getpid(),
+            "resume": resume,
+            "registry_state": runtime.registry_state,
+            "registry_schema_version": runtime.registry_snapshot.schema_version,
+            "registry_definition_hash": runtime.registry_snapshot.definition_hash,
+            "registry_loaded_by_main_runtime": runtime.registry_loaded_by_main_runtime,
+            "checkpoint_dir": str(paths.state_dir / "main-runtime"),
+        }
+    )
+    while not wait_for_shutdown(timeout=1.0):
+        pass
+    return 0
+
+
 def _task_template_for_type(
     runtime: MainRuntimeManager, task_type: str
 ) -> tuple[AgentTask, dict[str, object]] | None:
@@ -451,6 +483,9 @@ def main(argv: list[str] | None = None) -> int:
         if command_id == "health":
             _print(run_health_check_as_dict(paths))
             return 0
+
+        if command_id == "serve":
+            return _serve_runtime(paths, env_file, resume=bool(getattr(args, "resume", False)))
 
         if command_id == "validate-env":
             env_report = audit_environment(paths, env_path=env_file)
