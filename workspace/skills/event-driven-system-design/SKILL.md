@@ -1,7 +1,7 @@
 ---
 name: event-driven-system-design
 description: Design event schemas, integrity hashes, provenance chains, and dedup guards.
-version: 1.2.14
+version: 1.2.15
 owner_agent: blueprint-coder
 purpose: Guarantee every pipeline event is idempotent, tamper-evident, and carries complete provenance.
 allowed_inputs:

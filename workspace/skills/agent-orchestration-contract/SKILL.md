@@ -1,7 +1,7 @@
 ---
 name: agent-orchestration-contract
 description: MAIN safe routing and orchestration constraints for all 11 specialist agents.
-version: 1.2.14
+version: 1.2.15
 owner_agent: super-advisor
 purpose: Define safe agent routing, task dispatch, and conflict detection rules for MAIN.
 allowed_inputs:

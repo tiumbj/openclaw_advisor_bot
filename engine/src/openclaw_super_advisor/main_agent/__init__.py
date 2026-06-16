@@ -9,6 +9,7 @@ Blueprint §3: MAIN Agent Manager Architecture
 from __future__ import annotations
 
 from .planner import MainPlanner
+from .registry_runtime import RegistrySnapshot, build_registry_snapshot
 from .router import AgentRouter
 
-__all__ = ["AgentRouter", "MainPlanner"]
+__all__ = ["AgentRouter", "MainPlanner", "RegistrySnapshot", "build_registry_snapshot"]

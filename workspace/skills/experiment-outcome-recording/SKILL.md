@@ -1,7 +1,7 @@
 ---
 name: experiment-outcome-recording
 description: Record experiment outcomes into the Outcome Ledger with hash-chained immutable entries.
-version: 1.2.14
+version: 1.2.15
 owner_agent: knowledge-skill-manager
 purpose: Ensure every experiment transition produces a verifiable, hash-linked outcome record.
 allowed_inputs:

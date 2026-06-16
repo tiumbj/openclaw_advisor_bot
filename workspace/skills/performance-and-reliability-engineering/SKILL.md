@@ -1,7 +1,7 @@
 ---
 name: performance-and-reliability-engineering
 description: Profile, fix bottlenecks, add retry with backoff, and cap unbounded data structures.
-version: 1.2.14
+version: 1.2.15
 owner_agent: blueprint-coder
 purpose: Ensure the pipeline meets latency targets and handles transient failures gracefully.
 allowed_inputs:

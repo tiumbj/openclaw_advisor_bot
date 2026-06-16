@@ -1,7 +1,7 @@
 ---
 name: regime-classification
 description: Classify current XAUUSD market regime (trending, ranging, breakout, volatile) for strategy context.
-version: 1.2.14
+version: 1.2.15
 owner_agent: intermarket-macro-agent
 purpose: Label market regime from Python-computed indicators to guide strategy selection.
 allowed_inputs:

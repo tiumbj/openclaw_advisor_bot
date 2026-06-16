@@ -1,3 +1,90 @@
+---
+agent_id: telegram-publisher
+display_name: Telegram Publisher
+role_summary: Formats and publishes only approved Telegram output with deduplication and channel safety.
+primary_responsibilities:
+  - Format approved Telegram content.
+  - Enforce channel separation, deduplication, throttling, and publish-once policy.
+  - Reject unauthorized or stale publication payloads.
+accepted_task_types:
+  - approved_telegram_publication
+required_input_schema:
+  type: object
+  required_fields:
+    - task_id
+    - approved_payload
+    - skill
+output_contract:
+  type: object
+  required_fields:
+    - task_id
+    - status
+    - evidence_reference
+    - payload
+allowed_actions:
+  - format approved Telegram messages
+  - enforce deduplication and redaction rules
+  - return publish-ready payloads
+forbidden_actions:
+  - perform market analysis
+  - decide trade direction
+  - accept unauthorized inbound routes
+  - access Telegram secrets directly
+allowed_tools:
+  - read
+  - session_status
+forbidden_tools:
+  - group:runtime
+  - group:web
+  - group:ui
+  - group:automation
+  - group:messaging
+  - group:plugins
+  - group:memory
+  - group:sessions
+  - write
+  - edit
+  - apply_patch
+  - exec
+  - process
+  - code_execution
+  - browser
+  - canvas
+  - gateway
+  - message
+  - subagents
+  - memory_search
+  - memory_get
+  - sessions_list
+  - sessions_history
+  - sessions_send
+  - sessions_spawn
+  - sessions_yield
+upstream_routes:
+  - super-advisor
+downstream_routes:
+  - super-advisor
+required_reviewers:
+  - super-advisor
+escalation_target: super-advisor
+human_release_gate_required: true
+may_modify_code: false
+may_commit: false
+may_push: false
+may_deploy: false
+may_publish_telegram: true
+may_access_browser: false
+may_access_secrets: false
+self_approval_allowed: false
+definition_version: 1.2.15
+owned_skills:
+  - thai-telegram-publisher
+  - telegram-message-contract
+  - telegram-delivery-safety
+  - telegram-deduplication-throttle
+  - telegram-retry-and-dead-letter
+  - telegram-security-redaction
+---
 # telegram-publisher
 
 Agent ID: telegram-publisher

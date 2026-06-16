@@ -8,7 +8,9 @@ from pathlib import Path
 from typing import Any
 
 from ..events import canonical_json, sha256_hex, utc_now
-from .planner import AgentTask, DependencyPlan
+from .planner import AgentTask, DependencyPlan, MainPlanner
+from .registry_runtime import RegistrySnapshot
+from .router import AgentRouter
 
 Dispatcher = Callable[[AgentTask], Mapping[str, Any]]
 
@@ -52,6 +54,12 @@ class RuntimeReport:
     dispatch_count: int
     checkpoint_path: str
     audit_log_path: str
+
+
+@dataclass(frozen=True)
+class MainRuntimeQueryReport:
+    query_type: str
+    response: dict[str, Any]
 
 
 @dataclass
@@ -122,16 +130,217 @@ class MainRuntimeManager:
         checkpoint_dir: Path,
         dispatcher: Dispatcher,
         *,
+        registry_snapshot: RegistrySnapshot | None = None,
+        planner: MainPlanner | None = None,
+        router: AgentRouter | None = None,
         max_retries: int = 2,
     ) -> None:
         self.capabilities = {item.agent_id: item for item in capabilities}
         self.checkpoint_dir = checkpoint_dir
         self.dispatcher = dispatcher
         self.max_retries = max_retries
+        self.registry_snapshot = registry_snapshot
+        self.planner = planner
+        self.router = router
         self.checkpoint_dir.mkdir(parents=True, exist_ok=True)
         self.audit_log_path = self.checkpoint_dir / "main-runtime-audit.ndjson"
 
+    @classmethod
+    def from_registry_snapshot(
+        cls,
+        registry_snapshot: RegistrySnapshot,
+        checkpoint_dir: Path,
+        dispatcher: Dispatcher,
+        *,
+        max_retries: int = 2,
+    ) -> MainRuntimeManager:
+        capabilities = tuple(
+            AgentCapability(
+                agent.agent_id,
+                agent.owned_skills,
+                agent.current_availability == "AVAILABLE",
+            )
+            for agent in registry_snapshot.list_available_agents()
+            if agent.agent_id != "super-advisor"
+        )
+        planner = MainPlanner(registry_snapshot)
+        router = AgentRouter(registry_snapshot)
+        return cls(
+            capabilities,
+            checkpoint_dir,
+            dispatcher,
+            registry_snapshot=registry_snapshot,
+            planner=planner,
+            router=router,
+            max_retries=max_retries,
+        )
+
+    @property
+    def registry_state(self) -> str:
+        if self.registry_snapshot is None:
+            return "AGENT_REGISTRY_INVALID"
+        return self.registry_snapshot.state
+
+    @property
+    def registry_loaded_by_main_runtime(self) -> bool:
+        return bool(
+            self.registry_snapshot is not None
+            and self.registry_snapshot.loaded_by_main_runtime
+            and self.planner is not None
+            and self.router is not None
+        )
+
+    def plan_request(
+        self,
+        plan_id: str,
+        request_type: str,
+        tasks: list[AgentTask],
+        *,
+        available_inputs: dict[str, dict[str, Any]] | None = None,
+    ) -> DependencyPlan:
+        if self.registry_state != "AGENT_REGISTRY_READY":
+            raise RuntimeValidationError(
+                "MAIN planner is unavailable because the registry is not ready"
+            )
+        if self.planner is None:
+            raise RuntimeValidationError(
+                "MAIN planner is unavailable because the registry is not loaded"
+            )
+        return self.planner.build_plan(
+            plan_id,
+            request_type,
+            tasks,
+            available_inputs=available_inputs,
+        )
+
+    def route_plan(
+        self,
+        plan: DependencyPlan,
+        payloads: dict[str, dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        if self.registry_state != "AGENT_REGISTRY_READY":
+            raise RuntimeValidationError(
+                "MAIN router is unavailable because the registry is not ready"
+            )
+        if self.router is None:
+            raise RuntimeValidationError(
+                "MAIN router is unavailable because the registry is not loaded"
+            )
+        return [item.__dict__ for item in self.router.route_all(plan, payloads)]
+
+    def handle_manager_query(self, query: str) -> MainRuntimeQueryReport:
+        if self.registry_snapshot is None:
+            return MainRuntimeQueryReport(
+                query_type="registry_unavailable",
+                response={"error": "MAIN runtime registry snapshot is unavailable"},
+            )
+        if self.registry_state != "AGENT_REGISTRY_READY":
+            return MainRuntimeQueryReport(
+                query_type="registry_unavailable",
+                response={
+                    "registry_state": self.registry_state,
+                    "registry_definition_hash": self.registry_snapshot.definition_hash,
+                    "registry_schema_version": self.registry_snapshot.schema_version,
+                    "error": "; ".join(self.registry_snapshot.validation_errors)
+                    or "registry is not ready",
+                },
+            )
+        normalized = query.strip().lower()
+        if "อะไรก็ได้" in normalized or "ใกล้เคียง" in normalized:
+            return MainRuntimeQueryReport(
+                query_type="routing_explanation",
+                response={
+                    "registry_schema_version": self.registry_snapshot.schema_version,
+                    "registry_definition_hash": self.registry_snapshot.definition_hash,
+                    "task_type": "unknown_task_type",
+                    "selected_agent": None,
+                    "rejected_candidates": [],
+                    "required_review_chain": [],
+                    "forbidden_actions": [],
+                    "error": "query classification is too ambiguous for contract-safe routing",
+                },
+            )
+        if any(token in normalized for token in ("code", "review", "ตรวจ")):
+            task_type = "code_review"
+        else:
+            task_type = ""
+        if any(token in normalized for token in ("มี agent", "หน้าที่", "ห้ามทำอะไร", "agent")):
+            if task_type:
+                pass
+            else:
+                agents = [
+                    {
+                        "agent_id": agent.agent_id,
+                        "display_name": agent.display_name,
+                        "role_summary": agent.role_summary,
+                        "primary_responsibilities": list(agent.primary_responsibilities),
+                        "forbidden_actions": list(agent.forbidden_actions),
+                        "current_availability": agent.current_availability,
+                        "definition_source": agent.definition_source,
+                        "definition_version": agent.definition_version,
+                    }
+                    for agent in self.registry_snapshot.agents
+                ]
+                return MainRuntimeQueryReport(
+                    query_type="agent_catalog_query",
+                    response={
+                        "registry_schema_version": self.registry_snapshot.schema_version,
+                        "registry_definition_hash": self.registry_snapshot.definition_hash,
+                        "registry_source": self.registry_snapshot.source_path,
+                        "source": "main_runtime_registry_snapshot",
+                        "agents": agents,
+                    },
+                )
+        if not task_type:
+            return MainRuntimeQueryReport(
+                query_type="unclassified",
+                response={
+                    "registry_schema_version": self.registry_snapshot.schema_version,
+                    "registry_definition_hash": self.registry_snapshot.definition_hash,
+                    "error": "query could not be classified against the validated registry",
+                },
+            )
+        task = AgentTask(
+            task_id="query-route-1",
+            agent_id="system-coder-auditor",
+            skill="python-pipeline-micro-audit",
+            depends_on=(),
+            input_schema={"type": "object"},
+            task_type=task_type,
+            requested_action="audit",
+        )
+        plan = self.plan_request(
+            "query-plan-1",
+            task_type,
+            [task],
+            available_inputs={
+                task.task_id: {
+                    "task_id": task.task_id,
+                    "audit_scope": "production-grade code review",
+                    "source_files": ["engine/src"],
+                }
+            },
+        )
+        decision = plan.planning_decisions[0]
+        return MainRuntimeQueryReport(
+            query_type="routing_explanation",
+            response={
+                "registry_schema_version": self.registry_snapshot.schema_version,
+                "registry_definition_hash": self.registry_snapshot.definition_hash,
+                "registry_source": self.registry_snapshot.source_path,
+                "selected_agent": decision.selected_agent,
+                "reason_for_selection": decision.selection_reason,
+                "matched_accepted_task_type": decision.matched_accepted_task_type,
+                "rejected_candidates": list(decision.rejected_candidate_agents),
+                "required_review_chain": list(decision.required_reviewers),
+                "forbidden_actions": list(decision.forbidden_actions),
+                "human_release_gate_required": decision.human_release_gate_required,
+            },
+        )
+
     def execute(self, request: RuntimeRequest) -> RuntimeReport:
+        if self.registry_state != "AGENT_REGISTRY_READY":
+            raise RuntimeValidationError("MAIN runtime registry is not ready")
         if request.action in {"release", "deploy"} and not request.human_release_gate_open:
             raise HumanReleaseGateClosedError("HUMAN_RELEASE_GATE is CLOSED")
         ordered = self._validate_and_order_plan(request.plan, request.max_hops)

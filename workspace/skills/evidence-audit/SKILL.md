@@ -1,7 +1,7 @@
 ---
 name: evidence-audit
 description: Evidence audit and provenance skill.
-version: 1.2.14
+version: 1.2.15
 owner_agent: super-advisor
 purpose: Audit evidence integrity and provenance.
 allowed_inputs:

@@ -1,7 +1,7 @@
 ---
 name: privilege-boundary-audit
 description: Verify each agent's tool allow/deny lists match the Blueprint isolation contract.
-version: 1.2.14
+version: 1.2.15
 owner_agent: security-compliance-agent
 purpose: Ensure no agent has been granted tools beyond its defined privilege boundary.
 allowed_inputs:

@@ -1,7 +1,7 @@
 ---
 name: multi-timeframe-structure-review
 description: Multi timeframe structure review skill.
-version: 1.2.14
+version: 1.2.15
 owner_agent: xau-strategy-auditor
 purpose: Review structure across multiple timeframes.
 allowed_inputs:

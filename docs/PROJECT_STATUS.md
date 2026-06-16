@@ -1,13 +1,13 @@
 # Project Status
 
 - Project: `openclaw_advisor_bot`
-- Package version: `1.2.14`
+- Package version: `1.2.15`
 - Phase: `P2.4`
-- Current work package: `WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT`
+- Current work package: `WP-P2_4-NFD002-AGENT-REGISTRY`
 - Phase status: `REMEDIATION_IN_PROGRESS`
 - Audit readiness: `NOT_READY`
 - Audit gate: `BROWSER_SANDBOX_BLOCKED_UPSTREAM`
-- Last update UTC: `2026-06-15T13:00:00Z`
+- Last update UTC: `2026-06-16T00:00:00Z`
 - Audit baseline commit: `4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a`
 - Report subject commit: `adebabca2665ea782bef6146fb27ef7d51b5fb12`
 - Validated subject commit: `adebabca2665ea782bef6146fb27ef7d51b5fb12`
@@ -19,7 +19,7 @@
 
 | Gate | Status | Evidence |
 | --- | --- | --- |
-| Version sync | PASS_LOCAL | Package and phase metadata aligned to `1.2.14` / `P2.4` |
+| Version sync | PASS_LOCAL | Package and phase metadata aligned to `1.2.15` / `P2.4` |
 | Pip check | PASS_LOCAL | `python -m pip check` |
 | Ruff | PASS_LOCAL | `python -m ruff check .` |
 | Mypy | PASS_LOCAL | `python -m mypy engine\src` |
@@ -27,6 +27,7 @@
 | Coverage gate | PASS_LOCAL | `85.89%` total (threshold 85.0%) |
 | Skill validation | PASS_LOCAL | `openclaw-advisor validate-skills --strict`; `74 skills` |
 | Agent validation | PASS_LOCAL | `openclaw-advisor validate-agents --strict`; `13 agents` |
+| Agent registry validation | PASS_LOCAL | `openclaw-advisor validate-agent-registry --strict`; generated registry in sync with `workspace/agents/*/AGENT.md` |
 | Routing validation | PASS_LOCAL | `openclaw-advisor validate-routing --strict` |
 | Config validation | PASS_LOCAL | `openclaw-advisor render-config --validate --strict` |
 | Security scan | PASS_LOCAL | `openclaw-advisor security-scan --include-history --strict` |
@@ -44,6 +45,7 @@
 | Finding | Status | Evidence |
 | --- | --- | --- |
 | NFD-001 | CLOSED_LOCAL | `consume_event()` `now_utc` parameter injection; 21 deterministic boundary tests in `test_event_consumer_clock.py` |
+| NFD-002 | OPEN | Authoritative Agent Capability Registry implemented and validated locally; full non-live suite / CI / security rerun still pending |
 | PPA-0001 | CLOSED_LOCAL | Non-self-referential provenance model adopted; `observed_remote_head`/`implementation_commit`/`status_report_commit`/`remediation_commit` removed |
 | PPA-0002 | CLOSED_LOCAL | Gateway token paths are reconciled for the current runtime state |
 | PPA-0003 | CLOSED_LOCAL | MAIN runtime manager tests remain green |

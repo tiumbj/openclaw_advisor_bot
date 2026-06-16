@@ -1,7 +1,7 @@
 ---
 name: realtime-evidence-review
 description: Realtime evidence review skill.
-version: 1.2.14
+version: 1.2.15
 owner_agent: xau-strategy-auditor
 purpose: Review live evidence snapshots without mutation.
 allowed_inputs:

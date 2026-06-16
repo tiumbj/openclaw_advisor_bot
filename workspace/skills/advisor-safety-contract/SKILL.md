@@ -1,7 +1,7 @@
 ---
 name: advisor-safety-contract
 description: Super-advisor safety contract skill.
-version: 1.2.14
+version: 1.2.15
 owner_agent: super-advisor
 purpose: Enforce advisor-only safety and evidence discipline.
 allowed_inputs:

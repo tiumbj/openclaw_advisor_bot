@@ -1,14 +1,14 @@
 {
   "schema_version": "project-status-v5",
   "project": "openclaw_advisor_bot",
-  "package_version": "1.2.14",
+  "package_version": "1.2.15",
   "current_phase": "P2.4",
   "phase": "P2.4",
   "phase_status": "REMEDIATION_IN_PROGRESS",
   "audit_readiness": "NOT_READY",
   "audit_gate": "BROWSER_SANDBOX_BLOCKED_UPSTREAM",
-  "current_work_package": "WP-P2_4-NFD001-PROVENANCE-CLEAN-AUDIT",
-  "updated_at_utc": "2026-06-15T13:00:00Z",
+  "current_work_package": "WP-P2_4-NFD002-AGENT-REGISTRY",
+  "updated_at_utc": "2026-06-16T00:00:00Z",
   "audit_baseline_commit": "4d2cbe3ca01c6c319ad5c57b97c98f0fa0adbe4a",
   "report_subject_commit": "adebabca2665ea782bef6146fb27ef7d51b5fb12",
   "validated_subject_commit": "adebabca2665ea782bef6146fb27ef7d51b5fb12",
@@ -43,7 +43,7 @@
   ],
   "selected_provider": "claude",
   "credit_blocker": "NONE",
-  "next_action": "Run full validation suite in isolated worktree, commit, push, and verify remote CI conclusions for the NFD-001 / PPA-0001 remediation commit.",
+  "next_action": "Run the full NFD-002 validation matrix, isolated-worktree rerun, and remote CI/security verification for the agent registry control-plane remediation.",
   "provider_static_validation": {
     "status": "PASS",
     "provider_policy": "BLOCKED",
@@ -68,7 +68,7 @@
     "status_probe_pass": true,
     "ui_bootstrap_pass": true,
     "overall_pass": true,
-    "script_version": "1.2.14",
+    "script_version": "1.2.15",
     "runtime_token_source": "env",
     "runtime_token_variable": "OPENCLAW_GATEWAY_TOKEN",
     "warnings": []
@@ -170,6 +170,12 @@
       "summary": "13 agents verified"
     },
     {
+      "name": "validate_agent_registry",
+      "command": "openclaw-advisor validate-agent-registry --strict",
+      "status": "PASS_LOCAL",
+      "summary": "authoritative generated registry matches 13 AGENT.md definitions"
+    },
+    {
       "name": "validate_routing",
       "command": "openclaw-advisor validate-routing --strict",
       "status": "PASS"
@@ -184,7 +190,7 @@
       "name": "security_scan",
       "command": ".venv-blueprint\\Scripts\\openclaw-advisor.exe security-scan --include-history --strict",
       "status": "PASS_LOCAL",
-      "summary": "active_source_violations=0; 5 working_tree false positives in .venv-blueprint/ binary files (ruff.exe, arrow.dll) — gitignored, absent from CI"
+      "summary": "active_source_violations=0; 5 working_tree false positives in .venv-blueprint/ binary files (ruff.exe, arrow.dll) - gitignored, absent from CI"
     },
     {
       "name": "pip_audit",
@@ -206,6 +212,7 @@
   },
   "findings": {
     "NFD-001": "CLOSED_LOCAL",
+    "NFD-002": "OPEN",
     "PPA-0001": "CLOSED_LOCAL",
     "PPA-0002": "CLOSED_LOCAL",
     "PPA-0003": "CLOSED_LOCAL",
@@ -232,6 +239,7 @@
   "notes": [
     "PPA-0001 closed: non-self-referential provenance model adopted. Fields report_subject_commit/validated_subject_commit/containing_commit_resolution/provenance_model_version replace the deprecated observed_remote_head/implementation_commit/status_report_commit/remediation_commit fields.",
     "NFD-001 closed: consume_event() now_utc parameter injection eliminates test time-sensitivity; deterministic boundary tests added.",
+    "NFD-002 remains OPEN until the full non-live suite, coverage gate, build, isolated-worktree rerun, and CI/security evidence are refreshed for the new registry-backed control plane.",
     "Browser feature remains disabled until an explicit human-approved upstream fix exists.",
     "Do not claim a commit's own containing SHA inside files within that same commit; resolve it with git log -1 --format=%H -- <file-path> after push."
   ]

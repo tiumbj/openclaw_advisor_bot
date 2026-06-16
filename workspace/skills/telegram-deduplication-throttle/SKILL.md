@@ -1,7 +1,7 @@
 ---
 name: telegram-deduplication-throttle
 description: Telegram deduplication throttle skill.
-version: 1.2.14
+version: 1.2.15
 owner_agent: telegram-publisher
 purpose: Deduplicate and throttle publication payloads.
 allowed_inputs:

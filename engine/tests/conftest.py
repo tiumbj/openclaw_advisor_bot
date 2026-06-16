@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import shutil
 import textwrap
 from pathlib import Path
@@ -136,4 +137,14 @@ def sample_project(tmp_path: Path) -> Path:
         repo_root, "config/settings.schema.json", root / "config" / "settings.schema.json"
     )
     shutil.copytree(repo_root / "workspace" / "skills", root / "workspace" / "skills")
+    shutil.copytree(repo_root / "workspace" / "agents", root / "workspace" / "agents")
+    from openclaw_super_advisor.agent_registry import build_agent_registry
+    from openclaw_super_advisor.paths import build_paths
+
+    paths = build_paths(root)
+    registry = build_agent_registry(paths)
+    paths.agent_registry_path.write_text(
+        json.dumps(registry.to_dict(), ensure_ascii=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
     return root

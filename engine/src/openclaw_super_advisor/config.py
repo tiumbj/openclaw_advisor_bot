@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
 
+from .agent_registry import build_agent_registry
 from .agent_topology import build_agent_topology, validate_routing
 from .constants import RUNTIME_AGENT_IDS, SKILL_NAMES
 from .env import load_settings
@@ -87,6 +88,25 @@ def render_config(
     payload = json.loads(rendered)
     if not isinstance(payload, dict):
         raise ConfigValidationError("Rendered config must be a JSON object")
+    try:
+        registry = build_agent_registry(paths)
+        payload["agentCapabilityRegistry"] = {
+            "path": str(paths.agent_registry_path),
+            "schemaVersion": registry.schema_version,
+            "registryVersion": registry.registry_version,
+            "registryHash": registry.registry_hash,
+            "agentCount": registry.agent_count,
+            "skillCount": registry.skill_count,
+        }
+    except (FileNotFoundError, ValueError):
+        payload["agentCapabilityRegistry"] = {
+            "path": str(paths.agent_registry_path),
+            "schemaVersion": "",
+            "registryVersion": "",
+            "registryHash": "",
+            "agentCount": 0,
+            "skillCount": 0,
+        }
     return cast(dict[str, object], payload)
 
 

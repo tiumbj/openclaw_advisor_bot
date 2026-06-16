@@ -2,38 +2,65 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from openclaw_super_advisor.main_agent.planner import AgentTask, DependencyPlan
+from openclaw_super_advisor.config import render_config
+from openclaw_super_advisor.main_agent.planner import AgentTask
+from openclaw_super_advisor.main_agent.registry_runtime import build_registry_snapshot
 from openclaw_super_advisor.main_agent.runtime import (
-    AgentCapability,
     MainRuntimeManager,
     RuntimeRequest,
 )
+from openclaw_super_advisor.paths import build_paths
 
 
-def test_main_runtime_crash_restart_reuses_checkpoint(tmp_path: Path) -> None:
+def test_main_runtime_crash_restart_reuses_checkpoint(
+    sample_project: Path,
+    tmp_path: Path,
+) -> None:
     calls: list[str] = []
-    tasks = (
+    paths = build_paths(sample_project)
+    rendered = render_config(paths, env_path=paths.canonical_env_example_path)
+    snapshot = build_registry_snapshot(paths, rendered)
+    manager = MainRuntimeManager.from_registry_snapshot(snapshot, tmp_path, lambda _task: {})
+    tasks = [
         AgentTask(
             task_id="collect",
-            agent_id="market-agent",
-            skill="market-data-coverage-audit",
+            agent_id="market-data-integrity-agent",
+            skill="stale-data-detection",
             depends_on=(),
             input_schema={"type": "object"},
+            task_type="data_freshness_investigation",
+            requested_action="validate",
         ),
         AgentTask(
             task_id="review",
-            agent_id="macro-agent",
+            agent_id="intermarket-macro-agent",
             skill="fx-basket-analysis",
             depends_on=("collect",),
             input_schema={"type": "object"},
+            task_type="intermarket_macro_analysis",
+            requested_action="analyze",
         ),
+    ]
+    plan = manager.plan_request(
+        "plan-1",
+        "data_freshness_investigation",
+        tasks,
+        available_inputs={
+            "collect": {
+                "task_id": "collect",
+                "symbol": "XAUUSD",
+                "source_system": "integration-test",
+                "evidence_package": {"window": "current-session"},
+            },
+            "review": {
+                "task_id": "review",
+                "symbol": "DXY",
+                "evidence_package": {"window": "macro-session"},
+                "source_freshness": "fresh",
+            },
+        },
     )
-    plan = DependencyPlan("plan-1", "runtime-e2e", tasks, requires_human_gate=False)
     request = RuntimeRequest("runtime-e2e", plan, "runtime-e2e-idempotency")
-    capabilities = (
-        AgentCapability("market-agent", ("market-data-coverage-audit",)),
-        AgentCapability("macro-agent", ("fx-basket-analysis",)),
-    )
 
     def dispatcher(task: AgentTask) -> dict[str, object]:
         calls.append(task.task_id)
@@ -46,9 +73,9 @@ def test_main_runtime_crash_restart_reuses_checkpoint(tmp_path: Path) -> None:
             "provenance": {"source": "integration-test"},
         }
 
-    first = MainRuntimeManager(capabilities, tmp_path, dispatcher)
+    first = MainRuntimeManager.from_registry_snapshot(snapshot, tmp_path, dispatcher)
     first.execute(request)
-    second = MainRuntimeManager(capabilities, tmp_path, dispatcher)
+    second = MainRuntimeManager.from_registry_snapshot(snapshot, tmp_path, dispatcher)
 
     recovered = second.recover(request)
 

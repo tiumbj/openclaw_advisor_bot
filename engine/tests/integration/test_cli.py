@@ -117,8 +117,63 @@ def test_cli_validation_commands(sample_project: Path) -> None:
     env = _run(["validate-env", "--project-root", root, "--env-file", env_file, "--json"])
     skills = _run(["validate-skills", "--project-root", root, "--env-file", env_example, "--json"])
     agents = _run(["validate-agents", "--project-root", root, "--env-file", env_example, "--json"])
+    registry = _run(
+        ["validate-agent-registry", "--project-root", root, "--env-file", env_example, "--json"]
+    )
     routing = _run(
         ["validate-routing", "--project-root", root, "--env-file", env_example, "--json"]
+    )
+    list_agents = _run(["list-agents", "--project-root", root, "--env-file", env_example, "--json"])
+    described = _run(
+        [
+            "describe-agent",
+            "blueprint-coder",
+            "--project-root",
+            root,
+            "--env-file",
+            env_example,
+            "--json",
+        ]
+    )
+    route_task = _run(
+        [
+            "route-task",
+            "--project-root",
+            root,
+            "--env-file",
+            env_example,
+            "--task-type",
+            "code_implementation",
+            "--dry-run",
+            "--json",
+        ]
+    )
+    manager_agents = _run(
+        [
+            "manager-query",
+            "--project-root",
+            root,
+            "--env-file",
+            env_example,
+            "--query",
+            "บอกหน้าที่ของ agent ทุกตัวในระบบ และบอกว่าแต่ละตัวห้ามทำอะไร",
+            "--json",
+        ]
+    )
+    manager_route = _run(
+        [
+            "manager-query",
+            "--project-root",
+            root,
+            "--env-file",
+            env_example,
+            "--query",
+            (
+                "งานตรวจ code production-grade ควรส่งให้ agent ตัวไหน เพราะอะไร "
+                "ใครต้อง review ต่อ และ agent ที่ได้รับงานห้ามทำอะไรบ้าง"
+            ),
+            "--json",
+        ]
     )
     pipeline = _run(
         ["pipeline-dry-run", "--project-root", root, "--env-file", env_example, "--json"]
@@ -139,7 +194,13 @@ def test_cli_validation_commands(sample_project: Path) -> None:
     assert env["valid"] is True
     assert skills["valid"] is True
     assert agents["valid"] is True
+    assert registry["valid"] is True
     assert routing["valid"] is True
+    assert len(list_agents["agents"]) == 13
+    assert described["agent"]["agent_id"] == "blueprint-coder"
+    assert route_task["decision"]["selected_agent"] == "blueprint-coder"
+    assert len(manager_agents["response"]["agents"]) == 13
+    assert manager_route["response"]["selected_agent"] == "system-coder-auditor"
     assert pipeline["overall_pass"] is True
     assert evidence["valid"] is True
     assert security["summary"]["pass"] is True
@@ -147,6 +208,72 @@ def test_cli_validation_commands(sample_project: Path) -> None:
     assert provider_policy["phase"] == PHASE
     assert provider_policy["policy"]["status"] == "BLOCKED"
     assert provider_policy["policy"]["reason"] == "NO_ENABLED_PROVIDER"
+
+
+def test_cli_registry_generation_is_deterministic(sample_project: Path) -> None:
+    root = str(sample_project)
+    env_example = str(sample_project / ".env.example")
+    temp_a = sample_project / "config" / "agent_capability_registry.a.json"
+    temp_b = sample_project / "config" / "agent_capability_registry.b.json"
+
+    first = _run(
+        [
+            "validate-agent-registry",
+            "--project-root",
+            root,
+            "--env-file",
+            env_example,
+            "--write",
+            "--output",
+            str(temp_a),
+            "--json",
+        ]
+    )
+    second = _run(
+        [
+            "validate-agent-registry",
+            "--project-root",
+            root,
+            "--env-file",
+            env_example,
+            "--write",
+            "--output",
+            str(temp_b),
+            "--json",
+        ]
+    )
+
+    bytes_a = temp_a.read_bytes()
+    bytes_b = temp_b.read_bytes()
+    canonical = (sample_project / "config" / "agent_capability_registry.json").read_bytes()
+
+    assert first["valid"] is True
+    assert second["valid"] is True
+    assert bytes_a == bytes_b
+    assert bytes_a == canonical
+    assert first["registry"]["registry_hash"] == second["registry"]["registry_hash"]
+
+
+def test_cli_manager_query_fails_closed_for_similarity_prompt(sample_project: Path) -> None:
+    root = str(sample_project)
+    env_example = str(sample_project / ".env.example")
+
+    exit_code, payload = _run_result(
+        [
+            "manager-query",
+            "--project-root",
+            root,
+            "--env-file",
+            env_example,
+            "--query",
+            "งานนี้ส่งให้ agent อะไรก็ได้ที่คิดว่าใกล้เคียง",
+            "--json",
+        ]
+    )
+
+    assert exit_code == 0
+    assert payload["response"]["selected_agent"] is None
+    assert payload["response"]["task_type"] == "unknown_task_type"
 
 
 def test_cli_market_data_commands(monkeypatch: pytest.MonkeyPatch, sample_project: Path) -> None:
@@ -232,8 +359,13 @@ def test_cli_help_and_no_trade_commands() -> None:
     assert "market-storage-check" in help_text
     assert "provider-policy" in help_text
     assert "validate-agents" in help_text
+    assert "validate-agent-registry" in help_text
     assert "validate-routing" in help_text
     assert "pipeline-dry-run" in help_text
+    assert "list-agents" in help_text
+    assert "describe-agent" in help_text
+    assert "route-task" in help_text
+    assert "manager-query" in help_text
     assert "buy" not in help_text.lower()
     assert "sell" not in help_text.lower()
     assert "trade" not in help_text.lower()

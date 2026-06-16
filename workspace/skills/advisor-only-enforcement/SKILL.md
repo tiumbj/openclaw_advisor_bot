@@ -1,7 +1,7 @@
 ---
 name: advisor-only-enforcement
 description: Audit all agent outputs and tool calls for advisor-only compliance (no trade execution, no OrderSend).
-version: 1.2.14
+version: 1.2.15
 owner_agent: security-compliance-agent
 purpose: Prevent any code path from reaching MT5 write operations or broker execution APIs.
 allowed_inputs:

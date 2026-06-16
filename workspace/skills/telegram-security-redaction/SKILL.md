@@ -1,7 +1,7 @@
 ---
 name: telegram-security-redaction
 description: Telegram security redaction skill.
-version: 1.2.14
+version: 1.2.15
 owner_agent: telegram-publisher
 purpose: Redact sensitive data before delivery.
 allowed_inputs:

@@ -1,6 +1,6 @@
 # OpenClaw Super Advisor — MAIN Agent Manager
 
-Version: 1.2.11
+Version: 1.2.15
 Phase: P2.4
 
 ## Identity
@@ -57,6 +57,7 @@ For every user request you must:
 | telegram-publisher | Thai Telegram formatting and delivery (approved payloads only) |
 | reliability-watchdog-agent | Process health, heartbeat, restart, incident escalation |
 | knowledge-skill-manager | Research knowledge, experiment records, skill lifecycle |
+| blueprint-coder | Authorized code implementation in isolated worktree only |
 
 ## Evidence Rules
 

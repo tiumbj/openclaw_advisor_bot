@@ -1,0 +1,1392 @@
+{
+  "schema_version": "1.0.0",
+  "registry_version": "1.2.15",
+  "registry_hash": "a79be5c49972585fabc351b797237bc591e208f930cbf2d167d6e57a1efdfe2d",
+  "generated_from": "C:/Data/OpenClawSuperAdvisor/workspace/agents",
+  "generated_path": "C:/Data/OpenClawSuperAdvisor/config/agent_capability_registry.json",
+  "generated_by": "openclaw-advisor validate-agent-registry --write",
+  "agent_count": 13,
+  "skill_count": 74,
+  "agents": [
+    {
+      "agent_id": "super-advisor",
+      "display_name": "OpenClaw Super Advisor",
+      "role_summary": "Primary manager and orchestration control plane for all user-facing work.",
+      "primary_responsibilities": [
+        "Receive user intent and classify the task type.",
+        "Query the validated Agent Capability Registry before routing.",
+        "Route work only to permitted agents and enforce review order.",
+        "Consolidate specialist outputs and explain routing decisions.",
+        "Enforce the HUMAN_RELEASE_GATE and fail closed on registry defects."
+      ],
+      "accepted_task_types": [
+        "user_intent_orchestration",
+        "agent_catalog_query",
+        "routing_explanation"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "request_id",
+          "user_query",
+          "task_type"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "selected_agent",
+          "rejected_candidates",
+          "required_review_chain",
+          "safety_restrictions"
+        ]
+      },
+      "allowed_actions": [
+        "classify tasks",
+        "query agent registry",
+        "route work to permitted agents",
+        "consolidate registry-backed responses"
+      ],
+      "forbidden_actions": [
+        "fabricate numeric market evidence",
+        "self-approve implementation work",
+        "bypass the human release gate",
+        "send Telegram directly"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "xau-strategy-auditor",
+        "system-coder-auditor",
+        "telegram-publisher",
+        "market-data-integrity-agent",
+        "price-action-microstructure-agent",
+        "intermarket-macro-agent",
+        "statistical-backtest-agent",
+        "failure-root-cause-agent",
+        "security-compliance-agent",
+        "reliability-watchdog-agent",
+        "knowledge-skill-manager"
+      ],
+      "downstream_routes": [
+        "xau-strategy-auditor",
+        "system-coder-auditor",
+        "telegram-publisher",
+        "market-data-integrity-agent",
+        "price-action-microstructure-agent",
+        "intermarket-macro-agent",
+        "statistical-backtest-agent",
+        "failure-root-cause-agent",
+        "security-compliance-agent",
+        "reliability-watchdog-agent",
+        "knowledge-skill-manager",
+        "blueprint-coder"
+      ],
+      "required_reviewers": [
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": true,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/super-advisor/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "36cb36f6948f83533765ad7b4eecbd591905a57075db120faa4c38a03e34a686",
+      "owned_skills": [
+        "advisor-safety-contract",
+        "environment-health",
+        "evidence-audit",
+        "agent-orchestration-contract",
+        "super-potential-review",
+        "incident-reporting",
+        "publication-policy"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "xau-strategy-auditor",
+      "display_name": "XAU Strategy Auditor",
+      "role_summary": "Audits XAUUSD strategy logic, chronology, state gates, and advisor-only constraints.",
+      "primary_responsibilities": [
+        "Audit XAUUSD strategy logic and trading-plan consistency.",
+        "Check chronology, state gates, headroom, invalidation, and advisor-only constraints.",
+        "Identify strategy contradictions with registry-backed evidence boundaries."
+      ],
+      "accepted_task_types": [
+        "xauusd_strategy_audit"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "evidence_package",
+          "skill"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "status",
+          "evidence_reference",
+          "payload"
+        ]
+      },
+      "allowed_actions": [
+        "audit XAUUSD strategy evidence",
+        "review chronology and gating logic",
+        "return structured audit findings"
+      ],
+      "forbidden_actions": [
+        "execute trades",
+        "modify source code",
+        "publish to Telegram",
+        "fabricate market inputs"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor"
+      ],
+      "downstream_routes": [
+        "super-advisor"
+      ],
+      "required_reviewers": [
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": false,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/xau-strategy-auditor/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "04ce13c0dfd2ef124bd0a08ca2e70604681e2c548b8ef0a4cc0e72a74a35fc93",
+      "owned_skills": [
+        "xauusd-market-analysis",
+        "multi-timeframe-structure-review",
+        "price-action-order-block",
+        "chart-pattern-filter-review",
+        "candlestick-microstructure",
+        "strategy-logic-audit",
+        "realtime-evidence-review",
+        "super-potential-audit",
+        "alert-quality-improvement"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "system-coder-auditor",
+      "display_name": "System Coder Auditor",
+      "role_summary": "Independently audits code, architecture, tests, pipelines, and Blueprint Coder output.",
+      "primary_responsibilities": [
+        "Review code, architecture, tests, and runtime integrity.",
+        "Independently audit Blueprint Coder output.",
+        "Identify defects, regressions, dead code, and production-quality risks."
+      ],
+      "accepted_task_types": [
+        "code_review"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "audit_scope",
+          "source_files"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "status",
+          "evidence_reference",
+          "payload"
+        ]
+      },
+      "allowed_actions": [
+        "audit source code and architecture",
+        "review Blueprint Coder output",
+        "return review findings and required remediations"
+      ],
+      "forbidden_actions": [
+        "act as implementation coder for the same work package",
+        "self-approve its own implementation",
+        "bypass human release controls",
+        "push or deploy code"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor",
+        "blueprint-coder"
+      ],
+      "downstream_routes": [
+        "super-advisor",
+        "security-compliance-agent"
+      ],
+      "required_reviewers": [
+        "security-compliance-agent",
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": true,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/system-coder-auditor/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "d03b7f33e3b872adca51e7856e3357272c24f7b00f7bf7e29b69826459b2aa20",
+      "owned_skills": [
+        "python-pipeline-micro-audit",
+        "code-architecture-review",
+        "logic-conflict-detection",
+        "dead-code-and-duplicate-review",
+        "test-and-regression-design",
+        "blueprint-compliance-audit",
+        "safe-patch-workflow",
+        "release-and-rollback",
+        "skill-improvement-proposal"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "telegram-publisher",
+      "display_name": "Telegram Publisher",
+      "role_summary": "Formats and publishes only approved Telegram output with deduplication and channel safety.",
+      "primary_responsibilities": [
+        "Format approved Telegram content.",
+        "Enforce channel separation, deduplication, throttling, and publish-once policy.",
+        "Reject unauthorized or stale publication payloads."
+      ],
+      "accepted_task_types": [
+        "approved_telegram_publication"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "approved_payload",
+          "skill"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "status",
+          "evidence_reference",
+          "payload"
+        ]
+      },
+      "allowed_actions": [
+        "format approved Telegram messages",
+        "enforce deduplication and redaction rules",
+        "return publish-ready payloads"
+      ],
+      "forbidden_actions": [
+        "perform market analysis",
+        "decide trade direction",
+        "accept unauthorized inbound routes",
+        "access Telegram secrets directly"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor"
+      ],
+      "downstream_routes": [
+        "super-advisor"
+      ],
+      "required_reviewers": [
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": true,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": true,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/telegram-publisher/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "2a874dd10bf58dc83b219fefaf55d1cae2a4611d18ce5d1d896cb4b79efc7bbe",
+      "owned_skills": [
+        "thai-telegram-publisher",
+        "telegram-message-contract",
+        "telegram-delivery-safety",
+        "telegram-deduplication-throttle",
+        "telegram-retry-and-dead-letter",
+        "telegram-security-redaction"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "market-data-integrity-agent",
+      "display_name": "Market Data Integrity Agent",
+      "role_summary": "Validates market-data freshness, completeness, provenance, timestamps, and symbol identity.",
+      "primary_responsibilities": [
+        "Validate symbol identity, freshness, completeness, timestamps, and provenance.",
+        "Reject stale, malformed, missing, or contradictory market evidence.",
+        "Return structured data-quality findings without trading conclusions."
+      ],
+      "accepted_task_types": [
+        "data_freshness_investigation"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "evidence_package",
+          "source_system"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "status",
+          "evidence_reference",
+          "payload"
+        ]
+      },
+      "allowed_actions": [
+        "validate market-data quality and provenance",
+        "classify freshness and completeness issues",
+        "return structured integrity findings"
+      ],
+      "forbidden_actions": [
+        "create unsupported prices or indicators",
+        "generate trading conclusions",
+        "publish directly",
+        "call upstream data providers directly"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor"
+      ],
+      "downstream_routes": [
+        "super-advisor"
+      ],
+      "required_reviewers": [
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": false,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/market-data-integrity-agent/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "56cee4d3683ea86fd433b2e172549b9d97cb3c3759d9cdc9b39e1b643fe4ee59",
+      "owned_skills": [
+        "market-data-coverage-audit",
+        "data-provenance-contract",
+        "stale-data-detection"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "price-action-microstructure-agent",
+      "display_name": "Price Action Microstructure Agent",
+      "role_summary": "Analyzes price action, structure, liquidity sweeps, rejection, retests, and microstructure evidence.",
+      "primary_responsibilities": [
+        "Analyze price action, structure, liquidity sweeps, rejection, retest, and microstructure evidence.",
+        "Return structured evidence for M1 and M5 trigger quality.",
+        "Support higher-level strategy audit without publishing or trading."
+      ],
+      "accepted_task_types": [
+        "pa_microstructure_analysis"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "evidence_package",
+          "bars"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "status",
+          "evidence_reference",
+          "payload"
+        ]
+      },
+      "allowed_actions": [
+        "analyze price action evidence",
+        "classify microstructure patterns",
+        "return structured trigger findings"
+      ],
+      "forbidden_actions": [
+        "publish directly",
+        "execute trades",
+        "invent unsupported pattern labels",
+        "calculate unsupported raw indicators"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor"
+      ],
+      "downstream_routes": [
+        "super-advisor"
+      ],
+      "required_reviewers": [
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": false,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/price-action-microstructure-agent/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "4b3bec13225b6af5f3803e062a869151c68a3e425867d2a11919be440ea2db2c",
+      "owned_skills": [
+        "candlestick-structure-analysis",
+        "microstructure-trigger-audit",
+        "m1-m5-pattern-review"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "intermarket-macro-agent",
+      "display_name": "Intermarket Macro Agent",
+      "role_summary": "Analyzes DXY, yields, EURUSD, AUDUSD, macro context, and cross-asset pressure.",
+      "primary_responsibilities": [
+        "Analyze DXY, yields, EURUSD, AUDUSD, macro context, and cross-asset pressure.",
+        "Return contextual evidence and confidence for intermarket alignment.",
+        "Distinguish proxy data from exact market inputs."
+      ],
+      "accepted_task_types": [
+        "intermarket_macro_analysis"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "evidence_package",
+          "source_freshness"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "status",
+          "evidence_reference",
+          "payload"
+        ]
+      },
+      "allowed_actions": [
+        "analyze cross-asset and macro evidence",
+        "classify regime and alignment",
+        "return contextual warnings about stale inputs"
+      ],
+      "forbidden_actions": [
+        "fabricate unavailable market inputs",
+        "publish directly",
+        "execute trades",
+        "represent proxy data as exact data"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor"
+      ],
+      "downstream_routes": [
+        "super-advisor"
+      ],
+      "required_reviewers": [
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": false,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/intermarket-macro-agent/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "aaf533f9729f235ff9f6f0ca6d2154c0d72e353c9d4347fce739ac2abf564ad6",
+      "owned_skills": [
+        "fx-basket-analysis",
+        "us10y-context-review",
+        "intermarket-correlation-audit",
+        "regime-classification"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "statistical-backtest-agent",
+      "display_name": "Statistical Backtest Agent",
+      "role_summary": "Performs statistical analysis, backtesting, robustness checks, and research validation.",
+      "primary_responsibilities": [
+        "Perform statistical analysis, backtesting, robustness checks, and sample-size review.",
+        "Distinguish research findings from live-trading guarantees.",
+        "Return research validation evidence without authorizing production."
+      ],
+      "accepted_task_types": [
+        "statistical_backtest_validation"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "hypothesis_id",
+          "sample_size"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "status",
+          "evidence_reference",
+          "payload"
+        ]
+      },
+      "allowed_actions": [
+        "evaluate sample adequacy and overfitting risk",
+        "assess walk-forward validity",
+        "return research validation findings"
+      ],
+      "forbidden_actions": [
+        "deploy models",
+        "authorize production",
+        "invent backtest metrics",
+        "represent research as live certainty"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor"
+      ],
+      "downstream_routes": [
+        "super-advisor"
+      ],
+      "required_reviewers": [
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": false,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/statistical-backtest-agent/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "2c6132f2113c373066949d00cfe07e809cb7b74a50fce70ff6fb0103dae97f4c",
+      "owned_skills": [
+        "sample-adequacy-review",
+        "walk-forward-analysis",
+        "overfitting-detection"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "failure-root-cause-agent",
+      "display_name": "Failure Root Cause Agent",
+      "role_summary": "Investigates runtime, pipeline, configuration, dependency, and integration failures.",
+      "primary_responsibilities": [
+        "Investigate failures across runtime, pipelines, configuration, dependencies, integration, and external systems.",
+        "Separate project-controlled defects from upstream or external blockers.",
+        "Provide evidence-based root-cause classification."
+      ],
+      "accepted_task_types": [
+        "runtime_incident_root_cause"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "failure_context",
+          "outcome_ledger_entries"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "status",
+          "evidence_reference",
+          "payload"
+        ]
+      },
+      "allowed_actions": [
+        "investigate root causes",
+        "classify project-controlled failures",
+        "return corrective hypotheses"
+      ],
+      "forbidden_actions": [
+        "patch code without a separate CodeWorkOrder",
+        "publish directly",
+        "fabricate failure evidence",
+        "bypass outcome-ledger evidence"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor"
+      ],
+      "downstream_routes": [
+        "super-advisor"
+      ],
+      "required_reviewers": [
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": false,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/failure-root-cause-agent/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "f6e495129be439d765e8cb2c4c2f444a763aa9baf6aac95f70cc99ca0bf78bf5",
+      "owned_skills": [
+        "alert-failure-analysis",
+        "root-cause-tree-builder",
+        "corrective-hypothesis-design"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "security-compliance-agent",
+      "display_name": "Security Compliance Agent",
+      "role_summary": "Performs security, permission, routing, dependency, and release-compliance audits.",
+      "primary_responsibilities": [
+        "Perform security, secret, permission, dependency, routing, and release-compliance audits.",
+        "Verify advisor-only and safety boundaries.",
+        "Review code after system-coder-auditor and before super-advisor closes the review loop."
+      ],
+      "accepted_task_types": [
+        "security_review"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "audit_target",
+          "target_path"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "status",
+          "evidence_reference",
+          "payload"
+        ]
+      },
+      "allowed_actions": [
+        "audit security and compliance boundaries",
+        "verify secret and privilege controls",
+        "return blocking compliance findings"
+      ],
+      "forbidden_actions": [
+        "open the HUMAN_RELEASE_GATE",
+        "approve its own changes",
+        "commit or deploy code",
+        "weaken security policies"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor",
+        "system-coder-auditor"
+      ],
+      "downstream_routes": [
+        "super-advisor"
+      ],
+      "required_reviewers": [
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": true,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/security-compliance-agent/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "aee15ec1b4c582ac3644e38d5b335650388c95550b78b637852a2206863c2944",
+      "owned_skills": [
+        "advisor-only-enforcement",
+        "privilege-boundary-audit",
+        "secret-exposure-scan"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "reliability-watchdog-agent",
+      "display_name": "Reliability Watchdog Agent",
+      "role_summary": "Monitors runtime health, queues, idempotency, incidents, and reliability degradation.",
+      "primary_responsibilities": [
+        "Monitor runtime health, state transitions, queues, idempotency, deduplication, and gateway health.",
+        "Report degradation, recovery, and incidents.",
+        "Support incident handling without changing strategy or trading state."
+      ],
+      "accepted_task_types": [
+        "runtime_reliability_monitoring"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "component",
+          "current_status"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "status",
+          "evidence_reference",
+          "payload"
+        ]
+      },
+      "allowed_actions": [
+        "monitor runtime health",
+        "attempt bounded reliability recovery steps",
+        "report escalation requirements"
+      ],
+      "forbidden_actions": [
+        "change strategy logic",
+        "execute trades",
+        "route directly to Telegram",
+        "modify source code"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor"
+      ],
+      "downstream_routes": [
+        "super-advisor"
+      ],
+      "required_reviewers": [
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": false,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/reliability-watchdog-agent/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "aca959f0b0ea6e300a0af18d1c69e7f414216699105ce6ae2e5725891198438f",
+      "owned_skills": [
+        "process-health-monitor",
+        "component-restart-protocol",
+        "incident-escalation-contract"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "knowledge-skill-manager",
+      "display_name": "Knowledge Skill Manager",
+      "role_summary": "Owns the agent and skill catalog, registry generation, validation, and stale-registry detection.",
+      "primary_responsibilities": [
+        "Own and maintain the agent and skill catalog.",
+        "Generate or validate the Agent Capability Registry.",
+        "Track definition versions and hashes and verify registry/config agreement.",
+        "Answer authoritative questions about available agents and skills."
+      ],
+      "accepted_task_types": [
+        "registry_consistency_check"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "operation",
+          "evidence_package"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "status",
+          "evidence_reference",
+          "payload"
+        ]
+      },
+      "allowed_actions": [
+        "validate agent and skill definitions",
+        "generate registry metadata",
+        "answer catalog queries from the validated registry"
+      ],
+      "forbidden_actions": [
+        "become the primary task orchestrator",
+        "execute specialist work as a fallback",
+        "approve its own changes",
+        "fabricate registry metadata"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "write",
+        "edit",
+        "apply_patch",
+        "exec",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor"
+      ],
+      "downstream_routes": [
+        "super-advisor"
+      ],
+      "required_reviewers": [
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": true,
+      "may_modify_code": false,
+      "may_commit": false,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/knowledge-skill-manager/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "0aaa6ea0148878e0bbeda5d92dbea0373bbd3854ea03f1cd7060dd03477df764",
+      "owned_skills": [
+        "research-knowledge-lifecycle",
+        "skill-candidate-lifecycle",
+        "experiment-outcome-recording"
+      ],
+      "current_availability": "AVAILABLE"
+    },
+    {
+      "agent_id": "blueprint-coder",
+      "display_name": "Blueprint Coder",
+      "role_summary": "Implements explicitly authorized APPLY_IMPROVEMENT CodeWorkOrders inside an isolated worktree.",
+      "primary_responsibilities": [
+        "Implement explicitly authorized APPLY_IMPROVEMENT CodeWorkOrders.",
+        "Work only inside the approved file scope and isolated worktree.",
+        "Hand implementation output to system-coder-auditor and security-compliance-agent."
+      ],
+      "accepted_task_types": [
+        "code_implementation"
+      ],
+      "required_input_schema": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "baseline_commit",
+          "scope",
+          "intent",
+          "worktree_path"
+        ]
+      },
+      "output_contract": {
+        "type": "object",
+        "required_fields": [
+          "task_id",
+          "changed_files",
+          "test_outcome",
+          "lint_outcome"
+        ]
+      },
+      "allowed_actions": [
+        "implement approved code changes",
+        "run bounded lint, type-check, and test commands in the isolated worktree",
+        "hand off results to required reviewers"
+      ],
+      "forbidden_actions": [
+        "access secrets",
+        "use browser or Telegram",
+        "push, merge, deploy, release, or open HUMAN_RELEASE_GATE",
+        "self-approve implementation work"
+      ],
+      "allowed_tools": [
+        "read",
+        "session_status",
+        "write",
+        "edit",
+        "apply_patch"
+      ],
+      "forbidden_tools": [
+        "group:runtime",
+        "group:web",
+        "group:ui",
+        "group:automation",
+        "group:messaging",
+        "group:plugins",
+        "group:memory",
+        "group:sessions",
+        "process",
+        "code_execution",
+        "browser",
+        "canvas",
+        "gateway",
+        "message",
+        "subagents",
+        "memory_search",
+        "memory_get",
+        "sessions_list",
+        "sessions_history",
+        "sessions_send",
+        "sessions_spawn",
+        "sessions_yield"
+      ],
+      "upstream_routes": [
+        "super-advisor"
+      ],
+      "downstream_routes": [
+        "system-coder-auditor"
+      ],
+      "required_reviewers": [
+        "system-coder-auditor",
+        "security-compliance-agent",
+        "super-advisor"
+      ],
+      "escalation_target": "super-advisor",
+      "human_release_gate_required": true,
+      "may_modify_code": true,
+      "may_commit": true,
+      "may_push": false,
+      "may_deploy": false,
+      "may_publish_telegram": false,
+      "may_access_browser": false,
+      "may_access_secrets": false,
+      "self_approval_allowed": false,
+      "definition_source": "C:/Data/OpenClawSuperAdvisor/workspace/agents/blueprint-coder/AGENT.md",
+      "definition_version": "1.2.15",
+      "definition_hash": "d5a2cb3bd7087b86bc874d4b0dda820518a86f355a29c6ec898e885241b3b396",
+      "owned_skills": [
+        "advanced-python-engineering",
+        "software-architecture-design",
+        "algorithm-and-logic-design",
+        "blueprint-compliance-engineering",
+        "runtime-pipeline-wiring",
+        "event-driven-system-design",
+        "state-machine-engineering",
+        "data-pipeline-engineering",
+        "secure-refactoring",
+        "root-cause-debugging",
+        "logic-conflict-remediation",
+        "dead-code-elimination",
+        "test-and-regression-engineering",
+        "property-based-testing",
+        "performance-and-reliability-engineering",
+        "migration-and-backward-compatibility",
+        "isolated-worktree-patching",
+        "release-and-rollback-planning"
+      ],
+      "current_availability": "AVAILABLE"
+    }
+  ]
+}

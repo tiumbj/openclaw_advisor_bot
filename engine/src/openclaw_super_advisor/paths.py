@@ -11,6 +11,7 @@ class ProjectPaths:
     config_dir: Path
     state_dir: Path
     workspace_dir: Path
+    agents_dir: Path
     docs_dir: Path
     engine_dir: Path
     skills_dir: Path
@@ -19,6 +20,7 @@ class ProjectPaths:
     config_template_path: Path
     runtime_config_path: Path
     config_schema_path: Path
+    agent_registry_path: Path
 
 
 def installed_project_root() -> Path:
@@ -72,6 +74,7 @@ def build_paths(project_root: str | Path | None = None) -> ProjectPaths:
         config_dir=config_dir,
         state_dir=state_dir,
         workspace_dir=workspace_dir,
+        agents_dir=workspace_dir / "agents",
         docs_dir=root_dir / "docs",
         engine_dir=root_dir / "engine",
         skills_dir=workspace_dir / "skills",
@@ -80,4 +83,5 @@ def build_paths(project_root: str | Path | None = None) -> ProjectPaths:
         config_template_path=config_dir / "openclaw.template.json",
         runtime_config_path=state_dir / "openclaw.json",
         config_schema_path=config_dir / "settings.schema.json",
+        agent_registry_path=config_dir / "agent_capability_registry.json",
     )

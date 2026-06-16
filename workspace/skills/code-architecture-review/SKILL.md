@@ -1,7 +1,7 @@
 ---
 name: code-architecture-review
 description: Code architecture review skill.
-version: 1.2.14
+version: 1.2.15
 owner_agent: system-coder-auditor
 purpose: Review architecture and module boundaries.
 allowed_inputs:

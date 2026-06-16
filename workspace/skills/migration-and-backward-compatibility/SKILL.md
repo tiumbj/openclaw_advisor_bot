@@ -1,7 +1,7 @@
 ---
 name: migration-and-backward-compatibility
 description: Implement backward-compatible migrations for schemas, constants, and config.
-version: 1.2.14
+version: 1.2.15
 owner_agent: blueprint-coder
 purpose: Prevent breaking changes from disrupting callers; maintain aliases for at least 3 commits.
 allowed_inputs:

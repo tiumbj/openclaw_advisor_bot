@@ -1,7 +1,7 @@
 ---
 name: logic-conflict-remediation
 description: Resolve contradictory decisions between agents or pipeline stages.
-version: 1.2.14
+version: 1.2.15
 owner_agent: blueprint-coder
 purpose: Apply canonical tie-break rules to produce a single authoritative decision from conflicting outputs.
 allowed_inputs:

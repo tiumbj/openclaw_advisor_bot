@@ -1,7 +1,7 @@
 ---
 name: market-data-coverage-audit
 description: Verify all 8 required MT5 symbols are present and non-null in every evidence packet.
-version: 1.2.14
+version: 1.2.15
 owner_agent: market-data-integrity-agent
 purpose: Detect missing or stale symbol data before it enters the evidence pipeline.
 allowed_inputs:

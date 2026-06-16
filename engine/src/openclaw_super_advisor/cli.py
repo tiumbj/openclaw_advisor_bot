@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import cast
 
 from ._version import PHASE, __version__
+from .agent_registry import ManagerRegistryRuntime, validate_agent_registry
 from .agent_topology import (
     build_agent_topology,
     validate_agent_topology,
@@ -16,6 +17,9 @@ from .config import render_config, validate_rendered_config
 from .env import CanonicalEnvMissingError, DuplicateEnvError, audit_environment, load_settings
 from .events import build_event_envelope, validate_event_envelope
 from .health import run_health_check_as_dict
+from .main_agent.planner import AgentTask
+from .main_agent.registry_runtime import build_registry_snapshot
+from .main_agent.runtime import MainRuntimeManager
 from .market_data import build_market_data_service
 from .paths import ProjectPaths, build_paths
 from .persistence import BackupManager, EvidenceArchive, SkillCandidateStore, TelegramPublishJournal
@@ -139,11 +143,44 @@ def build_parser() -> argparse.ArgumentParser:
     agents_parser.add_argument("--env-file", type=Path, default=None)
     agents_parser.add_argument("--strict", action="store_true")
 
+    registry_parser = subparsers.add_parser("validate-agent-registry")
+    registry_parser.set_defaults(command_id="validate-agent-registry")
+    _common_parser(registry_parser)
+    registry_parser.add_argument("--env-file", type=Path, default=None)
+    registry_parser.add_argument("--strict", action="store_true")
+    registry_parser.add_argument("--write", action="store_true")
+    registry_parser.add_argument("--output", type=Path, default=None)
+
     routing_parser = subparsers.add_parser("validate-routing")
     routing_parser.set_defaults(command_id="validate-routing")
     _common_parser(routing_parser)
     routing_parser.add_argument("--env-file", type=Path, default=None)
     routing_parser.add_argument("--strict", action="store_true")
+
+    list_agents_parser = subparsers.add_parser("list-agents")
+    list_agents_parser.set_defaults(command_id="list-agents")
+    _common_parser(list_agents_parser)
+    list_agents_parser.add_argument("--env-file", type=Path, default=None)
+
+    describe_agent_parser = subparsers.add_parser("describe-agent")
+    describe_agent_parser.set_defaults(command_id="describe-agent")
+    _common_parser(describe_agent_parser)
+    describe_agent_parser.add_argument("agent_id", type=str)
+    describe_agent_parser.add_argument("--env-file", type=Path, default=None)
+
+    route_task_parser = subparsers.add_parser("route-task")
+    route_task_parser.set_defaults(command_id="route-task")
+    _common_parser(route_task_parser)
+    route_task_parser.add_argument("--env-file", type=Path, default=None)
+    route_task_parser.add_argument("--task-type", type=str, required=True)
+    route_task_parser.add_argument("--source-agent", type=str, default="super-advisor")
+    route_task_parser.add_argument("--dry-run", action="store_true")
+
+    manager_query_parser = subparsers.add_parser("manager-query")
+    manager_query_parser.set_defaults(command_id="manager-query")
+    _common_parser(manager_query_parser)
+    manager_query_parser.add_argument("--env-file", type=Path, default=None)
+    manager_query_parser.add_argument("--query", type=str, required=True)
 
     pipeline_parser = subparsers.add_parser("pipeline-dry-run")
     pipeline_parser.set_defaults(command_id="pipeline-dry-run")
@@ -343,6 +380,65 @@ def _main_config_report(paths: ProjectPaths, env_file: Path | None) -> dict[str,
     }
 
 
+def _main_runtime_manager(paths: ProjectPaths, env_file: Path | None) -> MainRuntimeManager:
+    rendered_config = _load_rendered_config(paths, env_file)
+    snapshot = build_registry_snapshot(paths, rendered_config)
+    return MainRuntimeManager.from_registry_snapshot(
+        snapshot,
+        paths.state_dir / "main-runtime",
+        lambda task: {
+            "task_id": task.task_id,
+            "agent_id": task.agent_id,
+            "status": "COMPLETED",
+            "evidence_reference": "cli-dry-run",
+            "payload": {},
+            "provenance": {"source": "cli"},
+        },
+    )
+
+
+def _task_template_for_type(
+    runtime: MainRuntimeManager, task_type: str
+) -> tuple[AgentTask, dict[str, object]] | None:
+    if runtime.registry_snapshot is None:
+        return None
+    candidates = runtime.registry_snapshot.find_agents_for_task(task_type)
+    if not candidates:
+        return None
+    candidate = candidates[0]
+    requested_action = (
+        candidate.allowed_actions[0].split()[0]
+        if candidate.allowed_actions and candidate.allowed_actions[0].split()
+        else "analyze"
+    )
+    inputs: dict[str, object] = {}
+    for field in candidate.required_input_schema.get("required_fields", []):
+        if field == "task_id":
+            inputs[field] = "cli-route-task"
+        elif "files" in field:
+            inputs[field] = ["engine/src"]
+        elif "scope" in field:
+            inputs[field] = "cli route dry run"
+        elif "path" in field:
+            inputs[field] = "state/worktree"
+        elif field in {"baseline_commit", "intent", "user_query", "request_id"}:
+            inputs[field] = task_type if field != "baseline_commit" else "HEAD"
+        else:
+            inputs[field] = "placeholder"
+    return (
+        AgentTask(
+            task_id="cli-route-task",
+            agent_id=candidate.agent_id,
+            skill=candidate.owned_skills[0],
+            depends_on=(),
+            input_schema={"type": "object"},
+            task_type=task_type,
+            requested_action=requested_action,
+        ),
+        inputs,
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -389,16 +485,50 @@ def main(argv: list[str] | None = None) -> int:
             rendered_config = _load_rendered_config(paths, env_file)
             topology_report = validate_agent_topology(rendered_config, paths)
             config_report = validate_rendered_config(rendered_config, paths)
+            registry_report = validate_agent_registry(paths, rendered_config=rendered_config)
             payload = {
                 **_base_payload(paths),
-                "valid": topology_report.valid and config_report.valid,
+                "valid": topology_report.valid and config_report.valid and registry_report.valid,
                 "agents": [agent.__dict__ for agent in topology_report.agents],
                 "topology_issues": [issue.__dict__ for issue in topology_report.issues],
                 "route_issues": [issue.__dict__ for issue in topology_report.route_issues],
                 "config_issues": [issue.__dict__ for issue in config_report.issues],
+                "registry_issues": [issue.__dict__ for issue in registry_report.issues],
             }
             _print(payload)
             return 1 if strict and not payload["valid"] else 0
+
+        if command_id == "validate-agent-registry":
+            rendered_config = _load_rendered_config(paths, env_file)
+            registry_report = validate_agent_registry(paths, rendered_config=rendered_config)
+            output_path = args.output or paths.agent_registry_path
+            if args.write and registry_report.registry is not None:
+                output_path.write_text(
+                    json.dumps(registry_report.registry.to_dict(), ensure_ascii=True, indent=2)
+                    + "\n",
+                    encoding="utf-8",
+                )
+            _print(
+                {
+                    **_base_payload(paths),
+                    "valid": registry_report.valid,
+                    "status": registry_report.status,
+                    "registry": (
+                        None
+                        if registry_report.registry is None
+                        else registry_report.registry.to_dict()
+                    ),
+                    "issues": [issue.__dict__ for issue in registry_report.issues],
+                    "missing_agent_count": registry_report.missing_agent_count,
+                    "duplicate_agent_count": registry_report.duplicate_agent_count,
+                    "registry_config_mismatch_count": (
+                        registry_report.registry_config_mismatch_count
+                    ),
+                    "wrote_registry": bool(args.write and registry_report.registry is not None),
+                    "output_path": str(output_path) if args.write else None,
+                }
+            )
+            return 1 if strict and not registry_report.valid else 0
 
         if command_id == "validate-routing":
             rendered_config = _load_rendered_config(paths, env_file)
@@ -413,6 +543,64 @@ def main(argv: list[str] | None = None) -> int:
                 }
             )
             return 1 if strict and not route_report.valid else 0
+
+        if command_id == "list-agents":
+            rendered_config = _load_rendered_config(paths, env_file)
+            runtime = ManagerRegistryRuntime.load(paths, rendered_config)
+            registry = runtime.get_agent_registry()
+            _print(
+                {
+                    **_base_payload(paths),
+                    "registry_version": registry.registry_version,
+                    "registry_hash": registry.registry_hash,
+                    "agents": [agent.to_dict() for agent in runtime.list_available_agents()],
+                }
+            )
+            return 0
+
+        if command_id == "describe-agent":
+            rendered_config = _load_rendered_config(paths, env_file)
+            runtime = ManagerRegistryRuntime.load(paths, rendered_config)
+            agent = runtime.get_agent_capability(args.agent_id)
+            _print(
+                {
+                    **_base_payload(paths),
+                    "registry_version": runtime.get_agent_registry().registry_version,
+                    "registry_hash": runtime.get_agent_registry().registry_hash,
+                    "agent": agent.to_dict(),
+                }
+            )
+            return 0
+
+        if command_id == "route-task":
+            rendered_config = _load_rendered_config(paths, env_file)
+            route_runtime = ManagerRegistryRuntime.load(paths, rendered_config)
+            decision = route_runtime.route_task(args.task_type, source_agent=args.source_agent)
+            _print(
+                {
+                    **_base_payload(paths),
+                    "registry_version": route_runtime.get_agent_registry().registry_version,
+                    "registry_hash": route_runtime.get_agent_registry().registry_hash,
+                    "dry_run": bool(args.dry_run),
+                    "decision": decision.to_dict(),
+                }
+            )
+            return 1 if decision.selected_agent is None else 0
+
+        if command_id == "manager-query":
+            query_runtime = _main_runtime_manager(paths, env_file)
+            assert query_runtime.registry_snapshot is not None
+            query_report = query_runtime.handle_manager_query(args.query)
+            _print(
+                {
+                    **_base_payload(paths),
+                    "registry_version": query_runtime.registry_snapshot.registry_version,
+                    "registry_hash": query_runtime.registry_snapshot.definition_hash,
+                    "query_type": query_report.query_type,
+                    "response": query_report.response,
+                }
+            )
+            return 1 if query_report.query_type == "registry_unavailable" else 0
 
         if command_id == "pipeline-dry-run":
             rendered_config = _load_rendered_config(paths, env_file)
@@ -456,9 +644,9 @@ def main(argv: list[str] | None = None) -> int:
 
         if command_id == "evidence-verify":
             archive = _archive_for(paths, env_file)
-            report = archive.verify()
-            _print({"version": __version__, "phase": PHASE, **report})
-            return 1 if strict and not report["valid"] else 0
+            archive_report = archive.verify()
+            _print({"version": __version__, "phase": PHASE, **archive_report})
+            return 1 if strict and not archive_report["valid"] else 0
 
         if command_id == "evidence-export":
             archive = _archive_for(paths, env_file)
@@ -484,9 +672,9 @@ def main(argv: list[str] | None = None) -> int:
             backup_id = args.backup_id
             if backup_id is None:
                 raise ValueError("backup-id is required for backup verify")
-            report = backup.verify(backup_id)
-            _print({"version": __version__, "phase": PHASE, **report})
-            return 1 if strict and not report["valid"] else 0
+            backup_report = backup.verify(backup_id)
+            _print({"version": __version__, "phase": PHASE, **backup_report})
+            return 1 if strict and not backup_report["valid"] else 0
 
         if command_id in {"restore:validate", "restore:execute", "restore:drill"}:
             backup = _backup_for(paths, env_file)
@@ -494,16 +682,16 @@ def main(argv: list[str] | None = None) -> int:
             if backup_id is None:
                 raise ValueError("backup-id is required for restore commands")
             if command_id == "restore:validate":
-                report = backup.verify(backup_id)
-                _print({"version": __version__, "phase": PHASE, **report})
-                return 1 if strict and not report["valid"] else 0
+                backup_report = backup.verify(backup_id)
+                _print({"version": __version__, "phase": PHASE, **backup_report})
+                return 1 if strict and not backup_report["valid"] else 0
             if command_id == "restore:execute":
-                report = backup.restore_drill(backup_id)
-                _print({"version": __version__, "phase": PHASE, **report})
-                return 1 if strict and not report["valid"] else 0
-            report = backup.restore_drill(backup_id)
-            _print({"version": __version__, "phase": PHASE, **report})
-            return 1 if strict and not report["valid"] else 0
+                backup_report = backup.restore_drill(backup_id)
+                _print({"version": __version__, "phase": PHASE, **backup_report})
+                return 1 if strict and not backup_report["valid"] else 0
+            backup_report = backup.restore_drill(backup_id)
+            _print({"version": __version__, "phase": PHASE, **backup_report})
+            return 1 if strict and not backup_report["valid"] else 0
 
         if command_id.startswith("skill-candidate:"):
             store = _candidate_for(paths, env_file)

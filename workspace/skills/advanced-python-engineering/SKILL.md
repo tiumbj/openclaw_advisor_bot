@@ -1,7 +1,7 @@
 ---
 name: advanced-python-engineering
 description: Write production-grade typed Python with strict ruff and mypy compliance.
-version: 1.2.14
+version: 1.2.15
 owner_agent: blueprint-coder
 purpose: Ensure every module satisfies strict type safety, lint, and frozen-dataclass invariants.
 allowed_inputs:

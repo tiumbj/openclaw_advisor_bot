@@ -1,7 +1,7 @@
 ---
 name: chart-pattern-filter-review
 description: Chart pattern filter review skill.
-version: 1.2.14
+version: 1.2.15
 owner_agent: xau-strategy-auditor
 purpose: Filter chart patterns against approved evidence.
 allowed_inputs:
